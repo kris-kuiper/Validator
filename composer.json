@@ -1,0 +1,42 @@
+{
+  "name": "kris-kuiper/validator",
+  "description": "Validation of (form) array.",
+  "keywords": [
+    "modern",
+    "validate",
+    "validator",
+    "validation",
+    "php",
+    "form",
+    "array"
+  ],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Kris Kuiper",
+      "email": "kris@sfire.nl"
+    }
+  ],
+  "require": {
+    "php": ">=8.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9",
+    "phpstan/phpstan": "^1.7",
+    "phpro/grumphp": "^1.12",
+    "slevomat/coding-standard": "^7.2",
+    "brianium/paratest": "^6.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "KrisKuiper\\Validator\\": "./src/",
+      "tests\\": "./tests/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "phpro/grumphp": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

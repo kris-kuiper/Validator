@@ -1,0 +1,23 @@
+grumphp:
+  process_timeout: 120
+  git_hook_variables:
+    EXEC_GRUMPHP_COMMAND: 'docker-compose -f ./docker-compose.yml exec -T validator'
+  tasks:
+    paratest:
+      processes: ~
+    phpcs:
+      standard: [./phpcs.xml]
+      triggered_by: [php]
+      ignore_patterns: ['/^tests/']
+    phpstan:
+      autoload_file: ~
+      configuration: phpstan.neon
+      level: 5
+      force_patterns: [ ]
+      ignore_patterns:
+        - .phpstorm.meta.php
+        - _ide_helper.php
+        - tests/
+      triggered_by: ['php']
+      memory_limit: "-1"
+

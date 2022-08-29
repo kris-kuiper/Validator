@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Rules\{
-    AcceptedNotEmpty,
+use KrisKuiper\Validator\Blueprint\Rules\{AcceptedNotEmpty,
     After,
     Before,
     Between,
@@ -40,6 +39,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     IsIPv6,
     IsJSON,
     IsMACAddress,
+    IsNotNull,
     IsNull,
     IsNumber,
     IsScalar,
@@ -74,8 +74,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Same,
     StartsWith,
     ContainsSymbol,
-    Words
-};
+    Words};
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait
@@ -392,6 +391,14 @@ trait RuleTrait
     public function isMACAddress(string $delimiter = '-'): self
     {
         return $this->addRule(new IsMACAddress($delimiter));
+    }
+
+    /**
+     * Checks if the data under validation is not null
+     */
+    public function isNotNull(): self
+    {
+        return $this->addRule(new IsNotNull());
     }
 
     /**

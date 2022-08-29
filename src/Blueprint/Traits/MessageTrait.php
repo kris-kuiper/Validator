@@ -43,6 +43,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     IsNumber,
     IsScalar,
     IsString,
+    IsTimezone,
     IsTrue,
     IsURL,
     IsUUIDv1,
@@ -379,6 +380,14 @@ trait MessageTrait
     public function isString(string|int|float $message): self
     {
         return $this->addMessage(new IsString($message));
+    }
+
+    /**
+     * Adds a new message for the isTimezone rule
+     */
+    public function isTimezone(string|int|float $message): self
+    {
+        return $this->addMessage(new IsTimezone($message));
     }
 
     /**

@@ -72,6 +72,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    StartsNotWith,
     StartsWith,
     ContainsSymbol,
     Words
@@ -630,6 +631,14 @@ trait RuleTrait
     public function same(string ...$fieldNames): self
     {
         return $this->addRule(new Same(...$fieldNames));
+    }
+
+    /**
+     * Checks if the data under validation begins with a given value
+     */
+    public function startsNotWith(string|int|float $value, bool $caseSensitive = false): self
+    {
+        return $this->addRule(new StartsNotWith($value, $caseSensitive));
     }
 
     /**

@@ -72,6 +72,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    StartsNotWith,
     StartsWith,
     Symbols,
     Words
@@ -613,6 +614,14 @@ trait MessageTrait
     public function same(string|int|float $message): self
     {
         return $this->addMessage(new Same($message));
+    }
+
+    /**
+     * Adds a new message for the startsNotWith rule
+     */
+    public function startsNotWith(string|int|float $message): self
+    {
+        return $this->addMessage(new StartsNotWith($message));
     }
 
     /**

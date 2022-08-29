@@ -26,7 +26,7 @@
   - [Check if one or multiple fields have errors](#check-if-one-or-multiple-fields-have-errors)
   - [Working with error objects](#working-with-error-objects)
   - [Setting custom error messages](#setting-custom-error-messages)
-- [Returning the validated data](#returning-the-validated-data)
+- [Working with validated data](#working-with-validated-data)
   - [Returning only validated data](#returning-only-validated-data)
   - [Filter validated data](#filter-validated-data)
 - [Using Blueprints](#using-blueprints)
@@ -1654,7 +1654,7 @@ $validator->messages('amount')->between('Amount should be between :minimum and :
 
 
 
-## Returning the validated data
+## Working with validated data
 
 #### Returning only validated data
 

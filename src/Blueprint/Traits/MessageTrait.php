@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Messages\{
-    AcceptedNotEmpty,
+use KrisKuiper\Validator\Blueprint\Messages\{AcceptedNotEmpty,
     After,
     Between,
     Before,
@@ -18,6 +17,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Different,
     DifferentWithAll,
     Distinct,
+    EndsNotWith,
     EndsWith,
     Equals,
     In,
@@ -76,8 +76,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     StartsNotWith,
     StartsWith,
     Symbols,
-    Words
-};
+    Words};
 
 trait MessageTrait
 {
@@ -183,6 +182,14 @@ trait MessageTrait
     public function distinct(string|int|float $message): self
     {
         return $this->addMessage(new Distinct($message));
+    }
+
+    /**
+     * Adds a new message for the endsNotWith rule
+     */
+    public function endsNotWith(string|int|float $message): self
+    {
+        return $this->addMessage(new EndsNotWith($message));
     }
 
     /**

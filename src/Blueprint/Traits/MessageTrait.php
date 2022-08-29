@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Messages\{After,
+use KrisKuiper\Validator\Blueprint\Messages\{
+    AcceptedNotEmpty,
+    After,
     Between,
     Before,
     Contains,
@@ -70,13 +72,17 @@ use KrisKuiper\Validator\Blueprint\Messages\{After,
     Same,
     StartsWith,
     Symbols,
-    Words};
+    Words
+};
 
 trait MessageTrait
 {
-    public function custom(string $ruleName, string|int|float $message): self
+    /**
+     * Adds a new message for the acceptedNotEmpty rule
+     */
+    public function acceptedNotEmpty(string|int|float $message): self
     {
-        return $this->addMessage(new Custom($ruleName, $message));
+        return $this->addMessage(new AcceptedNotEmpty($message));
     }
 
     /**
@@ -141,6 +147,14 @@ trait MessageTrait
     public function countMin(string|int|float $message): self
     {
         return $this->addMessage(new CountMin($message));
+    }
+
+    /**
+     * Adds a new message for custom validation rules
+     */
+    public function custom(string $ruleName, string|int|float $message): self
+    {
+        return $this->addMessage(new Custom($ruleName, $message));
     }
 
     /**

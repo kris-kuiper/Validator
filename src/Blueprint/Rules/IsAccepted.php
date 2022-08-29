@@ -13,7 +13,7 @@ class IsAccepted extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Invalid input';
+    protected string $message = 'Should be accepted';
 
     /**
      * Constructor

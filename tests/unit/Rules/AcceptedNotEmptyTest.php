@@ -8,7 +8,7 @@ use KrisKuiper\Validator\Validator;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use PHPUnit\Framework\TestCase;
 
-final class IsAcceptedTest extends TestCase
+final class AcceptedNotEmptyTest extends TestCase
 {
     /**
      * @throws ValidatorException
@@ -16,8 +16,8 @@ final class IsAcceptedTest extends TestCase
     public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
         foreach ([1, '1', 'true', true, 'yes', 'on'] as $data) {
-            $validator = new Validator(['field' => $data]);
-            $validator->field('field')->isAccepted();
+            $validator = new Validator(['foo' => $data, 'bar' => 'yes']);
+            $validator->field('foo')->acceptedNotEmpty('bar');
             $this->assertTrue($validator->execute());
         }
     }
@@ -27,11 +27,9 @@ final class IsAcceptedTest extends TestCase
      */
     public function testIfValidationPassesWhenOtherAcceptedValuesAreProvided(): void
     {
-        foreach (['foo', 'bar', 2, '22.5'] as $data) {
-            $validator = new Validator(['field' => $data]);
-            $validator->field('field')->isAccepted(['foo', 'bar', 2, '22.5']);
-            $this->assertTrue($validator->execute());
-        }
+        $validator = new Validator(['foo' => 'bar', 'bar' => 'foo']);
+        $validator->field('foo')->acceptedNotEmpty('bar', ['foo', 'bar', 'quez']);
+        $this->assertTrue($validator->execute());
     }
 
     /**
@@ -39,8 +37,8 @@ final class IsAcceptedTest extends TestCase
      */
     public function testIfValidationFailsWhenOtherAcceptedValuesAreProvided(): void
     {
-        $validator = new Validator(['foo' => '2']);
-        $validator->field('foo')->isAccepted([2, 'bar', 'quez']);
+        $validator = new Validator(['foo' => '2', 'bar' => 'foo']);
+        $validator->field('foo')->acceptedNotEmpty('bar', [2, 'bar', 'quez']);
         $this->assertFalse($validator->execute());
     }
 
@@ -50,8 +48,20 @@ final class IsAcceptedTest extends TestCase
     public function testIfValidationFailsWhenInValidValuesAreProvided(): void
     {
         foreach ([null, [], (object) [], ['a', 'b', 'c'], 2552, false, '2817334', 'no', '0', 0] as $data) {
-            $validator = new Validator(['field' => $data]);
-            $validator->field('field')->isAccepted();
+            $validator = new Validator(['foo' => $data, 'bar' => 'yes']);
+            $validator->field('foo')->acceptedNotEmpty('bar');
+            $this->assertFalse($validator->execute());
+        }
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationFailsWhenInValidValuesAreProvidedAndOtherFieldIsNotProvided(): void
+    {
+        foreach ([null, [], (object) [], ['a', 'b', 'c'], 2552, false, '2817334', 'no', '0', 0] as $data) {
+            $validator = new Validator(['foo' => $data, 'bar' => '']);
+            $validator->field('foo')->acceptedNotEmpty('bar');
             $this->assertFalse($validator->execute());
         }
     }
@@ -62,7 +72,7 @@ final class IsAcceptedTest extends TestCase
     public function testIfValidationFailsWhenNoValuesAreProvided(): void
     {
         $validator = new Validator();
-        $validator->field('field')->isAccepted();
+        $validator->field('field')->acceptedNotEmpty('bar');
         $this->assertFalse($validator->execute());
     }
 
@@ -71,10 +81,10 @@ final class IsAcceptedTest extends TestCase
      */
     public function testIfCorrectErrorMessageIsReturnedWhenCustomMessageIsSet(): void
     {
-        $validator = new Validator(['field' => '']);
-        $validator->field('field')->isAccepted();
-        $validator->messages('field')->isAccepted('Message isAccepted');
+        $validator = new Validator(['foo' => '']);
+        $validator->field('foo')->acceptedNotEmpty('bar');
+        $validator->messages('foo')->acceptedNotEmpty('Message acceptedNotEmpty');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message isAccepted', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message acceptedNotEmpty', $validator->errors()->first('foo')->getMessage());
     }
 }

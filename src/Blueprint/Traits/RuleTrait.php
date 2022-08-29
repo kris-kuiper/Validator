@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
 use KrisKuiper\Validator\Blueprint\Rules\{
+    AcceptedNotEmpty,
     After,
     Before,
     Between,
@@ -77,6 +78,14 @@ use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait
 {
+    /**
+     * Checks if the data under validation is accepted if another fields value is not empty
+     */
+    public function acceptedNotEmpty(string $fieldName, array $accepted = []): self
+    {
+        return $this->addRule(new AcceptedNotEmpty($fieldName, $accepted));
+    }
+
     /**
      * Checks if the data under validation comes after a given date
      * @throws ValidatorException

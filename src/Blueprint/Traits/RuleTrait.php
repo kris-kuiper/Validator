@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Rules\{
-    AcceptedNotEmpty,
+use KrisKuiper\Validator\Blueprint\Rules\{AcceptedNotEmpty,
     After,
     Before,
     Between,
@@ -43,6 +42,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     IsNumber,
     IsScalar,
     IsString,
+    IsTimezone,
     IsTrue,
     IsURL,
     IsUUIDv1,
@@ -72,8 +72,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Same,
     StartsWith,
     ContainsSymbol,
-    Words
-};
+    Words};
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait
@@ -414,6 +413,15 @@ trait RuleTrait
     public function isString(): self
     {
         return $this->addRule(new IsString());
+    }
+
+    /**
+     * Checks if the data under validation is a valid timezone
+     * See https://www.php.net/manual/en/datetimezone.listidentifiers.php for more details
+     */
+    public function isTimezone(): self
+    {
+        return $this->addRule(new IsTimezone());
     }
 
     /**

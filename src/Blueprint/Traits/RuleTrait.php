@@ -17,6 +17,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{AcceptedNotEmpty,
     Different,
     DifferentWithAll,
     Distinct,
+    EndsNotWith,
     EndsWith,
     Equals,
     In,
@@ -216,6 +217,14 @@ trait RuleTrait
     public function distinct(): self
     {
         return $this->addRule(new Distinct());
+    }
+
+    /**
+     * Checks if the data under validation does not end with a given value
+     */
+    public function endsNotWith(string|int|float $value, bool $caseSensitive = false): self
+    {
+        return $this->addRule(new EndsNotWith($value, $caseSensitive));
     }
 
     /**

@@ -834,6 +834,17 @@ $valdiator->field('fieldName')->isMACAddress(':');
 
 
 
+##### Is not NULL
+
+Checks if the data under validation is not NULL
+
+```php
+$valdiator->field('fieldName')->isNotNull();
+```
+See also the [Is null](#is-null) rule.
+
+
+
 ##### Is NULL
 
 Checks if the data under validation is NULL
@@ -841,7 +852,7 @@ Checks if the data under validation is NULL
 ```php
 $valdiator->field('fieldName')->isNull();
 ```
-
+See also the [Is not null](#is-not-null) rule.
 
 
 ##### Is number

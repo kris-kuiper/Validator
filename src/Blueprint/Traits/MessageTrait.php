@@ -40,6 +40,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     IsInt,
     IsJSON,
     IsMACAddress,
+    IsNull,
     IsNumber,
     IsScalar,
     IsString,
@@ -356,6 +357,14 @@ trait MessageTrait
     public function isMACAddress(string|int|float $message): self
     {
         return $this->addMessage(new IsMACAddress($message));
+    }
+
+    /**
+     * Adds a new message for the isNumber rule
+     */
+    public function isNull(string|int|float $message): self
+    {
+        return $this->addMessage(new IsNull($message));
     }
 
     /**

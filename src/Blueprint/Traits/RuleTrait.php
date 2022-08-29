@@ -419,9 +419,9 @@ trait RuleTrait
      * Checks if the data under validation is a valid timezone
      * See https://www.php.net/manual/en/datetimezone.listidentifiers.php for more details
      */
-    public function isTimezone(): self
+    public function isTimezone(bool $caseInsensitive = false): self
     {
-        return $this->addRule(new IsTimezone());
+        return $this->addRule(new IsTimezone($caseInsensitive));
     }
 
     /**

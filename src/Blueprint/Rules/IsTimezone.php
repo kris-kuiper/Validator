@@ -16,6 +16,15 @@ class IsTimezone extends AbstractRule
     protected string $message = 'Not a valid timezone';
 
     /**
+     * Constructor
+     */
+    public function __construct(bool $caseInsensitive = false)
+    {
+        parent::__construct();
+        $this->setParameter('caseInsensitive', $caseInsensitive);
+    }
+
+    /**
      * @inheritdoc
      */
     public function getName(): string
@@ -29,6 +38,20 @@ class IsTimezone extends AbstractRule
      */
     public function isValid(): bool
     {
-        return true === in_array($this->getValue(), timezone_identifiers_list(), true);
+        $value = $this->getValue();
+        $timezones = timezone_identifiers_list();
+        $caseInsensitive = $this->getParameter('caseInsensitive');
+
+        if (true === $caseInsensitive) {
+            $timezones = array_map(static function (string $timezone) {
+                return strtolower($timezone);
+            }, $timezones);
+
+            if (true === is_string($value)) {
+                $value = strtolower($value);
+            }
+        }
+
+        return true === in_array($value, $timezones, true);
     }
 }

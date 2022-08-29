@@ -876,6 +876,13 @@ Checks if the data under validation is a valid timezone
 ```php
 $valdiator->field('fieldName')->isTimezone();
 ```
+
+Use the first parameter to search case-insensitive:
+```php
+$valdiator->field('fieldName')->isTimezone(true);
+```
+
+
 *Note: see [timezones](https://www.php.net/manual/en/datetimezone.listidentifiers.php) on php.net for more information*
 
 

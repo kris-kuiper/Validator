@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Messages\{AcceptedNotEmpty,
+use KrisKuiper\Validator\Blueprint\Messages\{
+    AcceptedNotEmpty,
     After,
     Between,
     Before,
@@ -48,6 +49,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{AcceptedNotEmpty,
     IsTimezone,
     IsTrue,
     IsURL,
+    IsUUID,
     IsUUIDv1,
     IsUUIDv3,
     IsUUIDv4,
@@ -76,7 +78,8 @@ use KrisKuiper\Validator\Blueprint\Messages\{AcceptedNotEmpty,
     StartsNotWith,
     StartsWith,
     Symbols,
-    Words};
+    Words
+};
 
 trait MessageTrait
 {
@@ -430,6 +433,14 @@ trait MessageTrait
     public function isURL(string|int|float $message): self
     {
         return $this->addMessage(new IsURL($message));
+    }
+
+    /**
+     * Adds a new message for the isUUID rule
+     */
+    public function isUUID(string $message): self
+    {
+        return $this->addMessage(new IsUUID($message));
     }
 
     /**

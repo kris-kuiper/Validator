@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Rules\{AcceptedNotEmpty,
+use KrisKuiper\Validator\Blueprint\Rules\{
+    AcceptedNotEmpty,
     After,
     Before,
     Between,
@@ -48,6 +49,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{AcceptedNotEmpty,
     IsTimezone,
     IsTrue,
     IsURL,
+    IsUUID,
     IsUUIDv1,
     IsUUIDv3,
     IsUUIDv4,
@@ -76,7 +78,8 @@ use KrisKuiper\Validator\Blueprint\Rules\{AcceptedNotEmpty,
     StartsNotWith,
     StartsWith,
     ContainsSymbol,
-    Words};
+    Words
+};
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait
@@ -474,6 +477,14 @@ trait RuleTrait
     public function isUUIDv1(): self
     {
         return $this->addRule(new IsUUIDv1());
+    }
+
+    /**
+     * Checks if the data under validation is a valid UUID v1, v3, v4 or v5 entity
+     */
+    public function isUUID(): self
+    {
+        return $this->addRule(new IsUUID());
     }
 
     /**

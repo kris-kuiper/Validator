@@ -376,31 +376,31 @@ $validator->field('fieldname')->min(1)->max(5)->bail();
 Below is a list with all predefined validation rules.
 
 |                                             |                                   |                                               |
-|---------------------------------------------|-----------------------------------|-----------------------------------------------|
-| [Accepted not empty](#accepted-not-empty)   | [Is array](#is-array)             | [Is UUID v4](#is-uuid-v4)                     |
-| [After (date)](#after)                      | [Is boolean](#is-boolean)         | [Is UUID v5](#is-uuid-v5)                     |
-| [Before (date)](#before)                    | [Is countable](#is-countable)     | [Length](#length)                             |
-| [Between](#between)                         | [Is date](#is-date)               | [Length between](#length-between)             |
-| [Contains](#contains)                       | [Is email](#is-email)             | [Max](#max)                                   |
-| [Contains letter](#contains-letter)         | [Is empty](#is-empty)             | [Max length](#max-length)                     |
-| [Contains mixed case](#contains-mixed-case) | [Is false](#is-false)             | [Max words](#max-words)                       |
-| [Contains number](#contains-number)         | [Is IP](#is-ip)                   | [Min](#min)                                   |
-| [Contains symbol](#contains-symbol)         | [Is IP Private](#is-ip-private)   | [Min length](#min-length)                     |
-| [Count](#count)                             | [Is IP Public](#is-ip-public)     | [Min words](#min-words)                       |
-| [Count between](#count-between)             | [Is IP v4](#is-ip-v4)             | [Not contains](#not-contains)                 |
-| [Count max](#count-max)                     | [Is IP v6](#is-ip-v6)             | [Not In](#not-in)                             |
-| [Count min](#count-min)                     | [Is int](#is-int)                 | [Present](#present)                           |
-| [Different](#different)                     | [Is JSON](#is-json)               | [Regex](#regex)                               |
-| [Different with all](#different-with-all)   | [Is MAC address](#is-mac-address) | [Required](#required)                         |
-| [Distinct](#distinct)                       | [Is null](#is-null)               | [Required with](#required-with)               |
-| [Ends not with](#ends-not-with)             | [Is number](#is-number)           | [Required with all](#required-with-all)       |
-| [Ends with](#ends-with)                     | [Is scalar](#is-scalar)           | [Required without](#required-without)         |
-| [Equals](#equals)                           | [Is string](#is-string)           | [Required without all](#required-without-all) |
-| [In](#in)                                   | [Is timezone](#is-timezone)       | [Same](#same)                                 |
-| [Is accepted](#is-accepted)                 | [Is true](#is-true)               | [Starts not with](#starts-not-with)           |
-| [Is alpha](#is-alpha)                       | [Is URL](#is-url)                 | [Starts with](#starts-with)                   |
-| [Is alpha dash](#is-alpha-dash)             | [Is UUID v1](#is-uuid-v1)         | [Words](#words)                               |
-| [Is alpha numeric](#is-alpha-numeric)       | [Is UUID v3](#is-uuid-v3)         |                                               |
+| ------------------------------------------- | --------------------------------- | --------------------------------------------- |
+| [Accepted not empty](#accepted-not-empty)   | [Is array](#is-array)             | [Is UUID v3](#is-uuid-v3)                     |
+| [After (date)](#after)                      | [Is boolean](#is-boolean)         | [Is UUID v4](#is-uuid-v4)                     |
+| [Before (date)](#before)                    | [Is countable](#is-countable)     | [Is UUID v5](#is-uuid-v5)                     |
+| [Between](#between)                         | [Is date](#is-date)               | [Length](#length)                             |
+| [Contains](#contains)                       | [Is email](#is-email)             | [Length between](#length-between)             |
+| [Contains letter](#contains-letter)         | [Is empty](#is-empty)             | [Max](#max)                                   |
+| [Contains mixed case](#contains-mixed-case) | [Is false](#is-false)             | [Max length](#max-length)                     |
+| [Contains number](#contains-number)         | [Is IP](#is-ip)                   | [Max words](#max-words)                       |
+| [Contains symbol](#contains-symbol)         | [Is IP Private](#is-ip-private)   | [Min](#min)                                   |
+| [Count](#count)                             | [Is IP Public](#is-ip-public)     | [Min length](#min-length)                     |
+| [Count between](#count-between)             | [Is IP v4](#is-ip-v4)             | [Min words](#min-words)                       |
+| [Count max](#count-max)                     | [Is IP v6](#is-ip-v6)             | [Not contains](#not-contains)                 |
+| [Count min](#count-min)                     | [Is int](#is-int)                 | [Not In](#not-in)                             |
+| [Different](#different)                     | [Is JSON](#is-json)               | [Present](#present)                           |
+| [Different with all](#different-with-all)   | [Is MAC address](#is-mac-address) | [Regex](#regex)                               |
+| [Distinct](#distinct)                       | [Is null](#is-null)               | [Required](#required)                         |
+| [Ends not with](#ends-not-with)             | [Is number](#is-number)           | [Required with](#required-with)               |
+| [Ends with](#ends-with)                     | [Is scalar](#is-scalar)           | [Required with all](#required-with-all)       |
+| [Equals](#equals)                           | [Is string](#is-string)           | [Required without](#required-without)         |
+| [In](#in)                                   | [Is timezone](#is-timezone)       | [Required without all](#required-without-all) |
+| [Is accepted](#is-accepted)                 | [Is true](#is-true)               | [Same](#same)                                 |
+| [Is alpha](#is-alpha)                       | [Is URL](#is-url)                 | [Starts not with](#starts-not-with)           |
+| [Is alpha dash](#is-alpha-dash)             | [Is UUID](#is-uuid-v1)            | [Starts with](#starts-with)                   |
+| [Is alpha numeric](#is-alpha-numeric)       | [Is UUID v1](#is-uuid-v1)         | [Words](#words)                               |
 
 
 
@@ -950,9 +950,9 @@ $valdiator->field('fieldName')->isURL(true);
 
 
 
-##### Is UUID v1
+##### Is UUID
 
-Checks if the data under validation is a valid UUID v1 entity.
+Checks if the data under validation is a valid UUID v1, v3, v4 or v5 entity.
 
 ```php
 $valdiator->field('fieldName')->isUUIDv1();

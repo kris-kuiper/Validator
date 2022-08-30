@@ -955,6 +955,16 @@ $valdiator->field('fieldName')->isURL(true);
 Checks if the data under validation is a valid UUID v1, v3, v4 or v5 entity.
 
 ```php
+$valdiator->field('fieldName')->isUUID();
+```
+
+
+
+##### Is UUID v1
+
+Checks if the data under validation is a valid UUID v1 entity.
+
+```php
 $valdiator->field('fieldName')->isUUIDv1();
 ```
 

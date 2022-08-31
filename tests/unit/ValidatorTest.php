@@ -8,7 +8,6 @@ use KrisKuiper\Validator\Blueprint\Rules\Between;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
-use tests\unit\assets\BailMiddleware;
 use tests\unit\assets\ExceptionRule;
 use tests\unit\assets\GetFieldNameMiddleware;
 use tests\unit\assets\LeadingZeroMiddleware;

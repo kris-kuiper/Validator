@@ -5,7 +5,7 @@
 - [Adding fields for validation](#adding-fields-for-validation)
 - [Execute validation](#execute-validation)
   - [Execute, fails and passes](#execute-fails-and-passes)
-  - [Reset validation](#reset-validation)
+  - [Re-validate](#re-validate)
 - [Validating arrays](#validating-arrays)
 - [Special "required" rules](#special-"required"-rules)
   - [Required](#required)
@@ -155,7 +155,7 @@ The validator will only run once to avoid i.e. multiple database lookups when ex
 
 
 
-#### Revalidate validation
+#### Re-validate
 
 By default, the validator caches the validation result. So if you run the same validator again, the validator won't run all the rules, middleware, etc. It will directly return the result of the previous run.
 

@@ -83,8 +83,8 @@ $data = [
 
 $validator = new Validator($data);
 
-//Select every age field
-$validator->field('*.age')->required()->email();
+//Select every email field
+$validator->field('*.email')->required()->email()->maxLength(50);
 
 //Select department and color field
 $validator->field('department', 'color')->required(false)->isString()->lengthBetween(5, 20);

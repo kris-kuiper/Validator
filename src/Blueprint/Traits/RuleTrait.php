@@ -195,7 +195,8 @@ trait RuleTrait
      */
     public function custom(string $ruleName, array $parameters = []): self
     {
-        return $this->addRule(new Custom($ruleName, $parameters));
+        return $this->addRule(new Custom($ruleName, static function () {
+        }, $parameters));
     }
 
     /**

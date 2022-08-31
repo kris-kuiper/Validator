@@ -155,52 +155,38 @@ The validator will only run once to avoid i.e. multiple database lookups when ex
 
 
 
-#### Reset validation
+#### Revalidate validation
 
 By default, the validator caches the validation result. So if you run the same validator again, the validator won't run all the rules, middleware, etc. It will directly return the result of the previous run.
 
+To run the validator with all rules, middleware, etc. again, you can use the `revalidate()` method.
 
-
-##### Example 1:
-
-You can reset the validator by calling the `reset()` method.
+#####  Example:
 
 ```php
-$input = ['username' => 'morris'];
+$executed = 0;
+$validator = new Validator(['username' => 'Morris']);
 
-$validator = new Validator($input);
-$validator->field('username')->required();
+$customRule = static function () use (&$executed) {
 
+    $executed++;
+    return true;
+};
+
+$validator->custom('check-username', $customRule);
+$validator->field('username')->custom('check-username');
+
+//Execute validation
 $validator->execute();
-$validator->reset();
-$validator->execute(); //Without the reset, the validator won't run again
-```
+var_dump($executed); //1
 
+//Executing the validation again will have the same result
+$validator->execute();
+var_dump($executed); //Still 1
 
-
-#####  Example 2:
-
-```php
-$input = ['username' => ''];
-
-//The input is passed as reference
-$validator = new Validator(&$input);
-$validator->field('username')->required();
-
-$validator->execute(); //false
-
-//Input is altered
-$input['username'] = 'morris';
-
-$validator->execute(); //false
-$validator->passes(); //false
-$validator->fails(); //true
-
-$validator->reset();
-
-$validator->execute(); //true
-$validator->passes(); //true
-$validator->fails(); //false
+//Rerun the validation with all rules, middleware, etc.
+$validator->revalidate();
+var_dump($executed); //2
 ```
 
 

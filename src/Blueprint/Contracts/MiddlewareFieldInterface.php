@@ -20,9 +20,4 @@ interface MiddlewareFieldInterface
      * Returns the name of the field under validation
      */
     public function getFieldName(): string;
-
-    /**
-     * Bails the next rule, preventing from executing next validation rules
-     */
-    public function bail(): void;
 }

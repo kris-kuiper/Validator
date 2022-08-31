@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Exceptions;
 
 use Exception;
-use KrisKuiper\Validator\Blueprint\Contracts\MiddlewareInterface;
-use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
 
 class ValidatorException extends Exception
 {
@@ -16,22 +14,6 @@ class ValidatorException extends Exception
     private function __construct(string $message)
     {
         parent::__construct($message);
-    }
-
-    /**
-     * Thrown when a provided middleware concretion doesn't implement the middleware interface
-     */
-    public static function middlewareIncompatible(string $concretion): self
-    {
-        return new self(sprintf('Middleware "%s" should implement "%s".', $concretion, MiddlewareInterface::class));
-    }
-
-    /**
-     * Thrown when a provided rule concretion doesn't implement the rule interface
-     */
-    public static function ruleIncompatible(string $concretion): self
-    {
-        return new self(sprintf('Rule "%s" should implement "%s".', $concretion, RuleInterface::class));
     }
 
     /**
@@ -64,13 +46,5 @@ class ValidatorException extends Exception
     public static function incorrectDateFormatUsed(string $date): self
     {
         return new self(sprintf('Date "%s" is not a correct date format', $date));
-    }
-
-    /**
-     * Thrown when a custom callback rule has not been set
-     */
-    public static function customRuleCallbackNotSet(string $name): self
-    {
-        return new self(sprintf('Callback function for custom rule "%s" not set', $name));
     }
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Translator\Contracts;
 
-use KrisKuiper\Validator\Collections\PathCollection;
-
 interface TranslatorInterface
 {
     /**
@@ -37,9 +35,4 @@ interface TranslatorInterface
      * Retrieves data based on key
      */
     public function get(string|int|float $key): array;
-
-    /**
-     * Retrieve and delete an item
-     */
-    public function pull(string|int|float $key): PathCollection;
 }

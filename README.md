@@ -1,9 +1,9 @@
 Modern PHP validator
 ====================
 
-[![Latest Stable Version](http://poser.pugx.org/kris-kuiper/validator/v)](https://packagist.org/packages/kris-kuiper/validator)
-[![License](http://poser.pugx.org/kris-kuiper/validator/license)](https://packagist.org/packages/kris-kuiper/validator)
-[![PHP Version Require](http://poser.pugx.org/kris-kuiper/validator/require/php)](https://packagist.org/packages/kris-kuiper/validator)
+[![Latest Stable Version](http://poser.pugx.org/kris-kuiper/validator/v?style=for-the-badge)](https://packagist.org/packages/kris-kuiper/validator)
+[![License](http://poser.pugx.org/kris-kuiper/validator/license?style=for-the-badge)](https://packagist.org/packages/kris-kuiper/validator)
+[![PHP Version Require](http://poser.pugx.org/kris-kuiper/validator/require/php?style=for-the-badge)](https://packagist.org/packages/kris-kuiper/validator)
 
 
 - [Introduction](#introduction)
@@ -44,7 +44,7 @@ Modern PHP validator
   - [Password validation](#example-2-password-validation)
   - [Combining multiple date fields for single validation](#example-3-combining-multiple-date-fields-for-single-validation)
   - [Using blueprints](#example-4-using-blueprints)
-
+- [License](#license)
 
 
 
@@ -2403,3 +2403,8 @@ if(true === $validator->fails()) {
     });
 }
 ```
+
+
+## License
+
+Modern PHP Validator is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

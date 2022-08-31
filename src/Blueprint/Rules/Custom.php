@@ -6,7 +6,6 @@ namespace KrisKuiper\Validator\Blueprint\Rules;
 
 use Closure;
 use KrisKuiper\Validator\Blueprint\Custom\Current;
-use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 class Custom extends AbstractRule
 {
@@ -15,15 +14,11 @@ class Custom extends AbstractRule
      */
     protected string $message = 'Invalid value';
 
-    /**
-     * Contains the callback which is executed on validation
-     */
-    private ?Closure $callback = null;
 
     /**
      * Constructor
      */
-    public function __construct(private string $name, array $parameters = [])
+    public function __construct(private string $name, private Closure $callback, array $parameters = [])
     {
         parent::__construct();
 
@@ -50,16 +45,10 @@ class Custom extends AbstractRule
 
     /**
      * @inheritdoc
-     * @throws ValidatorException
      */
     public function isValid(): bool
     {
         $callback = $this->callback;
-
-        if (null === $callback) {
-            throw ValidatorException::customRuleCallbackNotSet($this->name);
-        }
-
         return $callback(new Current($this, $this->getName()));
     }
 }

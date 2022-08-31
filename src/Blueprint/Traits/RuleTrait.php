@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
 use KrisKuiper\Validator\Blueprint\Rules\{
+    AcceptedNotEmpty,
     After,
     Before,
     Between,
@@ -17,6 +18,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Different,
     DifferentWithAll,
     Distinct,
+    EndsNotWith,
     EndsWith,
     Equals,
     In,
@@ -39,11 +41,15 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     IsIPv6,
     IsJSON,
     IsMACAddress,
+    IsNotNull,
+    IsNull,
     IsNumber,
     IsScalar,
     IsString,
+    IsTimezone,
     IsTrue,
     IsURL,
+    IsUUID,
     IsUUIDv1,
     IsUUIDv3,
     IsUUIDv4,
@@ -69,6 +75,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    StartsNotWith,
     StartsWith,
     ContainsSymbol,
     Words
@@ -77,6 +84,14 @@ use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait
 {
+    /**
+     * Checks if the data under validation is accepted if another fields value is not empty
+     */
+    public function acceptedNotEmpty(string $fieldName, array $accepted = []): self
+    {
+        return $this->addRule(new AcceptedNotEmpty($fieldName, $accepted));
+    }
+
     /**
      * Checks if the data under validation comes after a given date
      * @throws ValidatorException
@@ -180,7 +195,8 @@ trait RuleTrait
      */
     public function custom(string $ruleName, array $parameters = []): self
     {
-        return $this->addRule(new Custom($ruleName, $parameters));
+        return $this->addRule(new Custom($ruleName, static function () {
+        }, $parameters));
     }
 
     /**
@@ -205,6 +221,14 @@ trait RuleTrait
     public function distinct(): self
     {
         return $this->addRule(new Distinct());
+    }
+
+    /**
+     * Checks if the data under validation does not end with a given value
+     */
+    public function endsNotWith(string|int|float $value, bool $caseSensitive = false): self
+    {
+        return $this->addRule(new EndsNotWith($value, $caseSensitive));
     }
 
     /**
@@ -384,6 +408,22 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the data under validation is not null
+     */
+    public function isNotNull(): self
+    {
+        return $this->addRule(new IsNotNull());
+    }
+
+    /**
+     * Checks if the data under validation is null
+     */
+    public function isNull(): self
+    {
+        return $this->addRule(new IsNull());
+    }
+
+    /**
      * Checks if the data under validation is an integer number
      */
     public function isNumber(bool $strict = false): self
@@ -408,6 +448,15 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the data under validation is a valid timezone
+     * See https://www.php.net/manual/en/datetimezone.listidentifiers.php for more details
+     */
+    public function isTimezone(bool $caseInsensitive = false): self
+    {
+        return $this->addRule(new IsTimezone($caseInsensitive));
+    }
+
+    /**
      * Checks if value equals boolean true
      */
     public function isTrue(): self
@@ -429,6 +478,14 @@ trait RuleTrait
     public function isUUIDv1(): self
     {
         return $this->addRule(new IsUUIDv1());
+    }
+
+    /**
+     * Checks if the data under validation is a valid UUID v1, v3, v4 or v5 entity
+     */
+    public function isUUID(): self
+    {
+        return $this->addRule(new IsUUID());
     }
 
     /**
@@ -602,6 +659,14 @@ trait RuleTrait
     public function same(string ...$fieldNames): self
     {
         return $this->addRule(new Same(...$fieldNames));
+    }
+
+    /**
+     * Checks if the data under validation begins with a given value
+     */
+    public function startsNotWith(string|int|float $value, bool $caseSensitive = false): self
+    {
+        return $this->addRule(new StartsNotWith($value, $caseSensitive));
     }
 
     /**

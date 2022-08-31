@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Messages\{After,
+use KrisKuiper\Validator\Blueprint\Messages\{
+    AcceptedNotEmpty,
+    After,
     Between,
     Before,
     Contains,
@@ -16,6 +18,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{After,
     Different,
     DifferentWithAll,
     Distinct,
+    EndsNotWith,
     EndsWith,
     Equals,
     In,
@@ -38,11 +41,15 @@ use KrisKuiper\Validator\Blueprint\Messages\{After,
     IsInt,
     IsJSON,
     IsMACAddress,
+    IsNotNull,
+    IsNull,
     IsNumber,
     IsScalar,
     IsString,
+    IsTimezone,
     IsTrue,
     IsURL,
+    IsUUID,
     IsUUIDv1,
     IsUUIDv3,
     IsUUIDv4,
@@ -68,15 +75,20 @@ use KrisKuiper\Validator\Blueprint\Messages\{After,
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    StartsNotWith,
     StartsWith,
     Symbols,
-    Words};
+    Words
+};
 
 trait MessageTrait
 {
-    public function custom(string $ruleName, string|int|float $message): self
+    /**
+     * Adds a new message for the acceptedNotEmpty rule
+     */
+    public function acceptedNotEmpty(string|int|float $message): self
     {
-        return $this->addMessage(new Custom($ruleName, $message));
+        return $this->addMessage(new AcceptedNotEmpty($message));
     }
 
     /**
@@ -144,6 +156,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for custom validation rules
+     */
+    public function custom(string $ruleName, string|int|float $message): self
+    {
+        return $this->addMessage(new Custom($ruleName, $message));
+    }
+
+    /**
      * Adds a new message for the different rule
      */
     public function different(string|int|float $message): self
@@ -165,6 +185,14 @@ trait MessageTrait
     public function distinct(string|int|float $message): self
     {
         return $this->addMessage(new Distinct($message));
+    }
+
+    /**
+     * Adds a new message for the endsNotWith rule
+     */
+    public function endsNotWith(string|int|float $message): self
+    {
+        return $this->addMessage(new EndsNotWith($message));
     }
 
     /**
@@ -346,6 +374,22 @@ trait MessageTrait
     /**
      * Adds a new message for the isNumber rule
      */
+    public function isNotNull(string|int|float $message): self
+    {
+        return $this->addMessage(new IsNotNull($message));
+    }
+
+    /**
+     * Adds a new message for the isNumber rule
+     */
+    public function isNull(string|int|float $message): self
+    {
+        return $this->addMessage(new IsNull($message));
+    }
+
+    /**
+     * Adds a new message for the isNumber rule
+     */
     public function isNumber(string|int|float $message): self
     {
         return $this->addMessage(new IsNumber($message));
@@ -368,6 +412,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the isTimezone rule
+     */
+    public function isTimezone(string|int|float $message): self
+    {
+        return $this->addMessage(new IsTimezone($message));
+    }
+
+    /**
      * Adds a new message for the isTrue rule
      */
     public function isTrue(string|int|float $message): self
@@ -381,6 +433,14 @@ trait MessageTrait
     public function isURL(string|int|float $message): self
     {
         return $this->addMessage(new IsURL($message));
+    }
+
+    /**
+     * Adds a new message for the isUUID rule
+     */
+    public function isUUID(string $message): self
+    {
+        return $this->addMessage(new IsUUID($message));
     }
 
     /**
@@ -581,6 +641,14 @@ trait MessageTrait
     public function same(string|int|float $message): self
     {
         return $this->addMessage(new Same($message));
+    }
+
+    /**
+     * Adds a new message for the startsNotWith rule
+     */
+    public function startsNotWith(string|int|float $message): self
+    {
+        return $this->addMessage(new StartsNotWith($message));
     }
 
     /**

@@ -120,14 +120,15 @@ class Validator
     }
 
     /**
-     * Resets the cache of the validator
+     * Resets the cache of the validator and executes the validation again
+     * @throws ValidatorException
      */
-    public function reset(): self
+    public function revalidate(): bool
     {
         $this->isValid = true;
         $this->isValidated = false;
 
-        return $this;
+        return $this->execute();
     }
 
     /**
@@ -158,6 +159,8 @@ class Validator
         if (true === $this->isValidated) {
             return $this->isValid;
         }
+
+        $this->isValidated = true;
 
         $this->blueprintParser->getFieldCollection()->each(function (Field $field) {
 

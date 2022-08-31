@@ -8,12 +8,12 @@ use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 class IsUUIDv1 extends AbstractRule
 {
-    public const NAME = 'isUUID1';
+    public const NAME = 'isUUIDv1';
 
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be a valid V1 UUID string';
+    protected string $message = 'Value should be a valid v1 UUID string';
 
     /**
      * @inheritdoc

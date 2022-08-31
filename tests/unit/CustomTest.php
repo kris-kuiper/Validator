@@ -68,7 +68,6 @@ final class CustomTest extends TestCase
         $this->assertSame(2, $executed);
     }
 
-
     /**
      * @throws ValidatorException
      */
@@ -85,6 +84,9 @@ final class CustomTest extends TestCase
         $this->assertSame('Invalid input', $validator->errors()->first('name')->getMessage());
     }
 
+    /**
+     * @throws ValidatorException
+     */
     public function testIfCustomRuleReturnsCorrectMessageWhenProvidingCustomMessage(): void
     {
         $validator = new Validator([
@@ -131,5 +133,37 @@ final class CustomTest extends TestCase
 
         $this->assertFalse($validator->execute());
         $this->assertSame('foobar', $validator->errors()->first('name')->getMessage());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfExceptionIsThrownWhenWrongCustomRuleNameIsProvided(): void
+    {
+        $this->expectException(ValidatorException::class);
+
+        $validator = new Validator([
+            'name' => 'Morris'
+        ]);
+
+        $validator->loadRule(new CustomRule());
+        $validator->field('name')->custom('foo');
+        $validator->execute();
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfExceptionIsThrownWhenCallbackIsNotSet(): void
+    {
+        $this->expectException(ValidatorException::class);
+
+        $validator = new Validator([
+            'name' => 'Morris'
+        ]);
+
+        $validator->loadRule(new CustomRule());
+        $validator->field('name')->custom('foo');
+        $validator->execute();
     }
 }

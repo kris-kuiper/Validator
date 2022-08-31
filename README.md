@@ -5,7 +5,7 @@
 - [Adding fields for validation](#adding-fields-for-validation)
 - [Execute validation](#execute-validation)
   - [Execute, fails and passes](#execute-fails-and-passes)
-  - [Reset validation](#reset-validation)
+  - [Re-validate](#re-validate)
 - [Validating arrays](#validating-arrays)
 - [Special "required" rules](#special-"required"-rules)
   - [Required](#required)
@@ -155,52 +155,38 @@ The validator will only run once to avoid i.e. multiple database lookups when ex
 
 
 
-#### Reset validation
+#### Re-validate
 
 By default, the validator caches the validation result. So if you run the same validator again, the validator won't run all the rules, middleware, etc. It will directly return the result of the previous run.
 
+To run the validator with all rules, middleware, etc. again, you can use the `revalidate()` method.
 
-
-##### Example 1:
-
-You can reset the validator by calling the `reset()` method.
+#####  Example:
 
 ```php
-$input = ['username' => 'morris'];
+$executed = 0;
+$validator = new Validator(['username' => 'Morris']);
 
-$validator = new Validator($input);
-$validator->field('username')->required();
+$customRule = static function () use (&$executed) {
 
+    $executed++;
+    return true;
+};
+
+$validator->custom('check-username', $customRule);
+$validator->field('username')->custom('check-username');
+
+//Execute validation
 $validator->execute();
-$validator->reset();
-$validator->execute(); //Without the reset, the validator won't run again
-```
+var_dump($executed); //1
 
+//Executing the validation again will have the same result
+$validator->execute();
+var_dump($executed); //Still 1
 
-
-#####  Example 2:
-
-```php
-$input = ['username' => ''];
-
-//The input is passed as reference
-$validator = new Validator(&$input);
-$validator->field('username')->required();
-
-$validator->execute(); //false
-
-//Input is altered
-$input['username'] = 'morris';
-
-$validator->execute(); //false
-$validator->passes(); //false
-$validator->fails(); //true
-
-$validator->reset();
-
-$validator->execute(); //true
-$validator->passes(); //true
-$validator->fails(); //false
+//Rerun the validation with all rules, middleware, etc.
+$validator->revalidate();
+var_dump($executed); //2
 ```
 
 
@@ -376,35 +362,57 @@ $validator->field('fieldname')->min(1)->max(5)->bail();
 Below is a list with all predefined validation rules.
 
 |                                             |                                   |                                               |
-|:--------------------------------------------|-----------------------------------|-----------------------------------------------|
-| [After](#after) (date)                      | [Is array](#is-array)             | [Is UUID v4](#is-uuid-v4)                     |
-| [Before](#before) (date)                    | [Is boolean](#is-boolean)         | [Is UUID v5](#is-uuid-v5)                     |
-| [Between](#between)                         | [Is countable](#is-countable)     | [Length](#length)                             |
-| [Contains](#contains)                       | [Is date](#is-date)               | [Length between](#length-between)             |
-| [Contains letter](#contains-letter)         | [Is email](#is-email)             | [Max](#max)                                   |
-| [Contains mixed case](#contains-mixed-case) | [Is empty](#is-empty)             | [Max length](#max-length)                     |
-| [Contains number](#contains-number)         | [Is false](#is-false)             | [Max words](#max-words)                       |
-| [Contains symbol](#contains-symbol)         | [Is IP](#is-ip)                   | [Min](#min)                                   |
-| [Count](#count)                             | [Is IP Private](#is-ip-private)   | [Min length](#min-length)                     |
-| [Count between](#count-between)             | [Is IP Public](#is-ip-public)     | [Min words](#min-words)                       |
-| [Count max](#count-max)                     | [Is IP v4](#is-ip-v4)             | [Not contains](#not-contains)                 |
-| [Count min](#count-min)                     | [Is IP v6](#is-ip-v6)             | [Not In](#not-in)                             |
-| [Different](#different)                     | [Is int](#is-int)                 | [Present](#present)                           |
-| [Different with all](#different-with-all)   | [Is JSON](#is-json)               | [Regex](#regex)                               |
-| [Distinct](#distinct)                       | [Is MAC address](#is-mac-address) | [Required](#required)                         |
-| [Ends with](#ends-with)                     | [Is number](#is-number)           | [Required with](#required-with)               |
-| [Equals](#equals)                           | [Is scalar](#is-scalar)           | [Required with all](#required-with-all)       |
-| [In](#in)                                   | [Is string](#is-string)           | [Required without](#required-without)         |
-| [Is accepted](#is-accepted)                 | [Is true](#is-true)               | [Required without all](#required-without-all) |
-| [Is alpha](#is-alpha)                       | [Is URL](#is-url)                 | [Same](#same)                                 |
-| [Is alpha dash](#is-alpha-dash)             | [Is UUID v1](#is-uuid-v1)         | [Starts with](#starts-with)                   |
-| [Is alpha numeric](#is-alpha-numeric)       | [Is UUID v3](#is-uuid-v3)         | [Words](#words)                               |
+| ------------------------------------------- | --------------------------------- | --------------------------------------------- |
+| [Accepted not empty](#accepted-not-empty)   | [Is array](#is-array)             | [Is UUID v3](#is-uuid-v3)                     |
+| [After (date)](#after)                      | [Is boolean](#is-boolean)         | [Is UUID v4](#is-uuid-v4)                     |
+| [Before (date)](#before)                    | [Is countable](#is-countable)     | [Is UUID v5](#is-uuid-v5)                     |
+| [Between](#between)                         | [Is date](#is-date)               | [Length](#length)                             |
+| [Contains](#contains)                       | [Is email](#is-email)             | [Length between](#length-between)             |
+| [Contains letter](#contains-letter)         | [Is empty](#is-empty)             | [Max](#max)                                   |
+| [Contains mixed case](#contains-mixed-case) | [Is false](#is-false)             | [Max length](#max-length)                     |
+| [Contains number](#contains-number)         | [Is IP](#is-ip)                   | [Max words](#max-words)                       |
+| [Contains symbol](#contains-symbol)         | [Is IP Private](#is-ip-private)   | [Min](#min)                                   |
+| [Count](#count)                             | [Is IP Public](#is-ip-public)     | [Min length](#min-length)                     |
+| [Count between](#count-between)             | [Is IP v4](#is-ip-v4)             | [Min words](#min-words)                       |
+| [Count max](#count-max)                     | [Is IP v6](#is-ip-v6)             | [Not contains](#not-contains)                 |
+| [Count min](#count-min)                     | [Is int](#is-int)                 | [Not In](#not-in)                             |
+| [Different](#different)                     | [Is JSON](#is-json)               | [Present](#present)                           |
+| [Different with all](#different-with-all)   | [Is MAC address](#is-mac-address) | [Regex](#regex)                               |
+| [Distinct](#distinct)                       | [Is null](#is-null)               | [Required](#required)                         |
+| [Ends not with](#ends-not-with)             | [Is number](#is-number)           | [Required with](#required-with)               |
+| [Ends with](#ends-with)                     | [Is scalar](#is-scalar)           | [Required with all](#required-with-all)       |
+| [Equals](#equals)                           | [Is string](#is-string)           | [Required without](#required-without)         |
+| [In](#in)                                   | [Is timezone](#is-timezone)       | [Required without all](#required-without-all) |
+| [Is accepted](#is-accepted)                 | [Is true](#is-true)               | [Same](#same)                                 |
+| [Is alpha](#is-alpha)                       | [Is URL](#is-url)                 | [Starts not with](#starts-not-with)           |
+| [Is alpha dash](#is-alpha-dash)             | [Is UUID](#is-uuid-v1)            | [Starts with](#starts-with)                   |
+| [Is alpha numeric](#is-alpha-numeric)       | [Is UUID v1](#is-uuid-v1)         | [Words](#words)                               |
+
+
+
+##### Accepted not empty
+
+The field under validation must be "yes", "on", "1", "true", `1`, or `true` if another field's value is not empty.
+
+```php
+$data = ['field' => 'yes', 'other_field' => 'foo'];
+$validator = new Validator($data);
+
+$valdiator->field('fieldName')->acceptedNotEmpty('other_field');
+```
+
+You may also provide the values which should be considered as accepted:
+```php
+$valdiator->field('fieldName')->acceptedNotEmpty('other_field', ['accepted', 'agreed', 'checked']);
+```
+
+See also the [Is accepted](#is-accepted) rule.
 
 
 
 ##### After
 
-Checks if the data under validation comes after a given date
+Checks if the data under validation comes after a given date.
 
 ```php
 $valdiator->field('fieldName')->after('2000-01-01', 'Y-m-d');
@@ -415,7 +423,7 @@ See also the [Before](#before) rule.
 
 ##### Before
 
-Checks if the data under validation comes before a given date
+Checks if the data under validation comes before a given date.
 
 ```php
 $valdiator->field('fieldName')->before('2030-01-01', 'Y-m-d');
@@ -426,7 +434,7 @@ See also the [After](#after) rule.
 
 ##### Between
 
-Checks if the data under validation (number) is between a given minimum and maximum
+Checks if the data under validation (number) is between a given minimum and maximum.
 
 ```php
 $valdiator->field('fieldName')->between(5, 10.5);
@@ -436,7 +444,7 @@ $valdiator->field('fieldName')->between(5, 10.5);
 
 ##### Contains
 
-Checks if the data under validation contains a given value
+Checks if the data under validation contains a given value.
 
 ```php
 $valdiator->field('fieldName')->contains('abc');
@@ -451,7 +459,7 @@ $valdiator->field('fieldName')->contains('ABC', true);
 
 ##### Contains letter
 
-Checks if the data under validation has at least one letter
+Checks if the data under validation has at least one letter.
 
 ```php
 $valdiator->field('fieldName')->containsLetter();
@@ -461,7 +469,7 @@ $valdiator->field('fieldName')->containsLetter();
 
 ##### Contains mixed case
 
-Checks if the data under validation has at least one uppercase and one lowercase letter
+Checks if the data under validation has at least one uppercase and one lowercase letter.
 
 ```php
 $valdiator->field('fieldName')->containsMixedCase();
@@ -471,7 +479,7 @@ $valdiator->field('fieldName')->containsMixedCase();
 
 ##### Contains number
 
-Checks if the data under validation has at least one number
+Checks if the data under validation has at least one number.
 
 ```php
 $valdiator->field('fieldName')->containsNumber();
@@ -481,7 +489,7 @@ $valdiator->field('fieldName')->containsNumber();
 
 ##### Contains symbol
 
-Checks if the data under validation has at least one symbol
+Checks if the data under validation has at least one symbol.
 
 ```php
 $valdiator->field('fieldName')->containsSymbol();
@@ -491,7 +499,7 @@ $valdiator->field('fieldName')->containsSymbol();
 
 ##### Count
 
-Checks if the data under validation contains a given amount of items
+Checks if the data under validation contains a given amount of items.
 
 ```php
 $valdiator->field('fieldName')->count(10);
@@ -501,7 +509,7 @@ $valdiator->field('fieldName')->count(10);
 
 ##### Count between
 
-Checks if the data under validation contains an amount of items between a given minimum and maximum
+Checks if the data under validation contains an amount of items between a given minimum and maximum.
 
 ```php
 $valdiator->field('fieldName')->countBetween(5, 10);
@@ -511,7 +519,7 @@ $valdiator->field('fieldName')->countBetween(5, 10);
 
 ##### Count max
 
-Checks if the data under validation contains no more items than a given maximum amount
+Checks if the data under validation contains no more items than a given maximum amount.
 
 ```php
 $valdiator->field('fieldName')->countMax(10);
@@ -521,7 +529,7 @@ $valdiator->field('fieldName')->countMax(10);
 
 ##### Count min
 
-Checks if the data under validation contains at least a given amount of items
+Checks if the data under validation contains at least a given amount of items.
 
 ```php
 $valdiator->field('fieldName')->countMin(5);
@@ -531,7 +539,7 @@ $valdiator->field('fieldName')->countMin(5);
 
 ##### Different
 
-Check if the data under validation does not match one of the values of one or more fields
+Check if the data under validation does not match one of the values of one or more fields.
 
 ```php
 $valdiator->field('fieldName')->different('otherFieldName', 'anotherFieldName');
@@ -541,7 +549,7 @@ $valdiator->field('fieldName')->different('otherFieldName', 'anotherFieldName');
 
 ##### Different with all
 
-Check if the data under validation does not match all the values of one or more fields
+Check if the data under validation does not match all the values of one or more fields.
 
 ```php
 $valdiator->field('fieldName')->differentWithAll('otherFieldName', 'anotherFieldName');
@@ -559,9 +567,26 @@ $valdiator->field('fieldName')->distinct();
 
 
 
+##### Ends not with
+
+Checks if the data under validation does not end with a given value.
+
+```php
+$valdiator->field('fieldName')->endsNotWith('abc');
+```
+
+Use the second parameter to match case-sensitive:
+```php
+$valdiator->field('fieldName')->endsNotWith('ABC', true);
+```
+
+See also the [Ends with](#ends-with), [Starts with](#starts-with) and [Starts not with](#starts-not-with) rule.
+
+
+
 ##### Ends with
 
-Checks if the data under validation ends with a given value
+Checks if the data under validation ends with a given value.
 
 ```php
 $valdiator->field('fieldName')->endsWith('abc');
@@ -572,13 +597,13 @@ Use the second parameter to match case-sensitive:
 $valdiator->field('fieldName')->endsWith('ABC', true);
 ```
 
-See also the [StartsWith](#starts-with) rule.
+See also the [Ends not with](#ends-not-with), [Starts with](#starts-with) and [Starts not with](#starts-not-with) rule.
 
 
 
 ##### Equals
 
-Checks if the data under validation equals a provided value
+Checks if the data under validation equals a provided value.
 
 ```php
 $valdiator->field('fieldName')->equals('abc');
@@ -593,7 +618,7 @@ $valdiator->field('fieldName')->equals('ABC', true);
 
 ##### In
 
-Checks if the data under validation exists in a given array
+Checks if the data under validation exists in a given array.
 
 ```php
 $valdiator->field('fieldName')->in(['foo', 'bar']);
@@ -610,7 +635,7 @@ See also the [not in](#not-in) rule.
 
 ##### Is array
 
-Checks if the data under validation is an array
+Checks if the data under validation is an array.
 
 ```php
 $valdiator->field('fieldName')->isArray();
@@ -635,7 +660,7 @@ $valdiator->field('fieldName')->isAccepted(['accept', 'agree', 'ok']);
 
 ##### Is alpha
 
-Checks if the field under validation only contains alpha characters (a-z and A-Z)
+Checks if the field under validation only contains alpha characters (a-z and A-Z).
 
 ```php
 $valdiator->field('fieldName')->isAlpha();
@@ -645,7 +670,7 @@ $valdiator->field('fieldName')->isAlpha();
 
 ##### Is alpha dash
 
-Checks if the field under validation only contains letters and numbers, dashes and underscores
+Checks if the field under validation only contains letters and numbers, dashes and underscores.
 
 ```php
 $valdiator->field('fieldName')->isAlphaDash();
@@ -655,7 +680,7 @@ $valdiator->field('fieldName')->isAlphaDash();
 
 ##### Is alpha numeric
 
-Checks if the field under validation only exists off letters and numbers
+Checks if the field under validation only exists off letters and numbers.
 
 ```php
 $valdiator->field('fieldName')->isAlphaNumeric();
@@ -665,7 +690,7 @@ $valdiator->field('fieldName')->isAlphaNumeric();
 
 ##### Is boolean
 
-Checks if the data under validation is a boolean
+Checks if the data under validation is a boolean.
 
 ```php
 $valdiator->field('fieldName')->isBool();
@@ -675,7 +700,7 @@ $valdiator->field('fieldName')->isBool();
 
 ##### Is countable
 
-Checks if the data under validation is countable
+Checks if the data under validation is countable.
 
 ```php
 $valdiator->field('fieldName')->isCountable();
@@ -685,7 +710,7 @@ $valdiator->field('fieldName')->isCountable();
 
 ##### Is date
 
-Checks if the data under validation is a valid date
+Checks if the data under validation is a valid date.
 
 ```php
 $valdiator->field('fieldName')->isDate('Y-m-d');
@@ -695,7 +720,7 @@ $valdiator->field('fieldName')->isDate('Y-m-d');
 
 ##### Is email
 
-Checks if the data under validation is a valid email address
+Checks if the data under validation is a valid email address.
 
 ```php
 $valdiator->field('fieldName')->isEmail();
@@ -715,7 +740,7 @@ $valdiator->field('fieldName')->isEmpty();
 
 ##### Is false
 
-Checks if the data under validation is boolean false
+Checks if the data under validation is boolean false.
 
 ```php
 $valdiator->field('fieldName')->isFalse();
@@ -725,7 +750,7 @@ $valdiator->field('fieldName')->isFalse();
 
 ##### Is int
 
-Checks if the data under validation is an integer number
+Checks if the data under validation is an integer number.
 
 ```php
 $valdiator->field('fieldName')->isInt();
@@ -740,7 +765,7 @@ $valdiator->field('fieldName')->isInt(true);
 
 ##### Is IP
 
-Checks if the data under validation is a valid IP address (v4 or v6)
+Checks if the data under validation is a valid IP address (v4 or v6).
 
 ```php
 $valdiator->field('fieldName')->isIP();
@@ -750,7 +775,7 @@ $valdiator->field('fieldName')->isIP();
 
 ##### Is IP private 
 
-Checks if the data under validation is a private IP address (v4 or v6)
+Checks if the data under validation is a private IP address (v4 or v6).
 
 ```php
 $valdiator->field('fieldName')->isIPPrivate();
@@ -760,7 +785,7 @@ $valdiator->field('fieldName')->isIPPrivate();
 
 ##### Is IP public 
 
-Checks if the data under validation is a public ip address (v4 or v6)
+Checks if the data under validation is a public ip address (v4 or v6).
 
 ```php
 $valdiator->field('fieldName')->isIPPublic();
@@ -770,7 +795,7 @@ $valdiator->field('fieldName')->isIPPublic();
 
 ##### Is IP V4
 
-Checks if the data under validation is a valid IP V4 address
+Checks if the data under validation is a valid IP V4 address.
 
 ```php
 $valdiator->field('fieldName')->isIPV4();
@@ -780,7 +805,7 @@ $valdiator->field('fieldName')->isIPV4();
 
 ##### Is IP V6
 
-Checks if the data under validation is a valid IP V6 address
+Checks if the data under validation is a valid IP V6 address.
 
 ```php
 $valdiator->field('fieldName')->isIPV6();
@@ -790,7 +815,7 @@ $valdiator->field('fieldName')->isIPV6();
 
 ##### Is JSON
 
-Checks if the data under validation is valid JSON
+Checks if the data under validation is valid JSON.
 
 ```php
 $valdiator->field('fieldName')->isJSON();
@@ -813,9 +838,30 @@ $valdiator->field('fieldName')->isMACAddress(':');
 
 
 
+##### Is not NULL
+
+Checks if the data under validation is not NULL.
+
+```php
+$valdiator->field('fieldName')->isNotNull();
+```
+See also the [Is null](#is-null) rule.
+
+
+
+##### Is NULL
+
+Checks if the data under validation is NULL.
+
+```php
+$valdiator->field('fieldName')->isNull();
+```
+See also the [Is not null](#is-not-null) rule.
+
+
 ##### Is number
 
-Checks if the data under validation is an integer number
+Checks if the data under validation is an integer number.
 
 ```php
 $valdiator->field('fieldName')->isNumber();
@@ -830,7 +876,7 @@ $valdiator->field('fieldName')->isNumber(true);
 
 ##### Is scalar
 
-Checks if the data under validation is a scalar type
+Checks if the data under validation is a scalar type.
 
 ```php
 $valdiator->field('fieldName')->isScalar();
@@ -840,7 +886,7 @@ $valdiator->field('fieldName')->isScalar();
 
 ##### Is string
 
-Checks if the data under validation is of the type string
+Checks if the data under validation is of the type string.
 
 ```php
 $valdiator->field('fieldName')->isString();
@@ -848,9 +894,26 @@ $valdiator->field('fieldName')->isString();
 
 
 
+##### Is timezone
+
+Checks if the data under validation is a valid timezone.
+
+```php
+$valdiator->field('fieldName')->isTimezone();
+```
+
+Use the first parameter to search case-insensitive:
+```php
+$valdiator->field('fieldName')->isTimezone(true);
+```
+
+
+*Note: see [timezones](https://www.php.net/manual/en/datetimezone.listidentifiers.php) on php.net for more information.*
+
+
 ##### Is true
 
-Checks if value equals boolean true
+Checks if value equals boolean true.
 
 ```php
 $valdiator->field('fieldName')->isTrue();
@@ -873,9 +936,19 @@ $valdiator->field('fieldName')->isURL(true);
 
 
 
+##### Is UUID
+
+Checks if the data under validation is a valid UUID v1, v3, v4 or v5 entity.
+
+```php
+$valdiator->field('fieldName')->isUUID();
+```
+
+
+
 ##### Is UUID v1
 
-Checks if the data under validation is a valid UUID v1 entity
+Checks if the data under validation is a valid UUID v1 entity.
 
 ```php
 $valdiator->field('fieldName')->isUUIDv1();
@@ -885,7 +958,7 @@ $valdiator->field('fieldName')->isUUIDv1();
 
 ##### Is UUID v3
 
-Checks if the data under validation is a valid UUID v3 entity
+Checks if the data under validation is a valid UUID v3 entity.
 
 ```php
 $valdiator->field('fieldName')->isUUIDv3();
@@ -895,7 +968,7 @@ $valdiator->field('fieldName')->isUUIDv3();
 
 ##### Is UUID v4
 
-Checks if the data under validation is a valid UUID v4 entity
+Checks if the data under validation is a valid UUID v4 entity.
 
 ```php
 $valdiator->field('fieldName')->isUUIDv4();
@@ -905,7 +978,7 @@ $valdiator->field('fieldName')->isUUIDv4();
 
 ##### Is UUID v5
 
-Checks if the data under validation is a valid UUID v4 entity
+Checks if the data under validation is a valid UUID v4 entity.
 
 ```php
 $valdiator->field('fieldName')->isUUIDv5();
@@ -915,7 +988,7 @@ $valdiator->field('fieldName')->isUUIDv5();
 
 ##### Length
 
-Checks if the value character length is the given length
+Checks if the value character length is the given length.
 
 ```php
 $valdiator->field('fieldName')->length(int $characters);
@@ -925,7 +998,7 @@ $valdiator->field('fieldName')->length(int $characters);
 
 ##### Length between
 
-Checks if the data under validation is a valid URL
+Checks if the data under validation is a valid URL.
 
 ```php
 $valdiator->field('fieldName')->lengthBetween(int $minimum, int $maximum);
@@ -935,7 +1008,7 @@ $valdiator->field('fieldName')->lengthBetween(int $minimum, int $maximum);
 
 ##### Max
 
-Checks if the value is less than the given maximum amount
+Checks if the value is less than the given maximum amount.
 
 ```php
 $valdiator->field('fieldName')->max(10.5);
@@ -945,7 +1018,7 @@ $valdiator->field('fieldName')->max(10.5);
 
 ##### Max length
 
-Checks if the amount of characters is less or equal than the given amount
+Checks if the amount of characters is less or equal than the given amount.
 
 ```php
 $valdiator->field('fieldName')->maxLength(10);
@@ -970,7 +1043,7 @@ $valdiator->field('fieldName')->maxWords(10, 5, false);
 
 ##### Min
 
-Checks if the field under validation is at least a given minimum
+Checks if the field under validation is at least a given minimum.
 
 ```php
 $valdiator->field('fieldName')->min(10.5;
@@ -980,7 +1053,7 @@ $valdiator->field('fieldName')->min(10.5;
 
 ##### Min length
 
-Checks if the amount of characters is at least a given amount
+Checks if the amount of characters is at least a given amount.
 
 ```php
 $valdiator->field('fieldName')->minLength(5);
@@ -1005,7 +1078,7 @@ $valdiator->field('fieldName')->minWords(10, 5, false);
 
 ##### Not contains
 
-Checks if the data under validation does not contain a given value
+Checks if the data under validation does not contain a given value.
 
 ```php
 $valdiator->field('fieldName')->notContains($value, bool $caseSensitive = false);
@@ -1015,7 +1088,7 @@ $valdiator->field('fieldName')->notContains($value, bool $caseSensitive = false)
 
 ##### Not in
 
-Checks if the data under validation exists in a given array
+Checks if the data under validation exists in a given array.
 
 ```php
 $valdiator->field('fieldName')->notIn(['foo', 'bar']);
@@ -1040,7 +1113,7 @@ $valdiator->field('fieldName')->present();
 
 ##### Regex
 
-Check if value matches a regular expression pattern
+Check if value matches a regular expression pattern.
 
 ```php
 $valdiator->field('fieldName')->regex('/[a-z]+/');
@@ -1050,7 +1123,7 @@ $valdiator->field('fieldName')->regex('/[a-z]+/');
 
 ##### Required
 
-Adds a new rule that will require the field/value (null, '', [] are considered empty)
+Adds a new rule that will require the field/value (null, '', [] are considered empty).
 
 ```php
 $valdiator->field('fieldName')->required();
@@ -1100,7 +1173,7 @@ $valdiator->field('fieldName')->requiredWithoutAll(string ...$fieldNames);
 
 ##### Same
 
-Check if value matches a value of a given field name
+Check if value matches a value of a given field name.
 
 ```php
 $valdiator->field('password')->same('password-repeat');
@@ -1108,9 +1181,26 @@ $valdiator->field('password')->same('password-repeat');
 
 
 
+##### Starts not with
+
+Checks if the data under validation does not begin with a given value.
+
+```php
+$valdiator->field('fieldName')->startsNotWith('abc');
+```
+
+Use the second parameter to search case-sensitive:
+```php
+$valdiator->field('fieldName')->startsNotWith('ABC', true);
+```
+
+See also the [Starts with](#starts-with), [Ends with](#ends-with) and [Ends not with](#ends-not-with) rule.
+
+
+
 ##### Starts with
 
-Checks if the data under validation begins with a given value
+Checks if the data under validation begins with a given value.
 
 ```php
 $valdiator->field('fieldName')->startsWith('abc');
@@ -1121,13 +1211,13 @@ Use the second parameter to search case-sensitive:
 $valdiator->field('fieldName')->startsWith('ABC', true);
 ```
 
-See also the [Ends with](#ends-with) rule.
+See also the [Ends with](#ends-with), [Ends not with](#ends-not-with) and [Starts not with](#starts-not-with) rule.
 
 
 
 ##### Words
 
-Checks if the amount of words is at least a given amount
+Checks if the amount of words is at least a given amount.
 
 ```php
 $valdiator->field('fieldName')->words(int $words, int $minCharacters = 2, bool $onlyAlphanumeric = true);

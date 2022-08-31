@@ -44,11 +44,6 @@ class PathTranslator extends AbstractTranslator
         }
     }
 
-    public function merge(self $pathTranslator): void
-    {
-        $this->data = array_replace_recursive($pathTranslator->getData(), $this->data);
-    }
-
     /**
      * @inheritdoc
      */
@@ -79,23 +74,6 @@ class PathTranslator extends AbstractTranslator
     public function get(string|int|float $key): array
     {
         return $this->path($key)->getValues();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function pull(string|int|float $key): PathCollection
-    {
-        $pathCollection = new PathCollection();
-        $paths = $this->paths(explode('.', $key), $this->data, $pathCollection, []);
-
-        /** @var Path $item */
-        foreach ($paths as $item) {
-            $pathCollection->append(new Path($item->getPath(), $item->getValue()));
-            $this->removeFromKeys($item->getPath(), $this->data);
-        }
-
-        return $pathCollection;
     }
 
     /**

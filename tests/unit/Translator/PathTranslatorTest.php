@@ -138,4 +138,63 @@ final class PathTranslatorTest extends TestCase
         $this->assertSame($translator->path('*.*.age')->current()->getValue(), 52);
         $this->assertSame($translator->path('*.*.age')->current()->getPath(), ['people', 0, 'age']);
     }
+
+
+    public function testIfCorrectArrayIsReturnedUsingConstructorToSetValues(): void
+    {
+        $data = ['foo' => 'bar'];
+
+        $translator = new PathTranslator($data);
+        $this->assertSame($data, $translator->getData());
+    }
+
+    public function testIfCorrectArrayIsReturnedWhenAddingNewKey(): void
+    {
+        $data = ['foo' => 'bar'];
+
+        $translator = new PathTranslator($data);
+        $translator->add('quez', 'bazz');
+
+        $this->assertSame(['foo' => 'bar', 'quez' => 'bazz'], $translator->getData());
+    }
+
+    public function testIfCorrectArrayIsReturnedWhenOverwritingKey(): void
+    {
+        $data = ['foo' => 'bar'];
+
+        $translator = new PathTranslator($data);
+        $translator->set('foo', 'bazz');
+
+        $this->assertSame(['foo' => 'bazz'], $translator->getData());
+    }
+
+    public function testIfCorrectResultIsReturnedWhenCheckingIfStringKeyExists(): void
+    {
+        $data = [
+            'foo' => 'bar',
+            'quez' => [
+                '1' => ['foo' => true],
+                '2' => ['foo' => true]
+            ]
+        ];
+
+        $translator = new PathTranslator($data);
+        $translator->set('foo', 'bazz');
+
+        $this->assertTrue($translator->has('foo'));
+        $this->assertTrue($translator->has('quez.*.foo'));
+    }
+
+    public function testIfCorrectArrayIsReturnedWhenRemovingKey(): void
+    {
+        $data = [
+            'foo' => 'bar',
+            'quez' =>'bazz'
+        ];
+
+        $translator = new PathTranslator($data);
+        $translator->remove('foo');
+
+        $this->assertSame(['quez' => 'bazz'], $translator->getData());
+    }
 }

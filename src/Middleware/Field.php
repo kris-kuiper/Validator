@@ -40,12 +40,4 @@ class Field implements MiddlewareFieldInterface
     {
         return $this->field->getFieldName();
     }
-
-    /**
-     * Sets the bailed option to prevent further validation for this field
-     */
-    public function bail(): void
-    {
-        $this->field->setBailed(true);
-    }
 }

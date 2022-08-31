@@ -32,14 +32,6 @@ class CombineProxy
     }
 
     /**
-     * Returns the fields with their values
-     */
-    public function getFields(): FieldCollection
-    {
-        return $this->fieldCollection;
-    }
-
-    /**
      * Returns the value of the combined fields
      * @throws ValidatorException
      */

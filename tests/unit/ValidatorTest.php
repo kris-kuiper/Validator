@@ -8,6 +8,9 @@ use KrisKuiper\Validator\Blueprint\Rules\Between;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
+use tests\unit\assets\BailMiddleware;
+use tests\unit\assets\ExceptionRule;
+use tests\unit\assets\GetFieldNameMiddleware;
 use tests\unit\assets\LeadingZeroMiddleware;
 
 final class ValidatorTest extends TestCase
@@ -63,6 +66,19 @@ final class ValidatorTest extends TestCase
 
         $this->assertTrue($validator->execute());
         $this->assertSame(['date' => '1952-05-02'], $validator->validatedData()->only('date')->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfCorrectFieldNameIsReturnedWhenUsingMiddleware(): void
+    {
+        $validator = new Validator(['foo' => 'bar']);
+        $validator->middleware('foo')->load(new GetFieldNameMiddleware());
+        $validator->field('foo')->required();
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => 'foo'], $validator->validatedData()->only('foo')->toArray());
     }
 
     /**
@@ -368,35 +384,63 @@ final class ValidatorTest extends TestCase
         $this->assertSame(['people', 'age'], $path->getPath());
     }
 
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfExceptionIsThrownWhenNotProvidingCorrectRuleParameter(): void
+    {
+        $this->expectException(ValidatorException::class);
 
-
+        $rule = new ExceptionRule();
+        $rule->getParameter('foo');
+    }
 
     /**
      * @throws ValidatorException
      */
-//    public function testShouldReturnCorrectAmountOfErrorsWhenUsingDistinctMethodAndWildcards(): void
-//    {
-//        $data = [
-//            'product' => [
-//                'option 1',
-//            ]
-//        ];
-//
-//        $validator = new Validator($data);
-//        $validator->field('product.1')->endsWith('bar');
-//        $validator->field('product.*')->between(1, 5)->startsWith('foo');
-//        $validator->execute();
-//
-//        foreach ($validator->errors()->distinct() as $error) {
-//            var_dump($error->getFieldName(), $error->getMessage());
-//        }
-//
-//        exit();
-//        $this->assertCount(3, $validator->errors());
-//        $this->assertCount(2, $validator->errors()->distinct());
-//    }
+    public function testIfOppositeValidationValuesAreReturnedWhenValidationFails(): void
+    {
+        $validator = new Validator();
+        $validator->field('foo')->required();
+
+        $this->assertFalse($validator->passes());
+        $this->assertTrue($validator->fails());
+    }
 
     /**
      * @throws ValidatorException
      */
+    public function testIfOppositeValidationValuesAreReturnedWhenValidationPasses(): void
+    {
+        $validator = new Validator(['foo' => 'bar']);
+        $validator->field('foo')->required();
+
+        $this->assertTrue($validator->passes());
+        $this->assertFalse($validator->fails());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenValuesAreAlteredAndValidationIsRevalidated(): void
+    {
+        $executed = 0;
+        $validator = new Validator(['foo' => 25]);
+
+        $custom = static function () use (&$executed) {
+
+            $executed++;
+            return true;
+        };
+
+        $validator->custom('custom', $custom);
+        $validator->field('foo')->custom('custom');
+
+        $this->assertTrue($validator->execute());
+        $this->assertTrue($validator->execute());
+        $this->assertSame(1, $executed);
+
+        $this->assertTrue($validator->revalidate());
+        $this->assertSame(2, $executed);
+    }
 }

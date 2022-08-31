@@ -1,3 +1,6 @@
 .idea
 vendor
 .phpunit.result.cache
+coverage
+coverage.xml
+codecov

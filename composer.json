@@ -1,6 +1,7 @@
 {
   "name": "kris-kuiper/validator",
-  "description": "Validation of (form) array.",
+  "type": "library",
+  "description": "Modern PHP validator for validating forms and/or array's on steriods.",
   "keywords": [
     "modern",
     "validate",
@@ -10,7 +11,7 @@
     "form",
     "array"
   ],
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "authors": [
     {
       "name": "Kris Kuiper",
@@ -38,5 +39,7 @@
       "phpro/grumphp": true,
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

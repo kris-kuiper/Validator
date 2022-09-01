@@ -7,7 +7,7 @@ Modern PHP validator
 [![codecov](https://codecov.io/gh/kris-kuiper/validator/branch/master/graph/badge.svg)](https://codecov.io/gh/kris-kuiper/validator)
 
 - [Introduction](#introduction)
-- [Introduction](#introduction)
+- [Head first example](#head-first-example)
 - [Installation](#installation)
 - [Adding fields for validation](#adding-fields-for-validation)
 - [Execute validation](#execute-validation)

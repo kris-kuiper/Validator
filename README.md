@@ -1,12 +1,13 @@
 Modern PHP validator
 ====================
 
-[![Latest Stable Version](http://poser.pugx.org/kris-kuiper/validator/v?style=for-the-badge)](https://packagist.org/packages/kris-kuiper/validator)
-[![License](http://poser.pugx.org/kris-kuiper/validator/license?style=for-the-badge)](https://packagist.org/packages/kris-kuiper/validator)
-[![PHP Version Require](http://poser.pugx.org/kris-kuiper/validator/require/php?style=for-the-badge)](https://packagist.org/packages/kris-kuiper/validator)
-
+[![Latest Stable Version](http://poser.pugx.org/kris-kuiper/validator/v)](https://packagist.org/packages/kris-kuiper/validator)
+[![License](http://poser.pugx.org/kris-kuiper/validator/license)](https://packagist.org/packages/kris-kuiper/validator)
+[![PHP Version Require](http://poser.pugx.org/kris-kuiper/validator/require/php)](https://packagist.org/packages/kris-kuiper/validator)
+[![codecov](https://codecov.io/gh/kris-kuiper/validator/branch/master/graph/badge.svg)](https://codecov.io/gh/kris-kuiper/validator)
 
 - [Introduction](#introduction)
+- [Head first example](#head-first-example)
 - [Installation](#installation)
 - [Adding fields for validation](#adding-fields-for-validation)
 - [Execute validation](#execute-validation)
@@ -53,30 +54,30 @@ Validating incoming data or array's should not be hard. Meet Modern PHP validato
 
 Here are a couple of the many perks of the validator:
 
-- 65+ predefined validation rules;
+- 70+ predefined validation rules;
 - No new syntax you need to learn as in the case with i.e. Laravel Validator. Your editor/IDE can complete every validation rule, custom message, middleware, etc. out of the box.
-- Easy retrieving the validated data after validation;
-- Use pre-defined middleware or create your own;
-- Combine multiple fields as one for single validation (i.e. day, month, year inputs as a single date field for validation);
-- Use validation blueprints to extend other validators for [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) method;
-- Define you own validation rules and custom error messages.
+- Easy [retrieving the validated data](#working-with-validated-data) after validation;
+- Use pre-defined [middleware](#predefined-middleware) or [create your own](#custom-middleware);
+- [Combine](#combining-fields-for-validation) multiple fields as one for single validation (i.e. day, month, year inputs as a single date field for validation);
+- Use validation [blueprints](#using-blueprints) to extend other validators for [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) method;
+- Define you [own validation rules](#custom-validation-rules) and [custom error messages](#setting-custom-error-messages).
 
 
 
 The validator provides several approaches to validate your application's (incoming) data. It makes it a breeze to validate form submit values as combining multiple input for single validation. It supports middleware and custom validation rules and error messages. It will also returns the validated data to insert the data into i.e. a database.
 
-Let's dive directly into an example:
+## Head first example:
 
 ```php
 $data = [
-	'programmers' => [
-		'name' => 'Morris',
-		'email' => 'morris@domain.com'
-	],
-	'developers' => [
-		'name' => 'Smith',
-		'email' => 'smith@domain.com'
-	],
+    'programmers' => [
+        'name' => 'Morris',
+        'email' => 'morris@domain.com'
+    ],
+    'developers' => [
+        'name' => 'Smith',
+        'email' => 'smith@domain.com'
+    ],
     'department' => 'office',
     'color' => 'black'
 ];
@@ -1242,7 +1243,6 @@ Although there is a large number of validation rules, you may wish to specify so
 Below is a blueprint/example of a custom rule:
 
 ```php
-<?php
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
 use KrisKuiper\Validator\Blueprint\Custom\Current;
 
@@ -1324,7 +1324,7 @@ $validator->field('name')->custom('length', ['min' => 5]);
 $validator->messages('name')->custom('length', 'Invalid value, at least :min characters');
 
 if($validator->passes()) {
- 	//Validation passes   
+    //Validation passes   
 }
 ```
 
@@ -1349,8 +1349,8 @@ $validator = new Validator($data);
 $validator
     ->field('reason')
     ->conditional(function(Current $current) {
-	    return $current->getValue('amount') > 99;
-	})
+        return $current->getValue('amount') > 99;
+    })
     ->required()
     ->maxLength(2000);
 
@@ -1458,7 +1458,7 @@ You can also check if there are any errors by calling the `count()`method:
 
 ```php
 if($validator->errors()->count() > 0) {
-	//Validator has errors
+    //Validator has errors
 }
 ```
 
@@ -1895,7 +1895,12 @@ use KrisKuiper\Validator\Validator;
 
 //Create the validation blueprint
 $blueprint = new Blueprint();
-$blueprint->field('name')->lengthBetween(2, 30)->required();
+
+//Attach rules (and custom rules) to the "name" field
+$blueprint->field('name')
+    ->required()
+    ->lengthBetween(2, 30)
+    ->custom('morrisRule');
 
 //Define custom error messages
 $blueprint
@@ -1903,8 +1908,10 @@ $blueprint
     ->required('The name field is required!')
     ->lengthBetween('The name should be between :minimum and :maximum characters long!');
 
-//Define middleware
-$blueprint->middleware('name')->trim();
+//Attach middleware
+$blueprint
+    ->middleware('name')
+    ->trim();
 
 //Define a custom rule
 $blueprint->custom('morrisRule', function (Current $current) {
@@ -1949,8 +1956,8 @@ In this example
 ```php
 $data = [
     'emails' => [
-	    '  MORRIS@domain.com    ',
-	    ' Smith@domain.com '
+        '  MORRIS@domain.com    ',
+        ' Smith@domain.com '
     ]
 ];
 
@@ -1969,8 +1976,8 @@ if(true === $validator->passes()) {
     /*
     [
     	'emails' => [
-	    	'morris@domain.com',
-		    'smith@domain.com'
+            'morris@domain.com',
+            'smith@domain.com'
     	]
     ]
     */
@@ -2202,7 +2209,6 @@ You can also define your own custom middleware.
 Below is a blueprint/example of middleware which will prepend a zero if the value under validation is below 10 and higher than 0. This can be handy for dates i.e. validation of a month or day.
 
 ```php
-<?php
 use KrisKuiper\Validator\Blueprint\Contracts\MiddlewareFieldInterface;
 use KrisKuiper\Validator\Blueprint\Middleware\Transforms\AbstractMiddleware;
 

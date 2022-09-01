@@ -50,21 +50,21 @@ Modern PHP validator
 
 
 ## Introduction
-Validating incoming data or array's should not be hard. Meet Modern PHP validator which does the trick nice, clean and easy.
+Validating incoming data or array's (i.e POST data) should not be hard. Meet Modern PHP Validator which does the trick nice, clean and easy.
 
-Here are a couple of the many perks of the validator:
+Here are a couple of the many perks:
 
 - 70+ predefined validation rules;
-- No new syntax you need to learn as in the case with i.e. Laravel Validator. Your editor/IDE can complete every validation rule, custom message, middleware, etc. out of the box.
+- 15+ predefined [middleware](#predefined-middleware) or [create your own](#custom-middleware) custom middleware;
+- No new syntax you need to learn as in the case with i.e. Laravel Validator. Your editor/IDE can complete every validation rule, custom message, middleware, etc. out of the box;
 - Easy [retrieving the validated data](#working-with-validated-data) after validation;
-- Use pre-defined [middleware](#predefined-middleware) or [create your own](#custom-middleware);
 - [Combine](#combining-fields-for-validation) multiple fields as one for single validation (i.e. day, month, year inputs as a single date field for validation);
 - Use validation [blueprints](#using-blueprints) to extend other validators for [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) method;
 - Define you [own validation rules](#custom-validation-rules) and [custom error messages](#setting-custom-error-messages).
 
 
 
-The validator provides several approaches to validate your application's (incoming) data. It makes it a breeze to validate form submit values as combining multiple input for single validation. It supports middleware and custom validation rules and error messages. It will also returns the validated data to insert the data into i.e. a database.
+Modern PHP Validator provides several approaches to validate your application's (incoming) data. It makes it a breeze to validate form submit values as combining multiple input for single validation. It supports middleware and custom validation rules and error messages. It will also returns the validated data to insert the data into i.e. a database.
 
 ## Head first example:
 
@@ -84,10 +84,10 @@ $data = [
 
 $validator = new Validator($data);
 
-//Select every email field
+//Select every email field within an array using wildcards and attach rules
 $validator->field('*.email')->required()->email()->maxLength(50);
 
-//Select department and color field
+//Select department and color field and attach rules
 $validator->field('department', 'color')->required(false)->isString()->lengthBetween(5, 20);
 
 if($validator->passes()) {
@@ -105,7 +105,7 @@ Modern PHP Validator is available on Packagist (using semantic versioning). Inst
 
 Just add this line to your composer.json file:
 ```shell script
-"kris-kuiper/validator": "^1.0"
+"kris-kuiper/validator": "^1.1"
 ```
 
 or run:
@@ -115,12 +115,19 @@ composer require kris-kuiper/validator
 
 
 
+# Lets begin
+
+First things first: <u>rules are executed in the order they where defined</u>.
+
+
 
 ## Adding fields for validation
 
-By using the `field` method, you can add one or more field names for validation.
+By using the `field()` method, you can add one or more field names for validation.
 
-##### Example
+##### Example 1:
+
+Add one or combine multiple fields to attach rules and more:
 
 ```php
 use KrisKuiper\Validator\Validator;
@@ -134,6 +141,30 @@ $validator->field('username')->required();
 
 //Or add multiple field names
 $validator->field('username', 'password', 'email')->required();
+```
+
+
+
+##### Using wildcards:
+
+You can also use wildcards:
+
+```php
+$data = [
+    'programmers' => [
+        'name' => 'Morris',
+        'email' => 'morris@domain.com'
+    ],
+    'developers' => [
+        'name' => 'Smith',
+        'email' => 'smith@domain.com'
+    ]
+];
+
+$validator = new Validator($data);
+
+//Select every email field within an array using wildcards and attach rules
+$validator->field('*.email')->required()->email()->maxLength(50);
 ```
 
 
@@ -166,9 +197,7 @@ The validator will only run once to avoid i.e. multiple database lookups when ex
 
 By default, the validator caches the validation result. So if you run the same validator again, the validator won't run all the rules, middleware, etc. It will directly return the result of the previous run.
 
-To run the validator with all rules, middleware, etc. again, you can use the `revalidate()` method.
-
-#####  Example:
+To run the validator with all rules, middleware, etc. again, you can use the `revalidate()` method:
 
 ```php
 $executed = 0;
@@ -227,8 +256,8 @@ Before explaining all the rules, you need to know the existence of the special "
 
 A field is considered "empty" if one of the following conditions are true:
 
-- The value is `null`.
-- The value is an empty `string`.
+- The value is `null`;
+- The value is an empty `string`;
 - The value is an empty `array` or empty `countable` object.
 
 
@@ -237,7 +266,7 @@ A field is considered "empty" if one of the following conditions are true:
 
 The field under validation must be present in the input data and not empty.
 
-In this example, the `minLength()` rule will not be executed, because the `required()` method prevents the `minLength` rule to be executed, due to the fact that the surname is considered `empty`.
+In this example, the `minLength()` rule will not be executed, because the `required()` method prevents the `minLength` rule to be executed (bailing), due to the fact that the surname is considered `empty`.
 
 
 
@@ -273,14 +302,14 @@ The field under validation must be present and not empty *only if* any of the ot
 $data = [
     'surname' => '', 
     'middlename' => 'Elizabeth', 
-    'lastname' => 'Morris'
+    'lastname' => ''
 ];
 
 $validator = new Validator($data);
 $valdiator->field('surname')->requiredWith('middlename', 'lastname');
 ```
 
-*Note: validation will fail in this example, because the surname is required, but not provided*.
+*Note: validation will fail in this example, because the surname is required because of the middle name field, but it is not provided*.
 
 
 
@@ -356,7 +385,7 @@ This will prevent that the `max` rule is executed if the `min` rule fails valida
 
 
 
-The order of the `bail` method does not matter. The example below will have the same result as the example above:
+*Unlike all other rules*, the order of the `bail` method does not matter. The example below will have the same result as the example above:
 
 ```php
 $validator->field('fieldname')->min(1)->max(5)->bail();
@@ -369,7 +398,7 @@ $validator->field('fieldname')->min(1)->max(5)->bail();
 Below is a list with all predefined validation rules.
 
 |                                             |                                   |                                               |
-| ------------------------------------------- | --------------------------------- | --------------------------------------------- |
+|---------------------------------------------|-----------------------------------|-----------------------------------------------|
 | [Accepted not empty](#accepted-not-empty)   | [Is array](#is-array)             | [Is UUID v3](#is-uuid-v3)                     |
 | [After (date)](#after)                      | [Is boolean](#is-boolean)         | [Is UUID v4](#is-uuid-v4)                     |
 | [Before (date)](#before)                    | [Is countable](#is-countable)     | [Is UUID v5](#is-uuid-v5)                     |
@@ -1238,7 +1267,7 @@ See also the [Max words](#max-words) and [Min words](#min-words) rules.
 
 #### Using rule objects
 
-Although there is a large number of validation rules, you may wish to specify some of your own. One method of registering custom validation rules is using rule objects.
+Although there is a large number of predefined validation rules, you may wish to specify some of your own. One method of registering custom validation rules is using rule objects.
 
 Below is a blueprint/example of a custom rule:
 
@@ -1269,7 +1298,7 @@ class CustomRule implements RuleInterface
 
 
 
-Once the rule has been defined, you may attach it to a validator by  passing the namespace of the rule object with your other validation rules:
+Once the rule has been defined, you may attach it to the validator by calling the `loadRule()` method, passing an instance of the rule object. Then you can call the `custom()` method which takes the name of the custom rule (which is defined in the `getName()` method of the custom rule object) as first parameter. An  optional second parameter is for all the parameters which you can use in your custom rule:
 
 ```php
 use KrisKuiper\Validator\Validator;
@@ -1283,7 +1312,7 @@ $validator->loadRule(new CustomRule());
 //Use the custom rule
 $validator->field('name')->custom(CustomRule::RULE_NAME, ['min' => 5]); 
 
-//Set a optional custom error message
+//Set an optional custom error message
 $validator
     ->messages('name')
     ->custom('length', 'Invalid value, at least :min characters'); 
@@ -1303,7 +1332,7 @@ if($validator->passes()) {
 
 #### Using closures
 
-If you only need the functionality of a custom rule once throughout your application, you may use a closure instead of a rule object.
+If you only need the functionality of a custom rule once throughout your application, you may use a `closure function` instead of a rule object:
 
 ```php
 use KrisKuiper\Validator\Validator;
@@ -1318,10 +1347,14 @@ $validator->custom('length', function (Current $current) {
 });
 
 //Use the custom rule
-$validator->field('name')->custom('length', ['min' => 5]);
+$validator
+    ->field('name')
+    ->custom('length', ['min' => 5]);
 
 //Set the error message
-$validator->messages('name')->custom('length', 'Invalid value, at least :min characters');
+$validator
+    ->messages('name')
+    ->custom('length', 'Invalid value, at least :min characters');
 
 if($validator->passes()) {
     //Validation passes   
@@ -1349,6 +1382,7 @@ $validator = new Validator($data);
 $validator
     ->field('reason')
     ->conditional(function(Current $current) {
+        //Retrieve the value of the amount field
         return $current->getValue('amount') > 99;
     })
     ->required()
@@ -1362,9 +1396,10 @@ In this example, the validation will fail because the amount is higher than 99, 
 If the amount is below 100, validation will pass.
 
 
+
 #### Using multiple conditions
 
-Although the last rule `isString` in example below is requires the provided data to be a `string` and the provided age is an `interger` number, the validation still succeeds. This is because the last `conditional` rule returns `false`, so the `isString` rule is not executed.
+Although the last rule `isString`, in the example below, requires the provided data to be a `string` and the provided age field is an `interger` number (`25`), the validation still succeeds. This is because the last `conditional` rule returns `false`, so the `isString` rule is not executed.
 
 ```php
 use KrisKuiper\Validator\Validator;
@@ -1384,9 +1419,9 @@ $validator
     })
     ->max(30) //Should be a maximum of 30
     ->conditional(static function () {
-        return false; //This will prevent executing the isString() rule
+        return false; //This will prevent executing the next rule
     })
-    ->isString();
+    ->isString(); //This rule won't be executed
 
 $validator->execute(); //Returns true
 ```
@@ -1397,7 +1432,7 @@ $validator->execute(); //Returns true
 
 ## Combining fields for validation
 
-Sometimes you need to check multiple input values as one value i.e. day, month and year into a single date field or a serial code separated into four blocks. Modern PHP Validator lets you combine them into a new value for validation using the `glue` or `format` method described below.
+Sometimes you need to check multiple input values as one value i.e. day, month and year into a single date field or a serial code separated into four blocks. Modern PHP Validator lets you combine them into a new value for validation using the `glue()` or `format()` method described below.
 
 ##### HTML
 
@@ -1417,8 +1452,14 @@ You can combine fields with the `glue()` method and give it a new field alias (i
 $input = ['year' => '1952', 'month' => '28', 'day' => '03'];
 
 $validator = new Validator($input);
-$validator->combine('year', 'month', 'day')->glue('-')->alias('date'); //1952-28-03
-$validator->field('date')->isdate('Y-m-d');
+$validator
+    ->combine('year', 'month', 'day')
+    ->glue('-')
+    ->alias('date'); //1952-28-03
+
+$validator
+    ->field('date')
+    ->isdate('Y-m-d');
 ```
 
 
@@ -1431,8 +1472,14 @@ You can also combine multiple fields with the `format()` method for more control
 $input = ['year' => '1952', 'month' => '28', 'day' => '03'];
 
 $validator = new Validator($input);
-$validator->combine('year', 'month', 'day')->format(':year/:month/:day')->name('date'); //1952/28/03
-$validator->field('date')->isdate('Y/m/d');
+$validator
+    ->combine('year', 'month', 'day')
+    ->format(':year/:month/:day')
+    ->name('date'); //1952/28/03
+
+$validator
+    ->field('date')
+    ->isdate('Y/m/d');
 ```
 
 Every colon variable i.e. `:year` or `:month` will be replaced with the value of its representing key. This way, you can reuse the variable.
@@ -1466,7 +1513,7 @@ if($validator->errors()->count() > 0) {
 
 #### Retrieve error messages
 
-The errors()` method can be used to retrieve a collection of all the errors, optional filtered on a specific field. If the field name parameters is provided, it will return all the errors for this specific field.
+The `errors()` method can be used to retrieve a collection of all the errors, optional filtered on a specific field. If the field name parameters is provided, it will return all the errors for this specific field.
 
 Imagine the following validation data and rules:
 
@@ -1474,8 +1521,16 @@ Imagine the following validation data and rules:
 $data = ['username' => 'abc', 'password' => '', 'password_repeat'];
 
 $validator = new Validator($data);
-$validator->field('username')->between(5, 10)->startsWith('def');
-$validator->field('password')->same('password_repeat');
+
+$validator
+    ->field('username')
+    ->between(5, 10)
+    ->startsWith('def');
+
+$validator
+    ->field('password')
+    ->same('password_repeat');
+
 $validator->execute();
 ```
 
@@ -1501,7 +1556,7 @@ string(43) "Value should be the same as password_repeat"
 
 
 
-You can also get all first errors for every unique field name using the `distinct` method:
+You can also get all first errors for every unique field name using the `distinct()` method:
 
 ```php
 foreach($validator->errors()->distinct() as $error) {
@@ -1556,7 +1611,9 @@ $error = $validator->errors()->first();
 $error = $validator->errors('username')->first();
 ```
 
-We now have a single error object. This object has several handy methods:
+We now have a single error object stored in the `$error` variable. 
+
+This object has several handy methods:
 
 
 
@@ -1568,7 +1625,7 @@ Returns the parsed (with variable parameters) error message.
 $error->getMessage();
 ```
 
-This will return
+This will return:
 
 ```
 Value should be between 5 and 10 characters long
@@ -1584,7 +1641,7 @@ Returns the raw (without variable parameters) error message.
 $error->getRawMessage();
 ```
 
-This will return
+This will return:
 
 ```
 Value should be between :minimum and :maximum characters long
@@ -1600,7 +1657,7 @@ Returns the name of the field that has been validated.
 $error->getFieldName();
 ```
 
-This will return
+This will return:
 
 ```
 username
@@ -1616,7 +1673,7 @@ Returns the value that has been validated which causes the error to trigger.
 $error->getValue();
 ```
 
-This will return
+This will return:
 
 ```
 abc
@@ -1632,7 +1689,7 @@ Returns the parameters used for validation.
 $error->getParameters();
 ```
 
-This will return
+This will return:
 
 ```php
 ['minimum' => 5, 'maximum' => 10]
@@ -1648,7 +1705,7 @@ Returns the name of the rule used for validation.
 $error->getRuleName();
 ```
 
-This will return
+This will return:
 
 ```php
 lengthBetween
@@ -1685,10 +1742,14 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->field('amount', 'product')->required();
+$validator
+    ->field('amount', 'product')
+    ->required();
 
 //Set error message globally for the required rule
-$validator->messages()->required('Field is required!'); 
+$validator
+    ->messages()
+    ->required('Field is required!'); 
 ```
 
 
@@ -1705,10 +1766,14 @@ $validator = new Validator($data);
 $validator->field('amount', 'product')->required();
 
 //Sets the required error messages specific for the amount field
-$validator->messages('amount')->required('Amount is required!'); 
+$validator
+    ->messages('amount')
+    ->required('Amount is required!'); 
 
 //Sets the required error messages specific for the product field
-$validator->messages('product')->required('Product is required!'); 
+$validator
+    ->messages('product')
+    ->required('Product is required!'); 
 ```
 
 
@@ -1722,13 +1787,19 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->field('amount', 'product')->required();
+$validator
+    ->field('amount', 'product')
+    ->required();
 
 //Sets the required error messages specific for the amount field
-$validator->messages('amount')->required('Amount is required'); 
+$validator
+    ->messages('amount')
+    ->required('Amount is required'); 
 
 //Set error message globally for the required rule. This will only affect the product field in this example.
-$validator->messages()->required('Field is required'); 
+$validator
+    ->messages()
+    ->required('Field is required'); 
 ```
 
 
@@ -1743,9 +1814,14 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->field('amount')->between(1, 5); //$minimum and $maximum parameters
+$validator
+    ->field('amount')
+    ->between(1, 5); //$minimum and $maximum parameters
 
-$validator->messages('amount')->between('Amount should be between :minimum and :maximum'); //Amount should be between 1 and 5'
+$validator
+    ->messages('amount')
+    ->between('Amount should be between :minimum and :maximum'); 
+	//Amount should be between 1 and 5'
 ```
 
 
@@ -1763,9 +1839,17 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->field('username')->minLength(3)->maxLength(10)->isString();
+$validator
+    ->field('username')
+    ->minLength(3)
+    ->maxLength(10)
+    ->isString();
+
 $validator->execute(); //Without executing, there is no validated data
-$validator->validatedData()->toArray(); //Array('username' => 'Morris')
+
+$validator
+    ->validatedData()
+    ->toArray(); //Array('username' => 'Morris')
 ```
 
 
@@ -1786,7 +1870,11 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->field('username', 'email', 'password', 'interest.*.title')->required();
+
+$validator
+    ->field('username', 'email', 'password', 'interest.*.title')
+    ->required();
+
 $validator->execute();
 ```
 
@@ -1795,7 +1883,10 @@ $validator->execute();
 ##### Include field names
 
 ```php
-$validator->validatedData()->only('username', 'email')->toArray();
+$validator
+    ->validatedData()
+    ->only('username', 'email')
+    ->toArray();
 ```
 
 This will return:
@@ -1812,7 +1903,10 @@ This will return:
 ##### Exclude field names
 
 ```php
-$validator->validatedData()->not('username', 'email', 'interest')->toArray();
+$validator
+    ->validatedData()
+    ->not('username', 'email', 'interest')
+    ->toArray();
 ```
 
 This will return:
@@ -1826,7 +1920,10 @@ This will return:
 ##### Extract multiple columns in key-pair value
 
 ```php
-$validator->validatedData()->pluck('interest.*.title')->toArray();
+$validator
+    ->validatedData()
+    ->pluck('interest.*.title')
+    ->toArray();
 ```
 
 This will return:
@@ -1873,10 +1970,17 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->loadBlueprint($blueprint); //Use the blueprint in the validator
-$validator->field('email')->isEmail()->lengthBetween(5, 50); //Add extra rules that extend the blueprint
 
-if(true === $validator->passes()) {
+//Use the blueprint in the validator
+$validator->loadBlueprint($blueprint); 
+
+//Add extra rules that extend the blueprint
+$validator
+    ->field('email')
+    ->isEmail()
+    ->lengthBetween(5, 50);
+
+if($validator->passes()) {
     //Validation passes
 }
 ```
@@ -1924,13 +2028,23 @@ $blueprint->custom('morrisRule', function (Current $current) {
 Then use the blueprint in your validator:
 
 ```php
-$data = ['name' => 'Morris', 'email' => 'morris@domain.com'];
+$data = [
+    'name' => 'Morris', 
+    'email' => 'morris@domain.com'
+];
 
 $validator = new Validator($data);
-$validator->loadBlueprint($blueprint); //Use the blueprint in the validator
-$validator->field('email')->isEmail()->lengthBetween(5, 50); //Add extra rules that extend the blueprint
 
-if(true === $validator->passes()) {
+//Use the blueprint in the validator
+$validator->loadBlueprint($blueprint);
+
+//Add extra rules that extend the blueprint
+$validator
+    ->field('email')
+    ->isEmail()
+    ->lengthBetween(5, 50);
+
+if($validator->passes()) {
     //Validation passes
 }
 ```
@@ -1951,12 +2065,14 @@ Modern PHP Validator comes with predefined middleware which you can use.
 
 ##### Example 1:
 
-In this example
+In the example below we define the `toLowercase` and `trim` middleware and attach it to all the elements inside the "email" field.
+
+Before a single rule is executed, the middleware will take the value of the field and convert and set the new value for the validation rules to work with.
 
 ```php
 $data = [
     'emails' => [
-        '  MORRIS@domain.com    ',
+        '  MORRIS@domain.com    ', //Note the spaces and capital letters
         ' Smith@domain.com '
     ]
 ];
@@ -1964,31 +2080,31 @@ $data = [
 $validator = new Validator($data);
 $validator->field('emails.*')->isEmail()->lengthBetween(5, 50);
 
-//Use the to lowercase and trim middleware
+//Attach the to lowercase and trim middleware
 $validator
     ->middleware('emails.*')
     ->toLowercase()
     ->trim(); 
 
-if(true === $validator->passes()) {
+if($validator->passes()) {
     
     $validator->validatedData()->toArray();
     /*
-    [
-    	'emails' => [
-            'morris@domain.com',
-            'smith@domain.com'
-    	]
-    ]
+	'emails' => [
+		'morris@domain.com',
+		'smith@domain.com'
+	]
     */
 }
 ```
+
+As you can see, the validation passes and the validated data is returning the array with emails converted to lower-case and without spaces around the email addresses.
 
 
 
 #### Middleware types:
 
-Below is a list of all the predefined middleware. If
+Below is a list of all the predefined middleware.
 
 ##### ABS
 
@@ -2044,7 +2160,8 @@ $valdiator->middleware('field')->ltrim();
 You can also define your own characters set which should be trimmed:
 
 ```php
-$valdiator->middleware('field')->ltrim('-*'); //Trims all the - and * characters
+//Trims all the - and * characters
+$valdiator->middleware('field')->ltrim('-*');
 ```
 
 See also the [Trim](#trim) and the [Rtrim](#rtrim) middleware.
@@ -2056,7 +2173,8 @@ See also the [Trim](#trim) and the [Rtrim](#rtrim) middleware.
 Replaces all occurrences of the search string with the replacement string.
 
 ```php
-$valdiator->middleware('field')->replace('hello', 'hi'); //Replaces all "hello" with "hi"
+//Replaces all "hello" with "hi"
+$valdiator->middleware('field')->replace('hello', 'hi'); 
 ```
 
 
@@ -2177,7 +2295,8 @@ $valdiator->middleware('field')->trim();
 You can also define your own characters which should be trimmed:
 
 ```php
-$valdiator->middleware('field')->trim('-|*'); //Trims all the -, | and * characters
+//Trims all the -, | and * characters
+$valdiator->middleware('field')->trim('-|*'); 
 ```
 
 See also the [Rtrim](#rtrim) and the [Ltrim](#ltrim) middleware.
@@ -2218,13 +2337,14 @@ class LeadingZeroMiddleware extends AbstractMiddleware
     {
         $value = $field->getValue();
 
-        if (false === is_numeric($value)) {
+        if (is_numeric($value) === false) {
             return;
         }
 
         $value = (float) $value;
 
         if ($value < 10 && $value >= 0) {
+            //Set the new value for the validation rules to work with
             $field->setValue('0' . $value);
         }
     }
@@ -2241,20 +2361,28 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->middleware('month')->load(new LeadingZeroMiddleware());
-$validator->field('month')->equals('03');
+
+//Attach the custom middleware to the "month" field
+$validator
+    ->middleware('month')
+    ->load(new LeadingZeroMiddleware());
+
+//Attach the rules
+$validator
+    ->field('month')
+    ->equals('03');
 
 if($validator->passes()) {
     //Validation passes
 }
 
-//['month' => '03']
+//This will return ['month' => '03'] (mind the leading zero)
 $validator->validatedData()->toArray();
 ```
 
 
 
-*Note: Middleware is also attachable to [blueprint validators](#using-blueprints)*
+*Note: Middleware is also attachable to [blueprint validators](#using-blueprints).*
 
 
 
@@ -2279,23 +2407,51 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->combine('date_of_birth.year', 'date_of_birth.month', 'date_of_birth.day')->glue('-')->alias('date_of_birth');
-$validator->middleware('date_of_birth.month', 'date_of_birth.day')->leadingZero();
-$validator->field('name')->lengthBetween(2, 20)->isString()->required();
-$validator->field('email')->maxLength(40)->isEmail()->required()->custom('inDatabase')->bail();
-$validator->field('terms')->isAccepted();
-$validator->field('date_of_birth')->isDate()->after('1900-01-01')->before(date('Y-m-d'));
+
+$validator
+    ->combine('date_of_birth.year', 'date_of_birth.month', 'date_of_birth.day')
+    ->glue('-')
+    ->alias('date_of_birth');
+
+$validator
+    ->middleware('date_of_birth.month', 'date_of_birth.day')
+    ->leadingZero();
+
+$validator
+    ->field('name')
+    ->lengthBetween(2, 20)
+    ->isString()
+    ->required();
+
+$validator
+    ->field('email')
+    ->maxLength(40)
+    ->isEmail()
+    ->required()
+    ->custom('inDatabase')
+    ->bail();
+
+$validator
+    ->field('terms')
+    ->isAccepted();
+
+$validator
+    ->field('date_of_birth')
+    ->isDate()
+    ->after('1900-01-01')
+    ->before(date('Y-m-d'));
+
 $validator->custom('inDatabase', function(Current $current) {
     return $current->getValue() !== 'already exists in database code';
 });
 
 //Validation passes
-if(true === $validator->passes()) {
+if($validator->passes()) {
     print_r($validator->validatedData()->toArray());
 }
 
 //Validation fails
-if(true === $validator->fails()) {
+if($validator->fails()) {
 
     $validator->errors()->each(function(Error $error) {
         print_r($error->getMessage());
@@ -2317,16 +2473,28 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->field('password')->required()->isString()->containsNumber()->containsLetter()->containsMixedCase()->containsSymbol()->lengthBetween(8, 50);
-$validator->field('password_repeat')->same('password');
+
+$validator
+    ->field('password')
+    ->required()
+    ->isString()
+    ->containsNumber()
+    ->containsLetter()
+    ->containsMixedCase()
+    ->containsSymbol()
+    ->lengthBetween(8, 50);
+
+$validator
+    ->field('password_repeat')
+    ->same('password');
 
 //Validation passes
-if(true === $validator->passes()) {
+if($validator->passes()) {
     print_r($validator->validatedData()->not('password_repeat')->toArray());
 }
 
 //Validation fails
-if(true === $validator->fails()) {
+if($validator->fails()) {
 
     $validator->errors()->each(function(Error $error) {
         print_r($error->getMessage());
@@ -2349,9 +2517,19 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->combine('year', 'month', 'day')->glue('-')->alias('date');
-$validator->middleware('month', 'day')->leadingZero();
-$validator->field('date')->isDate();
+
+$validator
+    ->combine('year', 'month', 'day')
+    ->glue('-')
+    ->alias('date');
+
+$validator
+    ->middleware('month', 'day')
+    ->leadingZero();
+
+$validator
+    ->field('date')
+    ->isDate();
 
 //Validation passes
 if(true === $validator->passes()) {
@@ -2359,7 +2537,7 @@ if(true === $validator->passes()) {
 }
 
 //Validation fails
-if(true === $validator->fails()) {
+if($validator->fails()) {
 
     $validator->errors()->each(function(Error $error) {
         print_r($error->getMessage());
@@ -2386,23 +2564,46 @@ $data = [
 
 //Create blueprint
 $blueprint = new Blueprint();
-$blueprint->field('name')->isString()->lengthBetween(2, 30)->required();
-$blueprint->field('role')->in(['admin', 'moderator', 'user'])->required();
-$blueprint->field('email')->isEmail()->lengthBetween(5, 50);
+
+$blueprint
+    ->field('name')
+    ->isString()
+    ->lengthBetween(2, 30)
+    ->required();
+
+$blueprint
+    ->field('role')
+    ->in(['admin', 'moderator', 'user'])
+    ->required();
+
+$blueprint
+    ->field('email')
+    ->isEmail()
+    ->lengthBetween(5, 50);
+
 
 //Use the blueprint in the validator
 $validator = new Validator($data);
-$validator->loadBlueprint($blueprint);
-$validator->field('password')->required()->lengthBetween(8, 50);
-$validator->field('password_repeat')->same('password');
+
+$validator
+    ->loadBlueprint($blueprint);
+
+$validator
+    ->field('password')
+    ->required()
+    ->lengthBetween(8, 50);
+
+$validator
+    ->field('password_repeat')
+    ->same('password');
 
 //Validation passes
-if(true === $validator->passes()) {
+if($validator->passes()) {
     print_r($validator->validatedData()->not('password_repeat')->toArray());
 }
 
 //Validation fails
-if(true === $validator->fails()) {
+if($validator->fails()) {
 
     $validator->errors()->each(function(Error $error) {
         print_r($error->getMessage());

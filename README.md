@@ -180,11 +180,11 @@ $validator->field('username')->minLength(5)->maxLength(20);
 
 $passes = $validator->execute(); //Returns bool false/true
 
-if(true === $validator->fails()) {
+if($validator->fails()) {
     //Validation fails
 }
 
-if(true === $validator->passes()) {
+if($validator->passes()) {
     //Validation success
 }
 ```
@@ -2532,7 +2532,7 @@ $validator
     ->isDate();
 
 //Validation passes
-if(true === $validator->passes()) {
+if($validator->passes()) {
     print_r($validator->validatedData()->toArray());
 }
 

@@ -1243,7 +1243,6 @@ Although there is a large number of validation rules, you may wish to specify so
 Below is a blueprint/example of a custom rule:
 
 ```php
-<?php
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
 use KrisKuiper\Validator\Blueprint\Custom\Current;
 
@@ -2210,7 +2209,6 @@ You can also define your own custom middleware.
 Below is a blueprint/example of middleware which will prepend a zero if the value under validation is below 10 and higher than 0. This can be handy for dates i.e. validation of a month or day.
 
 ```php
-<?php
 use KrisKuiper\Validator\Blueprint\Contracts\MiddlewareFieldInterface;
 use KrisKuiper\Validator\Blueprint\Middleware\Transforms\AbstractMiddleware;
 

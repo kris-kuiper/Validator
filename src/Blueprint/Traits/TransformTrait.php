@@ -4,7 +4,26 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Middleware\Transforms\{ABS, Ceil, Floor, LeadingZero, LTrim, Replace, Round, RTrim, Substr, ToBoolean, ToFloat, ToInt, ToLowercase, ToString, ToUppercase, Trim, UCFirst, UCWords};
+use KrisKuiper\Validator\Blueprint\Middleware\Transforms\{
+    ABS,
+    Ceil,
+    Floor,
+    LeadingZero,
+    LTrim,
+    Replace,
+    Round,
+    RTrim,
+    Substr,
+    ToBoolean,
+    ToFloat,
+    ToInt,
+    ToLowercase,
+    ToString,
+    ToUppercase,
+    Trim,
+    UCFirst,
+    UCWords
+};
 
 trait TransformTrait
 {

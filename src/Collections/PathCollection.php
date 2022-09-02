@@ -55,21 +55,4 @@ class PathCollection extends AbstractCollection
         $output = $this->getValues();
         return count($output) > 1 ? $output : ($output[0] ?? null);
     }
-
-    /**
-     * Returns a new collection with all the path object which matches a provided path identifier
-     */
-    public function filter(string $identifier): self
-    {
-        $collection = new self();
-
-        /** @var Path $item */
-        foreach ($this->items as $item) {
-            if ($item->getIdentifier() === $identifier) {
-                $collection->append($item);
-            }
-        }
-
-        return $collection;
-    }
 }

@@ -1,4 +1,4 @@
-Modern PHP validator - Standalone Validation Library
+Modern PHP Validator - Standalone Validation on Steroids
 ====================
 
 [![Latest Stable Version](http://poser.pugx.org/kris-kuiper/validator/v)](https://packagist.org/packages/kris-kuiper/validator)
@@ -50,7 +50,7 @@ Modern PHP validator - Standalone Validation Library
 
 
 ## Introduction
-Validating incoming data or array's (i.e POST data) should not be hard. Meet Modern PHP Validator which does the trick nice, clean and easy.
+Validating incoming data or array's (i.e. POST data) should not be hard. Meet Modern PHP Validator which does the trick nice, clean and easy.
 
 Here are a couple of the many perks:
 
@@ -64,7 +64,7 @@ Here are a couple of the many perks:
 
 
 
-Modern PHP Validator provides several approaches to validate your application's (incoming) data. It makes it a breeze to validate form submit values as combining multiple input for single validation. It supports middleware and custom validation rules and error messages. It will also returns the validated data to insert the data into i.e. a database.
+Modern PHP Validator provides several approaches to validate your application's (incoming) data. It makes it a breeze to validate form submit values as combining multiple input for single validation. It supports middleware and custom validation rules and error messages. It will also return the validated data to insert the data into i.e. a database.
 
 ## Head first example:
 
@@ -117,7 +117,7 @@ composer require kris-kuiper/validator
 
 # Let's begin
 
-First things first: <u>rules are executed in the order they where defined</u>.
+First things first: <u>rules are executed in the order they were defined</u>.
 
 
 
@@ -665,7 +665,7 @@ Use the second parameter to search type safe:
 $valdiator->field('fieldName')->in(['123', 123], true);
 ```
 
-See also the [not in](#not-in) rule.
+See also the [Not in](#not-in) rule.
 
 
 
@@ -2108,7 +2108,7 @@ Below is a list of all the predefined middleware.
 
 ##### ABS
 
-Converts numbers to their absolute value.
+Convert numbers to their absolute value.
 
 ```php
 $valdiator->middleware('field')->abs();

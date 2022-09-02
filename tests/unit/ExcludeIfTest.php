@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace tests\unit;
 
+use KrisKuiper\Validator\Blueprint\Rules\ExcludeIf;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
@@ -67,5 +68,11 @@ final class ExcludeIfTest extends TestCase
         $validator->field('business')->excludeIf('amount', 50)->equals('1')->required();
 
         $this->assertFalse($validator->execute());
+    }
+
+    public function testIfNameIsCorrectWhenUsingGetNameMethod(): void
+    {
+        $excludeIf = new ExcludeIf('field', null);
+        $this->assertSame(ExcludeIf::NAME, $excludeIf->getName());
     }
 }

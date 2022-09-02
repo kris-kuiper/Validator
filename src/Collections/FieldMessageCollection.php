@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Collections;
 
-use KrisKuiper\Validator\Fields\Field;
 use KrisKuiper\Validator\Parser\Message;
 
 class FieldMessageCollection extends AbstractCollection
@@ -20,7 +19,7 @@ class FieldMessageCollection extends AbstractCollection
     /**
      * @inheritdoc
      */
-    public function current(): ?Field
+    public function current(): ?Message
     {
         return ($item = current($this->items)) ? $item : null;
     }

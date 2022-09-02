@@ -10,6 +10,7 @@ use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
 use tests\unit\assets\ExceptionRule;
 use tests\unit\assets\GetFieldNameMiddleware;
+use tests\unit\assets\GetParametersMiddleware;
 use tests\unit\assets\LeadingZeroMiddleware;
 
 final class ValidatorTest extends TestCase
@@ -74,6 +75,19 @@ final class ValidatorTest extends TestCase
     {
         $validator = new Validator(['foo' => 'bar']);
         $validator->middleware('foo')->load(new GetFieldNameMiddleware());
+        $validator->field('foo')->required();
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => 'foo'], $validator->validatedData()->only('foo')->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfAllParametersAreReturnedWhenUsingMiddleware(): void
+    {
+        $validator = new Validator(['foo' => 'bar']);
+        $validator->middleware('foo')->load(new GetParametersMiddleware(), ['foo' => 'bar', 'quez' => 'bazz']);
         $validator->field('foo')->required();
 
         $this->assertTrue($validator->execute());

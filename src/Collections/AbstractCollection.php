@@ -91,12 +91,4 @@ abstract class AbstractCollection implements Iterator, Countable
             }
         }
     }
-
-    /**
-     * Merges all the items with
-     */
-    public function merge(self $collection): void
-    {
-        $this->items = array_merge($this->items, $collection->items);
-    }
 }

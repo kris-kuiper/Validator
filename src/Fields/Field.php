@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Fields;
 
 use KrisKuiper\Validator\Blueprint\Collections\FieldOptionCollection;
-use KrisKuiper\Validator\Blueprint\Collections\RuleCollection;
 use KrisKuiper\Validator\Collections\CombineProxyCollection;
 use KrisKuiper\Validator\Collections\MiddlewareProxyCollection;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
@@ -17,7 +16,6 @@ class Field
     private bool $bailed = false;
     private bool $shouldBail = false;
     private string|int|float $fieldName;
-    private RuleCollection $ruleCollection;
     private FieldOptionCollection $fieldOptionCollection;
     private CombineProxyCollection $combineProxyCollection;
     private MiddlewareProxyCollection $middlewareProxyCollection;
@@ -29,7 +27,6 @@ class Field
     {
         $this->path = $path;
         $this->fieldName = $fieldName;
-        $this->ruleCollection = new RuleCollection();
         $this->fieldOptionCollection = new FieldOptionCollection();
         $this->middlewareProxyCollection = new MiddlewareProxyCollection();
         $this->combineProxyCollection = $combineProxyCollection;
@@ -65,14 +62,6 @@ class Field
     public function getFieldOptions(): FieldOptionCollection
     {
         return $this->fieldOptionCollection;
-    }
-
-    /**
-     * Returns all the rules as a collection
-     */
-    public function getRules(): RuleCollection
-    {
-        return $this->ruleCollection;
     }
 
     /**

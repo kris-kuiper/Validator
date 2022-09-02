@@ -197,4 +197,26 @@ final class PathTranslatorTest extends TestCase
 
         $this->assertSame(['quez' => 'bazz'], $translator->getData());
     }
+
+    public function testIfCorrectDataIsReturnedWhenOverwritingData(): void
+    {
+        $data1 = ['foo' => 'bar'];
+        $data2 = ['quez' =>'bazz'];
+
+        $translator = new PathTranslator($data1);
+        $translator->setData($data2);
+
+        $this->assertSame($data2, $translator->getData());
+    }
+
+    public function testIfCorrectArrayIsReturnedWhenAddingDataBasedOnString(): void
+    {
+        $data1 = [];
+        $data2 =['foo' => 'bar'];
+
+        $translator = new PathTranslator($data1);
+        $translator->set($data2);
+
+        $this->assertSame($data2, $translator->getData());
+    }
 }

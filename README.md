@@ -1,4 +1,4 @@
-Modern PHP validator
+Modern PHP validator - Standalone Validation Library
 ====================
 
 [![Latest Stable Version](http://poser.pugx.org/kris-kuiper/validator/v)](https://packagist.org/packages/kris-kuiper/validator)
@@ -85,7 +85,7 @@ $data = [
 $validator = new Validator($data);
 
 //Select every email field within an array using wildcards and attach rules
-$validator->field('*.email')->required()->email()->maxLength(50);
+$validator->field('*.email')->required()->isEmail()->maxLength(50);
 
 //Select department and color field and attach rules
 $validator->field('department', 'color')->required(false)->isString()->lengthBetween(5, 20);
@@ -115,7 +115,7 @@ composer require kris-kuiper/validator
 
 
 
-# Lets begin
+# Let's begin
 
 First things first: <u>rules are executed in the order they where defined</u>.
 
@@ -164,7 +164,7 @@ $data = [
 $validator = new Validator($data);
 
 //Select every email field within an array using wildcards and attach rules
-$validator->field('*.email')->required()->email()->maxLength(50);
+$validator->field('*.email')->required()->isEmail()->maxLength(50);
 ```
 
 

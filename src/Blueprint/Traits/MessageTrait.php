@@ -6,9 +6,10 @@ namespace KrisKuiper\Validator\Blueprint\Traits;
 
 use KrisKuiper\Validator\Blueprint\Messages\{
     AcceptedNotEmpty,
+    ActiveURL,
     After,
-    Between,
     Before,
+    Between,
     Contains,
     Count,
     CountBetween,
@@ -89,6 +90,14 @@ trait MessageTrait
     public function acceptedNotEmpty(string|int|float $message): self
     {
         return $this->addMessage(new AcceptedNotEmpty($message));
+    }
+
+    /**
+     * Adds a new message for the activeURL rule
+     */
+    public function activeURL(string|int|float $message): self
+    {
+        return $this->addMessage(new ActiveURL($message));
     }
 
     /**

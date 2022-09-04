@@ -6,10 +6,15 @@ namespace KrisKuiper\Validator\Blueprint\Traits;
 
 use KrisKuiper\Validator\Blueprint\Rules\{
     AcceptedNotEmpty,
+    ActiveURL,
     After,
     Before,
     Between,
     Contains,
+    ContainsLetter,
+    ContainsMixedCase,
+    ContainsNumber,
+    ContainsSymbol,
     Count,
     CountBetween,
     CountMax,
@@ -33,12 +38,12 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     IsEmail,
     IsEmpty,
     IsFalse,
-    IsInt,
     IsIP,
     IsIPPrivate,
     IsIPPublic,
     IsIPv4,
     IsIPv6,
+    IsInt,
     IsJSON,
     IsMACAddress,
     IsNotNull,
@@ -56,17 +61,14 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     IsUUIDv5,
     Length,
     LengthBetween,
-    ContainsLetter,
     Max,
     MaxLength,
     MaxWords,
     Min,
     MinLength,
     MinWords,
-    ContainsMixedCase,
     NotContains,
     NotIn,
-    ContainsNumber,
     Present,
     Regex,
     Required,
@@ -77,7 +79,6 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Same,
     StartsNotWith,
     StartsWith,
-    ContainsSymbol,
     Words
 };
 use KrisKuiper\Validator\Exceptions\ValidatorException;
@@ -90,6 +91,14 @@ trait RuleTrait
     public function acceptedNotEmpty(string $fieldName, array $accepted = []): self
     {
         return $this->addRule(new AcceptedNotEmpty($fieldName, $accepted));
+    }
+
+    /**
+     * Checks if the data under validation is a valid IP address (v4 or v6)
+     */
+    public function activeURL(): self
+    {
+        return $this->addRule(new ActiveURL());
     }
 
     /**

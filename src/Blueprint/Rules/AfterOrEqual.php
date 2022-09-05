@@ -7,14 +7,14 @@ namespace KrisKuiper\Validator\Blueprint\Rules;
 use DateTime;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
-class After extends AbstractRule
+class AfterOrEqual extends AbstractRule
 {
-    public const NAME = 'after';
+    public const NAME = 'afterOrEqual';
 
     /**
      * @inheritdoc
      */
-    protected string $message = 'Date should be after :date';
+    protected string $message = 'Date should be after or equal to :date';
 
     /**
      * Constructor
@@ -46,15 +46,17 @@ class After extends AbstractRule
     public function isValid(): bool
     {
         $value = $this->getValue();
+
         if (true === is_string($value) || true === is_numeric($value)) {
             $format = $this->getParameter('format');
             $timestamp = DateTime::createFromFormat($format, $this->getParameter('date'))->getTimestamp();
-            $date = DateTime::createFromFormat($format, (string)$value);
+            $date = DateTime::createFromFormat($format, (string) $value);
+
             if (false === $date) {
                 return false;
             }
 
-            return $date->getTimestamp() > $timestamp;
+            return $date->getTimestamp() >= $timestamp;
         }
 
         return false;

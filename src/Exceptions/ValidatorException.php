@@ -43,8 +43,8 @@ class ValidatorException extends Exception
     /**
      * Thrown when using a date format which is not a valid date
      */
-    public static function incorrectDateFormatUsed(string $date): self
+    public static function incorrectDateFormatUsed(string $date, string $format): self
     {
-        return new self(sprintf('Date "%s" is not a correct date format', $date));
+        return new self(sprintf('Date "%s" is not a correct date format in "%s" format', $date, $format));
     }
 }

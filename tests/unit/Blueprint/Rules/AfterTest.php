@@ -39,9 +39,21 @@ final class AfterTest extends TestCase
      */
     public function testIfValidationFailsWhenInValidDatesAreProvided(): void
     {
-        foreach (['', null, [], (object) [], 2552, true, '1952-03-27', '900-01-01'] as $data) {
+        foreach (['', null, [], (object) [], 2552, true, '1952-03-27', '900-01-01', '1952-03-28'] as $data) {
             $validator = new Validator(['field' => $data]);
             $validator->field('field')->after('1952-03-28');
+            $this->assertFalse($validator->execute());
+        }
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationFailsWhenInValidDatesAndDateFormatAreProvided(): void
+    {
+        foreach (['', null, [], (object) [], 2552, true, '27-03-1952', '01-01-900', '2000-01-01', '1952-03-28'] as $data) {
+            $validator = new Validator(['field' => $data]);
+            $validator->field('field')->afterOrEqual('28-03-1952', 'd-m-Y');
             $this->assertFalse($validator->execute());
         }
     }

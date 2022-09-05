@@ -77,7 +77,7 @@ final class BeforeTest extends TestCase
         $validator->field('field')->before('2022-01-01');
         $validator->messages('field')->before('Message before');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message before', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message before', $validator->errors()->first('field')?->getMessage());
     }
 
     /**

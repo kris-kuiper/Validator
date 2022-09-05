@@ -54,6 +54,6 @@ final class MinTest extends TestCase
         $validator->messages('field')->min('Message min');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message min', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message min', $validator->errors()->first('field')?->getMessage());
     }
 }

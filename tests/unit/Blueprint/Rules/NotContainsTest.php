@@ -77,6 +77,6 @@ final class NotContainsTest extends TestCase
         $validator->field('field')->notContains('test');
         $validator->messages('field')->notContains('Message not contains');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message not contains', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message not contains', $validator->errors()->first('field')?->getMessage());
     }
 }

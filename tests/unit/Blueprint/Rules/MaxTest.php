@@ -54,6 +54,6 @@ final class MaxTest extends TestCase
         $validator->messages('field')->max('Message max');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message max', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message max', $validator->errors()->first('field')?->getMessage());
     }
 }

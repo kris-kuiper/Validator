@@ -77,7 +77,7 @@ final class AfterTest extends TestCase
         $validator->field('field')->after('1952-03-28');
         $validator->messages('field')->after('Message after');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message after', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message after', $validator->errors()->first('field')?->getMessage());
     }
 
     /**

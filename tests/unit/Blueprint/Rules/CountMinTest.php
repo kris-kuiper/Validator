@@ -54,6 +54,6 @@ final class CountMinTest extends TestCase
         $validator->messages('field')->countMin('Message count min');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message count min', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message count min', $validator->errors()->first('field')?->getMessage());
     }
 }

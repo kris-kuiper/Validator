@@ -77,6 +77,6 @@ final class NotInTest extends TestCase
         $validator->field('field')->notIn([0, 1]);
         $validator->messages('field')->notIn('Message not in');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message not in', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message not in', $validator->errors()->first('field')?->getMessage());
     }
 }

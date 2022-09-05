@@ -52,6 +52,6 @@ final class SameTest extends TestCase
         $validator->messages('field')->same('Message same');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message same', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message same', $validator->errors()->first('field')?->getMessage());
     }
 }

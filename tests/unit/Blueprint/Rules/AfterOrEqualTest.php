@@ -77,7 +77,7 @@ final class AfterOrEqualTest extends TestCase
         $validator->field('field')->afterOrEqual('1952-03-28');
         $validator->messages('field')->afterOrEqual('Message after or equal');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message after or equal', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message after or equal', $validator->errors()->first('field')?->getMessage());
     }
 
     /**

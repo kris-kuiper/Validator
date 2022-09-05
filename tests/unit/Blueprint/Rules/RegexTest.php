@@ -54,6 +54,6 @@ final class RegexTest extends TestCase
         $validator->messages('field')->regex('Message regex');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message regex', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message regex', $validator->errors()->first('field')?->getMessage());
     }
 }

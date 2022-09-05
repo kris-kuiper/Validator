@@ -8,16 +8,16 @@ use KrisKuiper\Validator\Validator;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use PHPUnit\Framework\TestCase;
 
-final class CountTest extends TestCase
+final class DigitsMinTest extends TestCase
 {
     /**
      * @throws ValidatorException
      */
     public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
-        foreach ([[1, 2], ['a', 'b']] as $data) {
+        foreach ([123456, '123456', -12345, '-12345', '12345', 12345, 123456789, '123456789'] as $data) {
             $validator = new Validator(['field' => $data]);
-            $validator->field('field')->count(2);
+            $validator->field('field')->digitsMin(5);
             $this->assertTrue($validator->execute());
         }
     }
@@ -27,9 +27,9 @@ final class CountTest extends TestCase
      */
     public function testIfValidationFailsWhenInValidValuesAreProvided(): void
     {
-        foreach ([null, [], (object) [], ['a', 'b', 'c'], 2552, true, '2817334'] as $data) {
+        foreach ([null, (object) [], [], 'abcdef', true, 123, '123', 1, '1', '-10', -10, 12.345, 12.34, 12.3457] as $data) {
             $validator = new Validator(['field' => $data]);
-            $validator->field('field')->count(2);
+            $validator->field('field')->digitsMin(5);
             $this->assertFalse($validator->execute());
         }
     }
@@ -40,7 +40,7 @@ final class CountTest extends TestCase
     public function testIfValidationFailsWhenNoValuesAreProvided(): void
     {
         $validator = new Validator();
-        $validator->field('field')->count(2);
+        $validator->field('field')->digitsMin(5);
         $this->assertFalse($validator->execute());
     }
 
@@ -49,10 +49,11 @@ final class CountTest extends TestCase
      */
     public function testIfCorrectErrorMessageIsReturnedWhenCustomMessageIsSet(): void
     {
-        $validator = new Validator(['field' => '']);
-        $validator->field('field')->count(2);
-        $validator->messages('field')->count('Message count');
+        $validator = new Validator();
+        $validator->field('field')->digitsMin(5);
+        $validator->messages('field')->digitsMin('Message min digits');
+
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message count', $validator->errors()->first('field')?->getMessage());
+        $this->assertSame('Message min digits', $validator->errors()->first('field')?->getMessage());
     }
 }

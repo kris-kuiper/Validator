@@ -54,6 +54,6 @@ final class DistinctTest extends TestCase
         $validator->messages('field')->distinct('Message distinct');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message distinct', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message distinct', $validator->errors()->first('field')?->getMessage());
     }
 }

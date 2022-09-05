@@ -90,6 +90,6 @@ final class MinWordsTest extends TestCase
         $validator->messages('field')->minWords('Message min words');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message min words', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message min words', $validator->errors()->first('field')?->getMessage());
     }
 }

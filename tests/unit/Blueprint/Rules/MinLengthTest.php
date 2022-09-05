@@ -54,6 +54,6 @@ final class MinLengthTest extends TestCase
         $validator->messages('field')->minLength('Message min length');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message min length', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message min length', $validator->errors()->first('field')?->getMessage());
     }
 }

@@ -78,6 +78,6 @@ final class EndsNotWithTest extends TestCase
         $validator->messages('field')->endsNotWith('Message ends not with');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message ends not with', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message ends not with', $validator->errors()->first('field')?->getMessage());
     }
 }

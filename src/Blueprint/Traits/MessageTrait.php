@@ -10,6 +10,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     AfterOrEqual,
     Between,
     Before,
+    BeforeOrEqual,
     Contains,
     Count,
     CountBetween,
@@ -114,6 +115,14 @@ trait MessageTrait
     public function before(string|int|float $message): self
     {
         return $this->addMessage(new Before($message));
+    }
+
+    /**
+     * Adds a new message for the beforeOrEqual rule
+     */
+    public function beforeOrEqual(string|int|float $message): self
+    {
+        return $this->addMessage(new BeforeOrEqual($message));
     }
 
     /**

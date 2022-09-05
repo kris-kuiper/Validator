@@ -9,8 +9,13 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     After,
     AfterOrEqual,
     Before,
+    BeforeOrEqual,
     Between,
     Contains,
+    ContainsLetter,
+    ContainsMixedCase,
+    ContainsNumber,
+    ContainsSymbol,
     Count,
     CountBetween,
     CountMax,
@@ -34,12 +39,12 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     IsEmail,
     IsEmpty,
     IsFalse,
-    IsInt,
     IsIP,
     IsIPPrivate,
     IsIPPublic,
     IsIPv4,
     IsIPv6,
+    IsInt,
     IsJSON,
     IsMACAddress,
     IsNotNull,
@@ -57,17 +62,14 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     IsUUIDv5,
     Length,
     LengthBetween,
-    ContainsLetter,
     Max,
     MaxLength,
     MaxWords,
     Min,
     MinLength,
     MinWords,
-    ContainsMixedCase,
     NotContains,
     NotIn,
-    ContainsNumber,
     Present,
     Regex,
     Required,
@@ -78,7 +80,6 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Same,
     StartsNotWith,
     StartsWith,
-    ContainsSymbol,
     Words
 };
 use KrisKuiper\Validator\Exceptions\ValidatorException;
@@ -118,6 +119,15 @@ trait RuleTrait
     public function before(string $date, string $format = 'Y-m-d'): self
     {
         return $this->addRule(new Before($date, $format));
+    }
+
+    /**
+     * Checks if the data under validation comes before or equal to a given date
+     * @throws ValidatorException
+     */
+    public function beforeOrEqual(string $date, string $format = 'Y-m-d'): self
+    {
+        return $this->addRule(new BeforeOrEqual($date, $format));
     }
 
     /**

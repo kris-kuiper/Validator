@@ -7,6 +7,7 @@ namespace KrisKuiper\Validator\Blueprint\Traits;
 use KrisKuiper\Validator\Blueprint\Messages\{
     AcceptedNotEmpty,
     After,
+    AfterOrEqual,
     Between,
     Before,
     Contains,
@@ -97,6 +98,14 @@ trait MessageTrait
     public function after(string|int|float $message): self
     {
         return $this->addMessage(new After($message));
+    }
+
+    /**
+     * Adds a new message for the after rule
+     */
+    public function afterOrEqual(string|int|float $message): self
+    {
+        return $this->addMessage(new AfterOrEqual($message));
     }
 
     /**

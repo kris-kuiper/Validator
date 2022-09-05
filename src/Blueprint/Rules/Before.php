@@ -21,7 +21,7 @@ class Before extends AbstractRule
     public function __construct(string $date, string $format = 'Y-m-d')
     {
         if (false === DateTime::createFromFormat($format, $date)) {
-            throw ValidatorException::incorrectDateFormatUsed($date);
+            throw ValidatorException::incorrectDateFormatUsed($date, $format);
         }
 
         parent::__construct();

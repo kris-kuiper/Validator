@@ -7,6 +7,7 @@ namespace KrisKuiper\Validator\Blueprint\Traits;
 use KrisKuiper\Validator\Blueprint\Rules\{
     AcceptedNotEmpty,
     After,
+    AfterOrEqual,
     Before,
     Between,
     Contains,
@@ -99,6 +100,15 @@ trait RuleTrait
     public function after(string $date, string $format = 'Y-m-d'): self
     {
         return $this->addRule(new After($date, $format));
+    }
+
+    /**
+     * Checks if the data under validation comes after or is equal to a given date
+     * @throws ValidatorException
+     */
+    public function afterOrEqual(string $date, string $format = 'Y-m-d'): self
+    {
+        return $this->addRule(new AfterOrEqual($date, $format));
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
 use KrisKuiper\Validator\Blueprint\Messages\{
+    AcceptedIf,
     AcceptedNotEmpty,
     After,
     AfterOrEqual,
@@ -89,6 +90,14 @@ use KrisKuiper\Validator\Blueprint\Messages\{
 
 trait MessageTrait
 {
+    /**
+     * Adds a new message for the acceptedIf rule
+     */
+    public function acceptedIf(string|int|float $message): self
+    {
+        return $this->addMessage(new AcceptedIf($message));
+    }
+
     /**
      * Adds a new message for the acceptedNotEmpty rule
      */

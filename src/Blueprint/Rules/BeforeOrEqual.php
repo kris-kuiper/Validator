@@ -7,13 +7,13 @@ namespace KrisKuiper\Validator\Blueprint\Rules;
 use DateTime;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
-class Before extends AbstractRule
+class BeforeOrEqual extends AbstractRule
 {
-    public const NAME = 'before';
+    public const NAME = 'beforeOrEqual';
 /**
      * @inheritdoc
      */
-    protected string $message = 'Date should be before :date';
+    protected string $message = 'Date should be before or equal to :date';
 /**
      * Constructor
      * @throws ValidatorException
@@ -54,7 +54,7 @@ class Before extends AbstractRule
                 return false;
             }
 
-            return $date->getTimestamp() < $timestamp;
+            return $date->getTimestamp() <= $timestamp;
         }
 
         return false;

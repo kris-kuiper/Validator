@@ -109,6 +109,6 @@ final class EqualsTest extends TestCase
         $validator->field('field')->equals('bar');
         $validator->messages('field')->equals('Message equals');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message equals', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message equals', $validator->errors()->first('field')?->getMessage());
     }
 }

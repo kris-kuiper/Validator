@@ -77,7 +77,7 @@ final class BeforeOrEqualTest extends TestCase
         $validator->field('field')->beforeOrEqual('2022-01-01');
         $validator->messages('field')->beforeOrEqual('Message before or equal');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message before or equal', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message before or equal', $validator->errors()->first('field')?->getMessage());
     }
 
     /**

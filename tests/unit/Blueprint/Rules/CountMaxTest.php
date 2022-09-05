@@ -54,6 +54,6 @@ final class CountMaxTest extends TestCase
         $validator->messages('field')->countMax('Message count max');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message count max', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message count max', $validator->errors()->first('field')?->getMessage());
     }
 }

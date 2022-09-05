@@ -102,6 +102,6 @@ final class WordsTest extends TestCase
         $validator->messages('field')->words('Message words');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message words', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message words', $validator->errors()->first('field')?->getMessage());
     }
 }

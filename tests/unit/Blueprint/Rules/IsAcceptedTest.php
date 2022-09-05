@@ -75,6 +75,6 @@ final class IsAcceptedTest extends TestCase
         $validator->field('field')->isAccepted();
         $validator->messages('field')->isAccepted('Message isAccepted');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message isAccepted', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message isAccepted', $validator->errors()->first('field')?->getMessage());
     }
 }

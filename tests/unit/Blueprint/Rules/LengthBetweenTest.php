@@ -54,6 +54,6 @@ final class LengthBetweenTest extends TestCase
         $validator->messages('field')->lengthBetween('Message length between');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message length between', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message length between', $validator->errors()->first('field')?->getMessage());
     }
 }

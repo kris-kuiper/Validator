@@ -23,6 +23,8 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Custom,
     Different,
     DifferentWithAll,
+    Digits,
+    DigitsBetween,
     Distinct,
     EndsNotWith,
     EndsWith,
@@ -63,9 +65,11 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Length,
     LengthBetween,
     Max,
+    DigitsMax,
     MaxLength,
     MaxWords,
     Min,
+    DigitsMin,
     MinLength,
     MinWords,
     NotContains,
@@ -233,6 +237,38 @@ trait RuleTrait
     public function differentWithAll(string|int|float ...$fieldNames): self
     {
         return $this->addRule(new DifferentWithAll(...$fieldNames));
+    }
+
+    /**
+     * Check if an integer value have exact length of provided digits
+     */
+    public function digits(int $digits): self
+    {
+        return $this->addRule(new Digits($digits));
+    }
+
+    /**
+     * Check if an integer value is between the provided min and max length of digits
+     */
+    public function digitsBetween(int $min, int $max): self
+    {
+        return $this->addRule(new DigitsBetween($min, $max));
+    }
+
+    /**
+     * Check if an integer value has a maximum length of digits
+     */
+    public function digitsMax(int $max): self
+    {
+        return $this->addRule(new DigitsMax($max));
+    }
+
+    /**
+     * Check if an integer value has at least the provided length of digits
+     */
+    public function digitsMin(int $min): self
+    {
+        return $this->addRule(new DigitsMin($min));
     }
 
     /**

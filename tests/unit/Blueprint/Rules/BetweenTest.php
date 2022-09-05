@@ -91,6 +91,6 @@ final class BetweenTest extends TestCase
         $validator->field('field')->between(1, 2);
         $validator->messages('field')->between('Message between');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message between', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message between', $validator->errors()->first('field')?->getMessage());
     }
 }

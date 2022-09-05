@@ -77,7 +77,7 @@ final class ContainsTest extends TestCase
         $validator->field('field')->contains('test');
         $validator->messages('field')->contains('Message contains');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message contains', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message contains', $validator->errors()->first('field')?->getMessage());
     }
 
     /**
@@ -89,6 +89,6 @@ final class ContainsTest extends TestCase
         $validator->field('field')->contains(1);
         $validator->messages('field')->contains('Message contains');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message contains', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message contains', $validator->errors()->first('field')?->getMessage());
     }
 }

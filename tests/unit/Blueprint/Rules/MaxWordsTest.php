@@ -102,6 +102,6 @@ final class MaxWordsTest extends TestCase
         $validator->messages('field')->maxWords('Message max words');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message max words', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message max words', $validator->errors()->first('field')?->getMessage());
     }
 }

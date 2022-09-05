@@ -65,6 +65,6 @@ final class IsDateTest extends TestCase
         $validator->field('field')->isDate();
         $validator->messages('field')->isDate('Message is date');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message is date', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message is date', $validator->errors()->first('field')?->getMessage());
     }
 }

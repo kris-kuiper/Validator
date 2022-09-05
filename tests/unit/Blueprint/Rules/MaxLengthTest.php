@@ -54,6 +54,6 @@ final class MaxLengthTest extends TestCase
         $validator->messages('field')->maxLength('Message max length');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message max length', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message max length', $validator->errors()->first('field')?->getMessage());
     }
 }

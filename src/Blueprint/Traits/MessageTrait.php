@@ -19,6 +19,8 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Custom,
     Different,
     DifferentWithAll,
+    Digits,
+    DigitsBetween,
     Distinct,
     EndsNotWith,
     EndsWith,
@@ -60,9 +62,11 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     LengthBetween,
     Letters,
     Max,
+    DigitsMax,
     MaxLength,
     MaxWords,
     Min,
+    DigitsMin,
     MinLength,
     MinWords,
     MixedCase,
@@ -195,6 +199,22 @@ trait MessageTrait
     public function differentWithAll(string|int|float $message): self
     {
         return $this->addMessage(new DifferentWithAll($message));
+    }
+
+    /**
+     * Adds a new message for the digits rule
+     */
+    public function digits(string|int|float $message): self
+    {
+        return $this->addMessage(new Digits($message));
+    }
+
+    /**
+     * Adds a new message for the digitsBetween rule
+     */
+    public function digitsBetween(string|int|float $message): self
+    {
+        return $this->addMessage(new DigitsBetween($message));
     }
 
     /**
@@ -526,6 +546,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the digitsMax rule
+     */
+    public function digitsMax(string|int|float $message): self
+    {
+        return $this->addMessage(new DigitsMax($message));
+    }
+
+    /**
      * Adds a new message for the maxLength rule
      */
     public function maxLength(string|int|float $message): self
@@ -547,6 +575,14 @@ trait MessageTrait
     public function min(string|int|float $message): self
     {
         return $this->addMessage(new Min($message));
+    }
+
+    /**
+     * Adds a new message for the digitsMin rule
+     */
+    public function digitsMin(string|int|float $message): self
+    {
+        return $this->addMessage(new digitsMin($message));
     }
 
     /**

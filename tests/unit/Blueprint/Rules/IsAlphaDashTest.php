@@ -44,6 +44,6 @@ final class IsAlphaDashTest extends TestCase
         $validator->field('field')->isAlphaDash();
         $validator->messages('field')->isAlphaDash('Message alpha dash');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message alpha dash', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message alpha dash', $validator->errors()->first('field')?->getMessage());
     }
 }

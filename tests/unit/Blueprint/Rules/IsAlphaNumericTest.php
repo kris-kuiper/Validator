@@ -44,6 +44,6 @@ final class IsAlphaNumericTest extends TestCase
         $validator->field('field')->isAlphaNumeric();
         $validator->messages('field')->isAlphaNumeric('Message alpha numeric');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message alpha numeric', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message alpha numeric', $validator->errors()->first('field')?->getMessage());
     }
 }

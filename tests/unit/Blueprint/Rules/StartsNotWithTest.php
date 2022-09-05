@@ -78,6 +78,6 @@ final class StartsNotWithTest extends TestCase
         $validator->messages('field')->startsNotWith('Message starts not with');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message starts not with', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message starts not with', $validator->errors()->first('field')?->getMessage());
     }
 }

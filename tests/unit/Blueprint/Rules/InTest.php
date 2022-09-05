@@ -65,6 +65,6 @@ final class InTest extends TestCase
         $validator->field('field')->in([0, 1]);
         $validator->messages('field')->in('Message in');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message in', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message in', $validator->errors()->first('field')?->getMessage());
     }
 }

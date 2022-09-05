@@ -44,6 +44,6 @@ final class IsAlphaTest extends TestCase
         $validator->field('field')->isAlpha();
         $validator->messages('field')->isAlpha('Message alpha');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message alpha', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message alpha', $validator->errors()->first('field')?->getMessage());
     }
 }

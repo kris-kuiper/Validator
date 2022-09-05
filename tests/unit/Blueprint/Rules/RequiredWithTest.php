@@ -267,6 +267,6 @@ final class RequiredWithTest extends TestCase
         $validator->messages('field')->requiredWith('Message required with');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message required with', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message required with', $validator->errors()->first('field')?->getMessage());
     }
 }

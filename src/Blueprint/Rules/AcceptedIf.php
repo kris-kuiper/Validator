@@ -6,9 +6,9 @@ namespace KrisKuiper\Validator\Blueprint\Rules;
 
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
-class IsAccepted extends AbstractRule
+class AcceptedIf extends AbstractRule
 {
-    public const NAME = 'isAccepted';
+    public const NAME = 'acceptedIf';
 
     /**
      * @inheritdoc
@@ -18,7 +18,7 @@ class IsAccepted extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(array $accepted = [])
+    public function __construct(string $fieldName, mixed $value, array $accepted = [])
     {
         parent::__construct();
 
@@ -26,6 +26,8 @@ class IsAccepted extends AbstractRule
             $accepted = ['yes', 'on', '1', 'true', 1, true];
         }
 
+        $this->setParameter('fieldName', $fieldName);
+        $this->setParameter('value', $value);
         $this->setParameter('accepted', $accepted);
     }
 
@@ -43,6 +45,13 @@ class IsAccepted extends AbstractRule
      */
     public function isValid(): bool
     {
-        return true === in_array($this->getValue(), $this->getParameter('accepted'), true);
+        $accepted = $this->getValue();
+        $targetValue = $this->getValidationData()->path($this->getParameter('fieldName'))->getValue();
+
+        if ($this->getParameter('value') === $targetValue) {
+            return true === in_array($accepted, $this->getParameter('accepted'), true);
+        }
+
+        return true;
     }
 }

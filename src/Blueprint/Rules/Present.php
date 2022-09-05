@@ -7,11 +7,13 @@ namespace KrisKuiper\Validator\Blueprint\Rules;
 class Present extends AbstractRule
 {
     public const NAME = 'present';
-/**
+
+    /**
      * @inheritdoc
      */
     protected string $message = 'Invalid input';
-/**
+
+    /**
      * @inheritdoc
      */
     public function getName(): string

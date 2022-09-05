@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
 use KrisKuiper\Validator\Blueprint\Rules\{
+    AcceptedIf,
     AcceptedNotEmpty,
     After,
     AfterOrEqual,
@@ -90,6 +91,14 @@ use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait
 {
+    /**
+     * Checks if the data under validation is accepted if another field under validation is equal to a specified value
+     */
+    public function acceptedIf(string $fieldName, mixed $value, array $accepted = []): self
+    {
+        return $this->addRule(new AcceptedIf($fieldName, $value, $accepted));
+    }
+
     /**
      * Checks if the data under validation is accepted if another fields value is not empty
      */
@@ -224,7 +233,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if the data under validation does not match one of the values of one or more fields
+     * Checks if the data under validation does not match one of the values of one or more fields
      */
     public function different(string|int|float ...$fieldNames): self
     {
@@ -232,7 +241,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if the data under validation does not match all the values of one or more fields
+     * Checks if the data under validation does not match all the values of one or more fields
      */
     public function differentWithAll(string|int|float ...$fieldNames): self
     {
@@ -240,7 +249,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if an integer value have exact length of provided digits
+     * Checks if an integer value have exact length of provided digits
      */
     public function digits(int $digits): self
     {
@@ -248,7 +257,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if an integer value is between the provided min and max length of digits
+     * Checks if an integer value is between the provided min and max length of digits
      */
     public function digitsBetween(int $min, int $max): self
     {
@@ -256,7 +265,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if an integer value has a maximum length of digits
+     * Checks if an integer value has a maximum length of digits
      */
     public function digitsMax(int $max): self
     {
@@ -264,7 +273,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if an integer value has at least the provided length of digits
+     * Checks if an integer value has at least the provided length of digits
      */
     public function digitsMin(int $min): self
     {
@@ -272,7 +281,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if all the values in an array are unique
+     * Checks if all the values in an array are unique
      */
     public function distinct(): self
     {
@@ -649,7 +658,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if the data under validation exists
+     * Checks if the data under validation exists
      */
     public function present(): self
     {
@@ -657,7 +666,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if value matches a regular expression pattern
+     * Checks if data under validation matches a regular expression pattern
      */
     public function regex(string $pattern): self
     {
@@ -710,7 +719,7 @@ trait RuleTrait
     }
 
     /**
-     * Check if value matches a value of a given field name
+     * Checks if value matches a value of a given field name
      */
     public function same(string ...$fieldNames): self
     {

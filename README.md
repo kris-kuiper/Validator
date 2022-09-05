@@ -399,32 +399,56 @@ Below is a list with all predefined validation rules.
 
 |                                             |                                       |                                               |
 |---------------------------------------------|---------------------------------------|-----------------------------------------------|
-| [Accepted not empty](#accepted-not-empty)   | [Is accepted](#is-accepted)           | [Is UUID](#is-uuid-v1)                        |
-| [After (date)](#after)                      | [Is alpha](#is-alpha)                 | [Is UUID v1](#is-uuid-v1)                     |
-| [After or equal (date)](#after-or-equal)    | [Is alpha dash](#is-alpha-dash)       | [Is UUID v3](#is-uuid-v3)                     |
-| [Before (date)](#before)                    | [Is alpha numeric](#is-alpha-numeric) | [Is UUID v4](#is-uuid-v4)                     |
-| [Before or Equal (date)](#before-or-equal)  | [Is array](#is-array)                 | [Is UUID v5](#is-uuid-v5)                     |
-| [Between](#between)                         | [Is boolean](#is-boolean)             | [Length](#length)                             |
-| [Contains](#contains)                       | [Is countable](#is-countable)         | [Length between](#length-between)             |
-| [Contains letter](#contains-letter)         | [Is date](#is-date)                   | [Max](#max)                                   |
-| [Contains mixed case](#contains-mixed-case) | [Is email](#is-email)                 | [Max length](#max-length)                     |
-| [Contains number](#contains-number)         | [Is empty](#is-empty)                 | [Max words](#max-words)                       |
-| [Contains symbol](#contains-symbol)         | [Is false](#is-false)                 | [Min](#min)                                   |
-| [Count](#count)                             | [Is IP](#is-ip)                       | [Min length](#min-length)                     |
-| [Count between](#count-between)             | [Is IP Private](#is-ip-private)       | [Min words](#min-words)                       |
-| [Count max](#count-max)                     | [Is IP Public](#is-ip-public)         | [Not contains](#not-contains)                 |
-| [Count min](#count-min)                     | [Is IP v4](#is-ip-v4)                 | [Not In](#not-in)                             |
-| [Different](#different)                     | [Is IP v6](#is-ip-v6)                 | [Present](#present)                           |
-| [Different with all](#different-with-all)   | [Is int](#is-int)                     | [Regex](#regex)                               |
-| [Digits](#digits)                           | [Is JSON](#is-json)                   | [Required](#required)                         |
-| [Digits between](#digits-between)           | [Is MAC address](#is-mac-address)     | [Required with](#required-with)               |
-| [Digits max](#digits-max)                   | [Is null](#is-null)                   | [Required with all](#required-with-all)       |
-| [Digits min](#digits-min)                   | [Is number](#is-number)               | [Required without](#required-without)         |
-| [Distinct](#distinct)                       | [Is scalar](#is-scalar)               | [Required without all](#required-without-all) |
-| [Ends  ot with](#ends-not-with)             | [Is string](#is-string)               | [Same](#same)                                 |
-| [Ends with](#ends-with)                     | [Is timezone](#is-timezone)           | [Starts not with](#starts-not-with)           |
-| [Equals](#equals)                           | [Is true](#is-true)                   | [Starts with](#starts-with)                   |
-| [In](#in)                                   | [Is URL](#is-url)                     | [Words](#words)                               |
+| [Accepted if](#accepted-if)                 | [Is accepted](#is-accepted)           | [Is UUID v1](#is-uuid-v1)                     |
+| [Accepted not empty](#accepted-not-empty)   | [Is alpha](#is-alpha)                 | [Is UUID v3](#is-uuid-v3)                     |
+| [After (date)](#after)                      | [Is alpha dash](#is-alpha-dash)       | [Is UUID v4](#is-uuid-v4)                     |
+| [After or equal (date)](#after-or-equal)    | [Is alpha numeric](#is-alpha-numeric) | [Is UUID v5](#is-uuid-v5)                     |
+| [Before (date)](#before)                    | [Is array](#is-array)                 | [Length](#length)                             |
+| [Before or Equal (date)](#before-or-equal)  | [Is boolean](#is-boolean)             | [Length between](#length-between)             |
+| [Between](#between)                         | [Is countable](#is-countable)         | [Max](#max)                                   |
+| [Contains](#contains)                       | [Is date](#is-date)                   | [Max length](#max-length)                     |
+| [Contains letter](#contains-letter)         | [Is email](#is-email)                 | [Max words](#max-words)                       |
+| [Contains mixed case](#contains-mixed-case) | [Is empty](#is-empty)                 | [Min](#min)                                   |
+| [Contains number](#contains-number)         | [Is false](#is-false)                 | [Min length](#min-length)                     |
+| [Contains symbol](#contains-symbol)         | [Is IP](#is-ip)                       | [Min words](#min-words)                       |
+| [Count](#count)                             | [Is IP Private](#is-ip-private)       | [Not contains](#not-contains)                 |
+| [Count between](#count-between)             | [Is IP Public](#is-ip-public)         | [Not In](#not-in)                             |
+| [Count max](#count-max)                     | [Is IP v4](#is-ip-v4)                 | [Present](#present)                           |
+| [Count min](#count-min)                     | [Is IP v6](#is-ip-v6)                 | [Regex](#regex)                               |
+| [Different](#different)                     | [Is int](#is-int)                     | [Required](#required)                         |
+| [Different with all](#different-with-all)   | [Is JSON](#is-json)                   | [Required with](#required-with)               |
+| [Digits](#digits)                           | [Is MAC address](#is-mac-address)     | [Required with all](#required-with-all)       |
+| [Digits between](#digits-between)           | [Is null](#is-null)                   | [Required without](#required-without)         |
+| [Digits max](#digits-max)                   | [Is number](#is-number)               | [Required without all](#required-without-all) |
+| [Digits min](#digits-min)                   | [Is scalar](#is-scalar)               | [Same](#same)                                 |
+| [Distinct](#distinct)                       | [Is string](#is-string)               | [Starts not with](#starts-not-with)           |
+| [Ends not with](#ends-not-with)             | [Is timezone](#is-timezone)           | [Starts with](#starts-with)                   |
+| [Ends with](#ends-with)                     | [Is true](#is-true)                   | [Words](#words)                               |
+| [Equals](#equals)                           | [Is URL](#is-url)                     |                                               |
+| [In](#in)                                   | [Is UUID](#is-uuid-v1)                |                                               |
+
+
+##### Accepted if
+
+The field under validation must be "yes", "on", "1", "true", `1`, or `true` if another field's value is equal to a given value.
+
+```php
+$data = ['field' => 'yes', 'other_field' => 'foo'];
+$validator = new Validator($data);
+
+$valdiator->field('fieldName')->acceptedIf('other_field', 'foo');
+```
+
+You may also provide the values which should be considered as accepted:
+```php
+$valdiator
+    ->field('fieldName')
+    ->acceptedIf('other_field', 'foo', ['accepted', 'agreed', 'checked']);
+```
+
+See also the [Is accepted](#is-accepted) and [Accepted not empty](#accepted-not-empty) rules.
+
+
 
 ##### Accepted not empty
 
@@ -444,7 +468,7 @@ $valdiator
     ->acceptedNotEmpty('other_field', ['accepted', 'agreed', 'checked']);
 ```
 
-See also the [Is accepted](#is-accepted) rule.
+See also the [Is accepted](#is-accepted) and [Accepted if](#accepted-if) rules.
 
 
 
@@ -455,7 +479,7 @@ Checks if the data under validation comes after a given date.
 ```php
 $valdiator->field('fieldName')->after('2000-01-01', 'Y-m-d');
 ```
-See also the [Before](#before), [Before or equal](#before-or-equal) and [After or equal](#after-or-equal) rule.
+See also the [Before](#before), [Before or equal](#before-or-equal) and [After or equal](#after-or-equal) rules.
 
 
 
@@ -466,7 +490,7 @@ Checks if the data under validation comes after or is equal to a given date.
 ```php
 $valdiator->field('fieldName')->afterOrEqual('2000-01-01', 'Y-m-d');
 ```
-See also the [After](#after), [Before or equal](#before-or-equal) and [Before](#before) rule.
+See also the [After](#after), [Before or equal](#before-or-equal) and [Before](#before) rules.
 
 
 
@@ -477,7 +501,7 @@ Checks if the data under validation comes before a given date.
 ```php
 $valdiator->field('fieldName')->before('2030-01-01', 'Y-m-d');
 ```
-See also the [After](#after), [Before or equal](#before-or-equal) and [After or equal](#after-or-equal) rule.
+See also the [After](#after), [Before or equal](#before-or-equal) and [After or equal](#after-or-equal) rules.
 
 
 
@@ -488,7 +512,7 @@ Checks if the data under validation comes before or is equal to a given date.
 ```php
 $valdiator->field('fieldName')->beforeOrEqual('2030-01-01', 'Y-m-d');
 ```
-See also the [After](#after), [After or equal](#after-or-equal) and [Before](#before) rule.
+See also the [After](#after), [After or equal](#after-or-equal) and [Before](#before) rules.
 
 
 
@@ -680,7 +704,7 @@ Use the second parameter to match case-sensitive:
 $valdiator->field('fieldName')->endsNotWith('ABC', true);
 ```
 
-See also the [Ends with](#ends-with), [Starts with](#starts-with) and [Starts not with](#starts-not-with) rule.
+See also the [Ends with](#ends-with), [Starts with](#starts-with) and [Starts not with](#starts-not-with) rules.
 
 
 
@@ -697,7 +721,7 @@ Use the second parameter to match case-sensitive:
 $valdiator->field('fieldName')->endsWith('ABC', true);
 ```
 
-See also the [Ends not with](#ends-not-with), [Starts with](#starts-with) and [Starts not with](#starts-not-with) rule.
+See also the [Ends not with](#ends-not-with), [Starts with](#starts-with) and [Starts not with](#starts-not-with) rules.
 
 
 
@@ -1294,7 +1318,7 @@ Use the second parameter to search case-sensitive:
 $valdiator->field('fieldName')->startsNotWith('ABC', true);
 ```
 
-See also the [Starts with](#starts-with), [Ends with](#ends-with) and [Ends not with](#ends-not-with) rule.
+See also the [Starts with](#starts-with), [Ends with](#ends-with) and [Ends not with](#ends-not-with) rules.
 
 
 
@@ -1311,7 +1335,7 @@ Use the second parameter to search case-sensitive:
 $valdiator->field('fieldName')->startsWith('ABC', true);
 ```
 
-See also the [Ends with](#ends-with), [Ends not with](#ends-not-with) and [Starts not with](#starts-not-with) rule.
+See also the [Ends with](#ends-with), [Ends not with](#ends-not-with) and [Starts not with](#starts-not-with) rules.
 
 
 

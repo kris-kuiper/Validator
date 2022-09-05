@@ -482,7 +482,7 @@ See also the [After](#after), [Before or equal](#before-or-equal) and [After or 
 
 ##### Before or equal
 
-Checks if the data under validation comes before a given date.
+Checks if the data under validation comes before or is equal to a given date.
 
 ```php
 $valdiator->field('fieldName')->beforeOrEqual('2030-01-01', 'Y-m-d');

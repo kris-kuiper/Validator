@@ -62,7 +62,7 @@ final class ValidatorTest extends TestCase
         $validator = new Validator($data);
         $validator->combine('year', 'month', 'day')->glue('-')->alias('date');
         $validator->middleware('month', 'day')->load(new LeadingZeroMiddleware());
-        $validator->field('date')->required()->isDate();
+        $validator->field('date')->required()->date();
 
         $this->assertTrue($validator->execute());
         $this->assertSame(['date' => '1952-05-02'], $validator->validatedData()->only('date')->toArray());

@@ -13,7 +13,7 @@ class Required extends AbstractRequired
     /**
      * Constructor
      */
-    public function __construct(bool $required = true)
+    public function __construct(private bool $required = true)
     {
         parent::__construct();
         $this->setParameter('required', $required);
@@ -33,10 +33,9 @@ class Required extends AbstractRequired
      */
     public function isValid(): bool
     {
-        $required = $this->getParameter('required');
         $empty = $this->isEmpty($this->getValue());
 
-        if (false === $required) {
+        if (false === $this->required) {
             if (true === $empty) {
                 $this->getField()?->setBailed(true);
             }

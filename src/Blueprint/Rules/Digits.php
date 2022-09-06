@@ -23,7 +23,7 @@ class Digits extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(int $digits)
+    public function __construct(private int $digits)
     {
         parent::__construct();
         $this->setParameter('digits', $digits);
@@ -54,6 +54,6 @@ class Digits extends AbstractRule
         }
 
         $length = $this->getPositiveNumberLength($value);
-        return $length === $this->getParameter('digits');
+        return $length === $this->digits;
     }
 }

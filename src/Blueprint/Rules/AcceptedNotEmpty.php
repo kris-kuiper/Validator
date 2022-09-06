@@ -18,18 +18,21 @@ class AcceptedNotEmpty extends AbstractRule
      */
     protected string $message = 'Should be accepted';
 
+    private array $accepted = ['yes', 'on', '1', 'true', 1, true];
+
     /**
      * Constructor
      */
-    public function __construct(string $fieldName, array $accepted = [])
+    public function __construct(private string $fieldName, array $accepted = [])
     {
         parent::__construct();
-        if (0 === count($accepted)) {
-            $accepted = ['yes', 'on', '1', 'true', 1, true];
+
+        if (0 !== count($accepted)) {
+            $this->accepted = $accepted;
         }
 
-        $this->setParameter('accepted', $accepted);
-        $this->setParameter('fieldName', $fieldName);
+        $this->setParameter('fieldName', $this->fieldName);
+        $this->setParameter('accepted', $this->accepted);
     }
 
     /**
@@ -48,13 +51,12 @@ class AcceptedNotEmpty extends AbstractRule
     {
         $value = $this->getValue();
         $empty = $this->isEmpty($value);
-        $fieldName = $this->getParameter('fieldName');
 
         if (false === $empty) {
             return true === $this->isAccepted($value);
         }
 
-        $paths = $this->getPaths($fieldName);
+        $paths = $this->getPaths($this->fieldName);
 
         foreach ($paths as $path) {
             if (false === $this->isEmpty($path->getValue())) {
@@ -65,12 +67,8 @@ class AcceptedNotEmpty extends AbstractRule
         return true === $this->isAccepted($value);
     }
 
-    /**
-     * @throws ValidatorException
-     */
     private function isAccepted(mixed $value): bool
     {
-        $accepted = $this->getParameter('accepted');
-        return true === in_array($value, $accepted, true);
+        return true === in_array($value, $this->accepted, true);
     }
 }

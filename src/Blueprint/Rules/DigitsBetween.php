@@ -23,7 +23,7 @@ class DigitsBetween extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(int $min, int $max)
+    public function __construct(private int $min, private int $max)
     {
         parent::__construct();
         $this->setParameter('min', $min);
@@ -55,6 +55,6 @@ class DigitsBetween extends AbstractRule
         }
 
         $length = $this->getPositiveNumberLength($value);
-        return $length >= $this->getParameter('min') && $length <= $this->getParameter('max');
+        return $length >= $this->min && $length <= $this->max;
     }
 }

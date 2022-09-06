@@ -18,7 +18,7 @@ class Equals extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct($value, bool $strict = false)
+    public function __construct(private mixed $value, private bool $strict = false)
     {
         parent::__construct();
         $this->setParameter('value', $value);
@@ -40,22 +40,21 @@ class Equals extends AbstractRule
     public function isValid(): bool
     {
         $value = $this->getValue();
-        $equals = $this->getParameter('value');
 
         //Check if strict mode is active
-        if (true === $this->getParameter('strict')) {
+        if (true === $this->strict) {
             //Compare the two types
-            if (gettype($value) !== gettype($equals)) {
+            if (gettype($value) !== gettype($this->value)) {
                 return false;
             }
 
             //Compare strictly
-            return $value === $equals;
+            return $value === $this->value;
         }
 
         //Compare but not strictly
         // @codingStandardsIgnoreStart
-        return $value == $equals;
+        return $value == $this->value;
         // @codingStandardsIgnoreEnd
     }
 }

@@ -18,7 +18,7 @@ class Regex extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(string $pattern)
+    public function __construct(private string $pattern)
     {
         parent::__construct();
         $this->setParameter('pattern', $pattern);
@@ -44,6 +44,6 @@ class Regex extends AbstractRule
             return false;
         }
 
-        return (bool) preg_match($this->getParameter('pattern'), (string) $value);
+        return (bool) preg_match($this->pattern, (string) $value);
     }
 }

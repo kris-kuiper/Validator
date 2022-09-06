@@ -21,7 +21,7 @@ class Words extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(int $words, int $minCharacters = 2, bool $onlyAlphanumeric = true)
+    public function __construct(private int $words, private int $minCharacters = 2, private bool $onlyAlphanumeric = true)
     {
         parent::__construct();
         $this->setParameter('words', $words);
@@ -44,14 +44,11 @@ class Words extends AbstractRule
     public function isValid(): bool
     {
         $value = $this->getValue();
-        $onlyAlphanumeric = $this->getParameter('onlyAlphanumeric');
-        $minCharacters = $this->getParameter('minCharacters');
-        $amount = $this->getParameter('words');
 
         if (false === is_string($value) && false === is_numeric($value)) {
             return false;
         }
 
-        return $amount === count($this->filterWords($value, $minCharacters, $onlyAlphanumeric));
+        return $this->words === count($this->filterWords($value, $this->minCharacters, $this->onlyAlphanumeric));
     }
 }

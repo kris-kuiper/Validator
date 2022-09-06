@@ -5,23 +5,30 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
 use KrisKuiper\Validator\Blueprint\Rules\{
+    Accepted,
     AcceptedIf,
     AcceptedNotEmpty,
     After,
     AfterOrEqual,
+    Alpha,
+    AlphaDash,
+    AlphaNumeric,
     Before,
     BeforeOrEqual,
     Between,
     Contains,
     ContainsLetter,
     ContainsMixedCase,
+    ContainsNot,
     ContainsNumber,
     ContainsSymbol,
     Count,
+    Countable,
     CountBetween,
     CountMax,
     CountMin,
     Custom,
+    Date,
     Different,
     DifferentWithAll,
     Digits,
@@ -29,52 +36,35 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     DigitsMax,
     DigitsMin,
     Distinct,
+    Email,
     EndsNotWith,
     EndsWith,
     Equals,
     In,
-    IsAccepted,
-    IsAlpha,
-    IsAlphaDash,
-    IsAlphaNumeric,
+    IP,
+    IPPrivate,
+    IPPublic,
+    IPv4,
+    IPv6,
     IsArray,
     IsBool,
-    IsCountable,
-    IsDate,
-    IsEmail,
     IsEmpty,
     IsFalse,
-    IsIP,
-    IsIPPrivate,
-    IsIPPublic,
-    IsIPv4,
-    IsIPv6,
     IsInt,
-    IsJSON,
-    IsMACAddress,
     IsNotNull,
     IsNull,
-    IsNumber,
-    IsScalar,
     IsString,
-    IsTimezone,
     IsTrue,
-    IsURL,
-    IsUUID,
-    IsUUIDv1,
-    IsUUIDv3,
-    IsUUIDv4,
-    IsUUIDv5,
+    JSON,
     Length,
     LengthBetween,
+    LengthMax,
+    LengthMin,
+    MACAddress,
     Max,
-    MaxLength,
-    MaxWords,
     Min,
-    MinLength,
-    MinWords,
-    NotContains,
     NotIn,
+    Number,
     Present,
     Regex,
     Required,
@@ -83,14 +73,32 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    Scalar,
     StartsNotWith,
     StartsWith,
-    Words
+    Timezone,
+    URL,
+    UUID,
+    UUIDv1,
+    UUIDv3,
+    UUIDv4,
+    UUIDv5,
+    Words,
+    WordsMax,
+    WordsMin,
 };
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait
 {
+    /**
+     * Checks if the data under validation is accepted
+     */
+    public function accepted(array $accepted = []): self
+    {
+        return $this->addRule(new Accepted($accepted));
+    }
+
     /**
      * Checks if the data under validation is accepted if another field under validation is equal to a specified value
      */
@@ -126,6 +134,30 @@ trait RuleTrait
     }
 
     /**
+     * Checks if value only contains alpha characters
+     */
+    public function alpha(): self
+    {
+        return $this->addRule(new Alpha());
+    }
+
+    /**
+     * Checks if value only contains letters and numbers, dashes and underscores
+     */
+    public function alphaDash(): self
+    {
+        return $this->addRule(new AlphaDash());
+    }
+
+    /**
+     * Checks if value only exists off letters and numbers
+     */
+    public function alphaNumeric(): self
+    {
+        return $this->addRule(new AlphaNumeric());
+    }
+
+    /**
      * Checks if the data under validation comes before a given date
      * @throws ValidatorException
      */
@@ -157,6 +189,14 @@ trait RuleTrait
     public function contains(string|int|float $value, bool $caseSensitive = false): self
     {
         return $this->addRule(new Contains($value, $caseSensitive));
+    }
+
+    /**
+     * Checks if the data under validation does not contain a given value
+     */
+    public function containsNot($value, bool $caseSensitive = false): self
+    {
+        return $this->addRule(new ContainsNot($value, $caseSensitive));
     }
 
     /**
@@ -200,6 +240,14 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the data under validation is countable
+     */
+    public function countable(): self
+    {
+        return $this->addRule(new Countable());
+    }
+
+    /**
      * Checks if the data under validation contains an amount of items between a given minimum and maximum
      */
     public function countBetween(int $minimum, int $maximum): self
@@ -230,6 +278,14 @@ trait RuleTrait
     {
         return $this->addRule(new Custom($ruleName, static function () {
         }, $parameters));
+    }
+
+    /**
+     * Checks if the data under validation is a valid date
+     */
+    public function date(string $format = 'Y-m-d'): self
+    {
+        return $this->addRule(new Date($format));
     }
 
     /**
@@ -289,6 +345,14 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the data under validation is a valid email address
+     */
+    public function email(): self
+    {
+        return $this->addRule(new Email());
+    }
+
+    /**
      * Checks if the data under validation does not end with a given value
      */
     public function endsNotWith(string|int|float $value, bool $caseSensitive = false): self
@@ -321,6 +385,46 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the data under validation is a valid IP address (v4 or v6)
+     */
+    public function ip(): self
+    {
+        return $this->addRule(new IP());
+    }
+
+    /**
+     * Checks if the data under validation is a private ip address (v4 or v6)
+     */
+    public function ipPrivate(): self
+    {
+        return $this->addRule(new IPPrivate());
+    }
+
+    /**
+     * Checks if the data under validation is a public ip address (v4 or v6)
+     */
+    public function ipPublic(): self
+    {
+        return $this->addRule(new IPPublic());
+    }
+
+    /**
+     * Checks if the data under validation is a valid IP V4 address
+     */
+    public function ipv4(): self
+    {
+        return $this->addRule(new IPv4());
+    }
+
+    /**
+     * Checks if the data under validation is a valid IP V6 address
+     */
+    public function ipv6(): self
+    {
+        return $this->addRule(new IPv6());
+    }
+
+    /**
      * Checks if the data under validation is an array
      */
     public function isArray(): self
@@ -329,67 +433,11 @@ trait RuleTrait
     }
 
     /**
-     * Checks if the data under validation is accepted
-     */
-    public function isAccepted(array $accepted = []): self
-    {
-        return $this->addRule(new IsAccepted($accepted));
-    }
-
-    /**
-     * Checks if value only contains alpha characters
-     */
-    public function isAlpha(): self
-    {
-        return $this->addRule(new IsAlpha());
-    }
-
-    /**
-     * Checks if value only contains letters and numbers, dashes and underscores
-     */
-    public function isAlphaDash(): self
-    {
-        return $this->addRule(new IsAlphaDash());
-    }
-
-    /**
-     * Checks if value only exists off letters and numbers
-     */
-    public function isAlphaNumeric(): self
-    {
-        return $this->addRule(new IsAlphaNumeric());
-    }
-
-    /**
      * Checks if the data under validation is a boolean
      */
     public function isBool(): self
     {
         return $this->addRule(new IsBool());
-    }
-
-    /**
-     * Checks if the data under validation is countable
-     */
-    public function isCountable(): self
-    {
-        return $this->addRule(new IsCountable());
-    }
-
-    /**
-     * Checks if the data under validation is a valid date
-     */
-    public function isDate(string $format = 'Y-m-d'): self
-    {
-        return $this->addRule(new IsDate($format));
-    }
-
-    /**
-     * Checks if the data under validation is a valid email address
-     */
-    public function isEmail(): self
-    {
-        return $this->addRule(new IsEmail());
     }
 
     /**
@@ -417,62 +465,6 @@ trait RuleTrait
     }
 
     /**
-     * Checks if the data under validation is a valid IP address (v4 or v6)
-     */
-    public function isIP(): self
-    {
-        return $this->addRule(new IsIP());
-    }
-
-    /**
-     * Checks if the data under validation is a private ip address (v4 or v6)
-     */
-    public function isIPPrivate(): self
-    {
-        return $this->addRule(new IsIPPrivate());
-    }
-
-    /**
-     * Checks if the data under validation is a public ip address (v4 or v6)
-     */
-    public function isIPPublic(): self
-    {
-        return $this->addRule(new IsIPPublic());
-    }
-
-    /**
-     * Checks if the data under validation is a valid IP V4 address
-     */
-    public function isIPv4(): self
-    {
-        return $this->addRule(new IsIPv4());
-    }
-
-    /**
-     * Checks if the data under validation is a valid IP V6 address
-     */
-    public function isIPv6(): self
-    {
-        return $this->addRule(new IsIPv6());
-    }
-
-    /**
-     * Checks if the data under validation is valid JSON
-     */
-    public function isJSON(): self
-    {
-        return $this->addRule(new IsJSON());
-    }
-
-    /**
-     * Checks if the data under validation is a valid MAC Address
-     */
-    public function isMACAddress(string $delimiter = '-'): self
-    {
-        return $this->addRule(new IsMACAddress($delimiter));
-    }
-
-    /**
      * Checks if the data under validation is not null
      */
     public function isNotNull(): self
@@ -489,36 +481,11 @@ trait RuleTrait
     }
 
     /**
-     * Checks if the data under validation is an integer number
-     */
-    public function isNumber(bool $strict = false): self
-    {
-        return $this->addRule(new IsNumber($strict));
-    }
-
-    /**
-     * Checks if the data under validation is a scalar type
-     */
-    public function isScalar(): self
-    {
-        return $this->addRule(new IsScalar());
-    }
-
-    /**
      * Checks if the data under validation is of the type string
      */
     public function isString(): self
     {
         return $this->addRule(new IsString());
-    }
-
-    /**
-     * Checks if the data under validation is a valid timezone
-     * See https://www.php.net/manual/en/datetimezone.listidentifiers.php for more details
-     */
-    public function isTimezone(bool $caseInsensitive = false): self
-    {
-        return $this->addRule(new IsTimezone($caseInsensitive));
     }
 
     /**
@@ -530,51 +497,11 @@ trait RuleTrait
     }
 
     /**
-     * Checks if the data under validation is a valid URL
+     * Checks if the data under validation is valid JSON
      */
-    public function isURL(bool $protocol = false): self
+    public function json(): self
     {
-        return $this->addRule(new IsURL($protocol));
-    }
-
-    /**
-     * Checks if the data under validation is a valid UUID v1 entity
-     */
-    public function isUUIDv1(): self
-    {
-        return $this->addRule(new IsUUIDv1());
-    }
-
-    /**
-     * Checks if the data under validation is a valid UUID v1, v3, v4 or v5 entity
-     */
-    public function isUUID(): self
-    {
-        return $this->addRule(new IsUUID());
-    }
-
-    /**
-     * Checks if the data under validation is a valid UUID v3 entity
-     */
-    public function isUUIDv3(): self
-    {
-        return $this->addRule(new IsUUIDv3());
-    }
-
-    /**
-     * Checks if the data under validation is a valid UUID v4 entity
-     */
-    public function isUUIDv4(): self
-    {
-        return $this->addRule(new IsUUIDv4());
-    }
-
-    /**
-     * Checks if the data under validation is a valid UUID v4 entity
-     */
-    public function isUUIDv5(): self
-    {
-        return $this->addRule(new IsUUIDv5());
+        return $this->addRule(new JSON());
     }
 
     /**
@@ -594,27 +521,35 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the amount of characters is less or equal than the given amount
+     */
+    public function lengthMax(int $characters): self
+    {
+        return $this->addRule(new LengthMax($characters));
+    }
+
+    /**
+     * Checks if the amount of characters is at least a given amount
+     */
+    public function lengthMin(int $characters): self
+    {
+        return $this->addRule(new LengthMin($characters));
+    }
+
+    /**
+     * Checks if the data under validation is a valid MAC Address
+     */
+    public function macAddress(string $delimiter = '-'): self
+    {
+        return $this->addRule(new MACAddress($delimiter));
+    }
+
+    /**
      * Checks if the value is less than the given maximum amount
      */
     public function max(float $maximum): self
     {
         return $this->addRule(new Max($maximum));
-    }
-
-    /**
-     * Checks if the amount of characters is less or equal than the given amount
-     */
-    public function maxLength(int $characters): self
-    {
-        return $this->addRule(new MaxLength($characters));
-    }
-
-    /**
-     * Checks if the amount of words is less than or equal to a given amount
-     */
-    public function maxWords(int $words, int $minCharacters = 2, bool $onlyAlphanumeric = true): self
-    {
-        return $this->addRule(new MaxWords($words, $minCharacters, $onlyAlphanumeric));
     }
 
     /**
@@ -626,35 +561,19 @@ trait RuleTrait
     }
 
     /**
-     * Checks if the amount of characters is at least a given amount
-     */
-    public function minLength(int $characters): self
-    {
-        return $this->addRule(new MinLength($characters));
-    }
-
-    /**
-     * Checks if the amount of words is at least a given amount
-     */
-    public function minWords(int $words, int $minCharacters = 2, bool $onlyAlphanumeric = true): self
-    {
-        return $this->addRule(new MinWords($words, $minCharacters, $onlyAlphanumeric));
-    }
-
-    /**
-     * Checks if the data under validation does not contain a given value
-     */
-    public function notContains($value, bool $caseSensitive = false): self
-    {
-        return $this->addRule(new NotContains($value, $caseSensitive));
-    }
-
-    /**
      * Checks if the data under validation does not exist in a given array
      */
     public function notIn(array $collection, bool $strict = false): self
     {
         return $this->addRule(new NotIn($collection, $strict));
+    }
+
+    /**
+     * Checks if the data under validation is an integer or float number
+     */
+    public function number(bool $strict = false): self
+    {
+        return $this->addRule(new Number($strict));
     }
 
     /**
@@ -727,6 +646,14 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the data under validation is a scalar type
+     */
+    public function scalar(): self
+    {
+        return $this->addRule(new Scalar());
+    }
+
+    /**
      * Checks if the data under validation begins with a given value
      */
     public function startsNotWith(string|int|float $value, bool $caseSensitive = false): self
@@ -743,10 +670,83 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the data under validation is a valid timezone
+     * See https://www.php.net/manual/en/datetimezone.listidentifiers.php for more details
+     */
+    public function timezone(bool $caseInsensitive = false): self
+    {
+        return $this->addRule(new Timezone($caseInsensitive));
+    }
+
+    /**
+     * Checks if the data under validation is a valid URL
+     */
+    public function url(bool $protocol = false): self
+    {
+        return $this->addRule(new URL($protocol));
+    }
+
+    /**
+     * Checks if the data under validation is a valid UUID v1, v3, v4 or v5 entity
+     */
+    public function uuid(): self
+    {
+        return $this->addRule(new UUID());
+    }
+
+    /**
+     * Checks if the data under validation is a valid UUID v1 entity
+     */
+    public function uuidv1(): self
+    {
+        return $this->addRule(new UUIDv1());
+    }
+
+    /**
+     * Checks if the data under validation is a valid UUID v3 entity
+     */
+    public function uuidv3(): self
+    {
+        return $this->addRule(new UUIDv3());
+    }
+
+    /**
+     * Checks if the data under validation is a valid UUID v4 entity
+     */
+    public function uuidv4(): self
+    {
+        return $this->addRule(new UUIDv4());
+    }
+
+    /**
+     * Checks if the data under validation is a valid UUID v4 entity
+     */
+    public function uuidv5(): self
+    {
+        return $this->addRule(new UUIDv5());
+    }
+
+    /**
      * Checks if the amount of words is at least a given amount
      */
     public function words(int $words, int $minCharacters = 2, bool $onlyAlphanumeric = true): self
     {
         return $this->addRule(new Words($words, $minCharacters, $onlyAlphanumeric));
+    }
+
+    /**
+     * Checks if the amount of words is less than or equal to a given amount
+     */
+    public function wordsMax(int $words, int $minCharacters = 2, bool $onlyAlphanumeric = true): self
+    {
+        return $this->addRule(new WordsMax($words, $minCharacters, $onlyAlphanumeric));
+    }
+
+    /**
+     * Checks if the amount of words is at least a given amount
+     */
+    public function wordsMin(int $words, int $minCharacters = 2, bool $onlyAlphanumeric = true): self
+    {
+        return $this->addRule(new WordsMin($words, $minCharacters, $onlyAlphanumeric));
     }
 }

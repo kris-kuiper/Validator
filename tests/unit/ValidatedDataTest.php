@@ -22,7 +22,7 @@ final class ValidatedDataTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('name')->isAlpha();
+        $validator->field('name')->alpha();
         $validator->field('age')->between(0, 100);
         $validator->execute();
 
@@ -40,7 +40,7 @@ final class ValidatedDataTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('name')->isAlpha();
+        $validator->field('name')->alpha();
         $validator->execute();
 
         $this->assertEquals(['name' => 'Brenda'], $validator->validatedData()->toArray());
@@ -57,7 +57,7 @@ final class ValidatedDataTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('name')->isAlpha();
+        $validator->field('name')->alpha();
         $validator->field('age')->between(25, 100);
         $validator->execute();
 
@@ -75,7 +75,7 @@ final class ValidatedDataTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('name')->isAlpha();
+        $validator->field('name')->alpha();
         $validator->field('age')->between(25, 100);
         $validator->execute();
 
@@ -108,7 +108,7 @@ final class ValidatedDataTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('non-existing')->isAlpha();
+        $validator->field('non-existing')->alpha();
         $validator->execute();
 
         $this->assertEquals([], $validator->validatedData()->toArray());
@@ -139,7 +139,7 @@ final class ValidatedDataTest extends TestCase
 
         $validator = new Validator($data);
         $validator->field('people.*.age')->min(60);
-        $validator->field('people.*.name')->isAlpha();
+        $validator->field('people.*.name')->alpha();
         $validator->execute();
 
         $output = [
@@ -165,7 +165,7 @@ final class ValidatedDataTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('name')->isAlpha();
+        $validator->field('name')->alpha();
         $validator->field('age')->between(0, 100);
         $validator->execute();
 
@@ -187,7 +187,7 @@ final class ValidatedDataTest extends TestCase
 
         $validator = new Validator($data);
         $validator->field('people.*.age')->min(60);
-        $validator->field('people.*.name')->isAlpha();
+        $validator->field('people.*.name')->alpha();
         $validator->execute();
 
         $this->assertEquals([52, 67], $validator->validatedData()->pluck('*.*.age')->toArray());
@@ -207,8 +207,8 @@ final class ValidatedDataTest extends TestCase
 
         $validator = new Validator($data);
         $validator->combine('day', 'month', 'year')->glue('-')->alias('date');
-        $validator->field('date')->isDate('Y-j-d');
-        $validator->field('name')->isAlpha();
+        $validator->field('date')->date('Y-j-d');
+        $validator->field('name')->alpha();
         $validator->execute();
 
         $output = [
@@ -233,8 +233,8 @@ final class ValidatedDataTest extends TestCase
 
         $validator = new Validator($data);
         $validator->combine('day', 'month', 'year')->glue('-')->alias('date');
-        $validator->field('date')->isDate('Y-j-d');
-        $validator->field('name')->isAlpha();
+        $validator->field('date')->date('Y-j-d');
+        $validator->field('name')->alpha();
         $validator->execute();
 
         $output = [

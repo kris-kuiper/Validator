@@ -52,7 +52,7 @@ final class SymbolsTest extends TestCase
     {
         $validator = new Validator(['field' => '']);
         $validator->field('field')->containsSymbol();
-        $validator->messages('field')->symbols('Message symbols');
+        $validator->messages('field')->containsSymbol('Message symbols');
         $this->assertFalse($validator->execute());
         $this->assertSame('Message symbols', $validator->errors()->first('field')?->getMessage());
     }

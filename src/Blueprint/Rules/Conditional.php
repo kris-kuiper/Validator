@@ -6,7 +6,6 @@ namespace KrisKuiper\Validator\Blueprint\Rules;
 
 use Closure;
 use KrisKuiper\Validator\Blueprint\Custom\Current;
-use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 class Conditional extends AbstractRule
 {
@@ -18,10 +17,10 @@ class Conditional extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(Closure $callback)
+    public function __construct(private Closure $callback)
     {
-        $this->setParameter('callback', $callback);
         parent::__construct();
+        $this->setParameter('callback', $callback);
     }
 
     /**
@@ -34,11 +33,10 @@ class Conditional extends AbstractRule
 
     /**
      * @inheritdoc
-     * @throws ValidatorException
      */
     public function isValid(): bool
     {
-        $callback = $this->getParameter('callback');
+        $callback = $this->callback;
         $conditional = $callback(new Current($this, $this->getName()));
 
         if (false === $conditional) {

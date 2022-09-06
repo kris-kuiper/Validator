@@ -5,19 +5,30 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
 use KrisKuiper\Validator\Blueprint\Messages\{
+    Accepted,
     AcceptedIf,
     AcceptedNotEmpty,
     After,
     AfterOrEqual,
+    Alpha,
+    AlphaDash,
+    AlphaNumeric,
     Before,
     BeforeOrEqual,
     Between,
     Contains,
+    ContainsLetter,
+    ContainsMixedCase,
+    ContainsNot,
+    ContainsNumber,
+    ContainsSymbol,
     Count,
+    Countable,
     CountBetween,
     CountMax,
     CountMin,
     Custom,
+    Date,
     Different,
     DifferentWithAll,
     Digits,
@@ -25,55 +36,35 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     DigitsMax,
     DigitsMin,
     Distinct,
+    Email,
     EndsNotWith,
     EndsWith,
     Equals,
     In,
-    IsAccepted,
-    IsAlpha,
-    IsAlphaDash,
-    IsAlphaNumeric,
+    IP,
+    IPPrivate,
+    IPPublic,
+    IPv4,
+    IPv6,
     IsArray,
     IsBool,
-    IsCountable,
-    IsDate,
-    IsEmail,
     IsEmpty,
     IsFalse,
-    IsIP,
-    IsIPPrivate,
-    IsIPPublic,
-    IsIPv4,
-    IsIPv6,
     IsInt,
-    IsJSON,
-    IsMACAddress,
     IsNotNull,
     IsNull,
-    IsNumber,
-    IsScalar,
     IsString,
-    IsTimezone,
     IsTrue,
-    IsURL,
-    IsUUID,
-    IsUUIDv1,
-    IsUUIDv3,
-    IsUUIDv4,
-    IsUUIDv5,
+    JSON,
     Length,
     LengthBetween,
-    Letters,
+    LengthMax,
+    LengthMin,
+    MACAddress,
     Max,
-    MaxLength,
-    MaxWords,
     Min,
-    MinLength,
-    MinWords,
-    MixedCase,
-    NotContains,
     NotIn,
-    Numbers,
+    Number,
     Present,
     Regex,
     Required,
@@ -82,14 +73,31 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    Scalar,
     StartsNotWith,
     StartsWith,
-    Symbols,
-    Words
+    Timezone,
+    URL,
+    UUID,
+    UUIDv1,
+    UUIDv3,
+    UUIDv4,
+    UUIDv5,
+    Words,
+    WordsMax,
+    WordsMin,
 };
 
 trait MessageTrait
 {
+    /**
+     * Adds a new message for the accepted rule
+     */
+    public function accepted(string|int|float $message): self
+    {
+        return $this->addMessage(new Accepted($message));
+    }
+
     /**
      * Adds a new message for the acceptedIf rule
      */
@@ -120,6 +128,30 @@ trait MessageTrait
     public function afterOrEqual(string|int|float $message): self
     {
         return $this->addMessage(new AfterOrEqual($message));
+    }
+
+    /**
+     * Adds a new message for the Alpha rule
+     */
+    public function alpha(string|int|float $message): self
+    {
+        return $this->addMessage(new Alpha($message));
+    }
+
+    /**
+     * Adds a new message for the alphaDash rule
+     */
+    public function alphaDash(string|int|float $message): self
+    {
+        return $this->addMessage(new AlphaDash($message));
+    }
+
+    /**
+     * Adds a new message for the alphaNumeric rule
+     */
+    public function alphaNumeric(string|int|float $message): self
+    {
+        return $this->addMessage(new AlphaNumeric($message));
     }
 
     /**
@@ -155,11 +187,59 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the containsNot rule
+     */
+    public function containsNot(string|int|float $message): self
+    {
+        return $this->addMessage(new ContainsNot($message));
+    }
+
+    /**
+     * Adds a new message for the containsLetter rule
+     */
+    public function containsLetter(string|int|float $message): self
+    {
+        return $this->addMessage(new ContainsLetter($message));
+    }
+
+    /**
+     * CAdds a new message for the containsMixedCase rule
+     */
+    public function containsMixedCase(string|int|float $message): self
+    {
+        return $this->addMessage(new ContainsMixedCase($message));
+    }
+
+    /**
+     * Adds a new message for the containsNumber rule
+     */
+    public function containsNumber(string|int|float $message): self
+    {
+        return $this->addMessage(new ContainsNumber($message));
+    }
+
+    /**
+     * Adds a new message for the containsSymbol rule
+     */
+    public function containsSymbol(string|int|float $message): self
+    {
+        return $this->addMessage(new ContainsSymbol($message));
+    }
+
+    /**
      * Adds a new message for the count rule
      */
     public function count(string|int|float $message): self
     {
         return $this->addMessage(new Count($message));
+    }
+
+    /**
+     * Adds a new message for the countable rule
+     */
+    public function countable(string|int|float $message): self
+    {
+        return $this->addMessage(new Countable($message));
     }
 
     /**
@@ -195,6 +275,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the date rule
+     */
+    public function date(string|int|float $message): self
+    {
+        return $this->addMessage(new Date($message));
+    }
+
+    /**
      * Adds a new message for the different rule
      */
     public function different(string|int|float $message): self
@@ -227,11 +315,35 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the digitsMax rule
+     */
+    public function digitsMax(string|int|float $message): self
+    {
+        return $this->addMessage(new DigitsMax($message));
+    }
+
+    /**
+     * Adds a new message for the digitsMin rule
+     */
+    public function digitsMin(string|int|float $message): self
+    {
+        return $this->addMessage(new digitsMin($message));
+    }
+
+    /**
      * Adds a new message for the distinct rule
      */
     public function distinct(string|int|float $message): self
     {
         return $this->addMessage(new Distinct($message));
+    }
+
+    /**
+     * Adds a new message for the email rule
+     */
+    public function email(string|int|float $message): self
+    {
+        return $this->addMessage(new Email($message));
     }
 
     /**
@@ -267,35 +379,43 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the isAccepted rule
+     * Adds a new message for the ip rule
      */
-    public function isAccepted(string|int|float $message): self
+    public function ip(string|int|float $message): self
     {
-        return $this->addMessage(new IsAccepted($message));
+        return $this->addMessage(new IP($message));
     }
 
     /**
-     * Adds a new message for the isAlpha rule
+     * Adds a new message for the ipPrivate rule
      */
-    public function isAlpha(string|int|float $message): self
+    public function ipPrivate(string|int|float $message): self
     {
-        return $this->addMessage(new IsAlpha($message));
+        return $this->addMessage(new IPPrivate($message));
     }
 
     /**
-     * Adds a new message for the isAlphaDash rule
+     * Adds a new message for the ipPublic rule
      */
-    public function isAlphaDash(string|int|float $message): self
+    public function ipPublic(string|int|float $message): self
     {
-        return $this->addMessage(new IsAlphaDash($message));
+        return $this->addMessage(new IPPublic($message));
     }
 
     /**
-     * Adds a new message for the isAlphaNumeric rule
+     * Adds a new message for the ipv4 rule
      */
-    public function isAlphaNumeric(string|int|float $message): self
+    public function ipv4(string|int|float $message): self
     {
-        return $this->addMessage(new IsAlphaNumeric($message));
+        return $this->addMessage(new IPv4($message));
+    }
+
+    /**
+     * Adds a new message for the ipv6 rule
+     */
+    public function ipv6(string|int|float $message): self
+    {
+        return $this->addMessage(new IPv6($message));
     }
 
     /**
@@ -315,30 +435,6 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the isCountable rule
-     */
-    public function isCountable(string|int|float $message): self
-    {
-        return $this->addMessage(new IsCountable($message));
-    }
-
-    /**
-     * Adds a new message for the isDate rule
-     */
-    public function isDate(string|int|float $message): self
-    {
-        return $this->addMessage(new IsDate($message));
-    }
-
-    /**
-     * Adds a new message for the isEmail rule
-     */
-    public function isEmail(string|int|float $message): self
-    {
-        return $this->addMessage(new IsEmail($message));
-    }
-
-    /**
      * Adds a new message for the isEmpty rule
      */
     public function isEmpty(string|int|float $message): self
@@ -355,46 +451,6 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the isIP rule
-     */
-    public function isIP(string|int|float $message): self
-    {
-        return $this->addMessage(new IsIP($message));
-    }
-
-    /**
-     * Adds a new message for the isIPPrivate rule
-     */
-    public function isIPPrivate(string|int|float $message): self
-    {
-        return $this->addMessage(new IsIPPrivate($message));
-    }
-
-    /**
-     * Adds a new message for the isIPPublic rule
-     */
-    public function isIPPublic(string|int|float $message): self
-    {
-        return $this->addMessage(new IsIPPublic($message));
-    }
-
-    /**
-     * Adds a new message for the isIPv4 rule
-     */
-    public function isIPv4(string|int|float $message): self
-    {
-        return $this->addMessage(new IsIPv4($message));
-    }
-
-    /**
-     * Adds a new message for the isIPv6 rule
-     */
-    public function isIPv6(string|int|float $message): self
-    {
-        return $this->addMessage(new IsIPv6($message));
-    }
-
-    /**
      * Adds a new message for the isInt rule
      */
     public function isInt(string|int|float $message): self
@@ -403,23 +459,7 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the isJSON rule
-     */
-    public function isJSON(string|int|float $message): self
-    {
-        return $this->addMessage(new IsJSON($message));
-    }
-
-    /**
-     * Adds a new message for the isMACAddress rule
-     */
-    public function isMACAddress(string|int|float $message): self
-    {
-        return $this->addMessage(new IsMACAddress($message));
-    }
-
-    /**
-     * Adds a new message for the isNumber rule
+     * Adds a new message for the isNotNull rule
      */
     public function isNotNull(string|int|float $message): self
     {
@@ -427,27 +467,11 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the isNumber rule
+     * Adds a new message for the isNull rule
      */
     public function isNull(string|int|float $message): self
     {
         return $this->addMessage(new IsNull($message));
-    }
-
-    /**
-     * Adds a new message for the isNumber rule
-     */
-    public function isNumber(string|int|float $message): self
-    {
-        return $this->addMessage(new IsNumber($message));
-    }
-
-    /**
-     * Adds a new message for the isScalar rule
-     */
-    public function isScalar(string|int|float $message): self
-    {
-        return $this->addMessage(new IsScalar($message));
     }
 
     /**
@@ -459,14 +483,6 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the isTimezone rule
-     */
-    public function isTimezone(string|int|float $message): self
-    {
-        return $this->addMessage(new IsTimezone($message));
-    }
-
-    /**
      * Adds a new message for the isTrue rule
      */
     public function isTrue(string|int|float $message): self
@@ -475,51 +491,11 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the isURL rule
+     * Adds a new message for the json rule
      */
-    public function isURL(string|int|float $message): self
+    public function json(string|int|float $message): self
     {
-        return $this->addMessage(new IsURL($message));
-    }
-
-    /**
-     * Adds a new message for the isUUID rule
-     */
-    public function isUUID(string $message): self
-    {
-        return $this->addMessage(new IsUUID($message));
-    }
-
-    /**
-     * Adds a new message for the isUUIDv1 rule
-     */
-    public function isUUIDv1(string $message): self
-    {
-        return $this->addMessage(new IsUUIDv1($message));
-    }
-
-    /**
-     * Adds a new message for the isUUIDv3 rule
-     */
-    public function isUUIDv3(string $message): self
-    {
-        return $this->addMessage(new IsUUIDv3($message));
-    }
-
-    /**
-     * Adds a new message for the isUUIDv4 rule
-     */
-    public function isUUIDv4(string $message): self
-    {
-        return $this->addMessage(new IsUUIDv4($message));
-    }
-
-    /**
-     * Adds a new message for the isUUIDv5 rule
-     */
-    public function isUUIDv5(string $message): self
-    {
-        return $this->addMessage(new IsUUIDv5($message));
+        return $this->addMessage(new JSON($message));
     }
 
     /**
@@ -531,19 +507,35 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the letters rule
-     */
-    public function letters(string|int|float $message): self
-    {
-        return $this->addMessage(new Letters($message));
-    }
-
-    /**
      * Adds a new message for the lengthBetween rule
      */
     public function lengthBetween(string|int|float $message): self
     {
         return $this->addMessage(new LengthBetween($message));
+    }
+
+    /**
+     * Adds a new message for the lengthMax rule
+     */
+    public function lengthMax(string|int|float $message): self
+    {
+        return $this->addMessage(new LengthMax($message));
+    }
+
+    /**
+     * Adds a new message for the lengthMin rule
+     */
+    public function lengthMin(string|int|float $message): self
+    {
+        return $this->addMessage(new LengthMin($message));
+    }
+
+    /**
+     * Adds a new message for the macAddress rule
+     */
+    public function macAddress(string|int|float $message): self
+    {
+        return $this->addMessage(new MACAddress($message));
     }
 
     /**
@@ -555,75 +547,11 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the digitsMax rule
-     */
-    public function digitsMax(string|int|float $message): self
-    {
-        return $this->addMessage(new DigitsMax($message));
-    }
-
-    /**
-     * Adds a new message for the maxLength rule
-     */
-    public function maxLength(string|int|float $message): self
-    {
-        return $this->addMessage(new MaxLength($message));
-    }
-
-    /**
-     * Adds a new message for the maxWords rule
-     */
-    public function maxWords(string|int|float $message): self
-    {
-        return $this->addMessage(new MaxWords($message));
-    }
-
-    /**
      * Adds a new message for the min rule
      */
     public function min(string|int|float $message): self
     {
         return $this->addMessage(new Min($message));
-    }
-
-    /**
-     * Adds a new message for the digitsMin rule
-     */
-    public function digitsMin(string|int|float $message): self
-    {
-        return $this->addMessage(new digitsMin($message));
-    }
-
-    /**
-     * Adds a new message for the minLength rule
-     */
-    public function minLength(string|int|float $message): self
-    {
-        return $this->addMessage(new MinLength($message));
-    }
-
-    /**
-     * Adds a new message for the minWords rule
-     */
-    public function minWords(string|int|float $message): self
-    {
-        return $this->addMessage(new MinWords($message));
-    }
-
-    /**
-     * Adds a new message for the mixedCase rule
-     */
-    public function mixedCase(string|int|float $message): self
-    {
-        return $this->addMessage(new MixedCase($message));
-    }
-
-    /**
-     * Adds a new message for the notContains rule
-     */
-    public function notContains(string|int|float $message): self
-    {
-        return $this->addMessage(new NotContains($message));
     }
 
     /**
@@ -635,11 +563,11 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the notIn rule
+     * Adds a new message for the number rule
      */
-    public function numbers(string|int|float $message): self
+    public function number(string|int|float $message): self
     {
-        return $this->addMessage(new Numbers($message));
+        return $this->addMessage(new Number($message));
     }
 
     /**
@@ -707,6 +635,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the scalar rule
+     */
+    public function scalar(string|int|float $message): self
+    {
+        return $this->addMessage(new Scalar($message));
+    }
+
+    /**
      * Adds a new message for the startsNotWith rule
      */
     public function startsNotWith(string|int|float $message): self
@@ -723,11 +659,59 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the symbols rule
+     * Adds a new message for the timezone rule
      */
-    public function symbols(string|int|float $message): self
+    public function timezone(string|int|float $message): self
     {
-        return $this->addMessage(new Symbols($message));
+        return $this->addMessage(new Timezone($message));
+    }
+
+    /**
+     * Adds a new message for the url rule
+     */
+    public function url(string|int|float $message): self
+    {
+        return $this->addMessage(new URL($message));
+    }
+
+    /**
+     * Adds a new message for the uuid rule
+     */
+    public function uuid(string $message): self
+    {
+        return $this->addMessage(new UUID($message));
+    }
+
+    /**
+     * Adds a new message for the uuidv1 rule
+     */
+    public function uuidv1(string $message): self
+    {
+        return $this->addMessage(new UUIDv1($message));
+    }
+
+    /**
+     * Adds a new message for the uuidv3 rule
+     */
+    public function uuidv3(string $message): self
+    {
+        return $this->addMessage(new UUIDv3($message));
+    }
+
+    /**
+     * Adds a new message for the uuidv4 rule
+     */
+    public function uuidv4(string $message): self
+    {
+        return $this->addMessage(new UUIDv4($message));
+    }
+
+    /**
+     * Adds a new message for the uuidv5 rule
+     */
+    public function uuidv5(string $message): self
+    {
+        return $this->addMessage(new UUIDv5($message));
     }
 
     /**
@@ -736,5 +720,21 @@ trait MessageTrait
     public function words(string|int|float $message): self
     {
         return $this->addMessage(new Words($message));
+    }
+
+    /**
+     * Adds a new message for the wordsMax rule
+     */
+    public function wordsMax(string|int|float $message): self
+    {
+        return $this->addMessage(new WordsMax($message));
+    }
+
+    /**
+     * Adds a new message for the wordsMin rule
+     */
+    public function wordsMin(string|int|float $message): self
+    {
+        return $this->addMessage(new WordsMin($message));
     }
 }

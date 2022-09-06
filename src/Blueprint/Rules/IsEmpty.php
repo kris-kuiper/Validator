@@ -30,6 +30,7 @@ class IsEmpty extends AbstractRule
     public function isValid(): bool
     {
         $value = $this->getValue();
+
         return match (gettype($value)) {
             'array' => 0 === count($value),
             'string' => '' === $value,

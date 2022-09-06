@@ -23,7 +23,7 @@ class DigitsMin extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(int $min)
+    public function __construct(private int $min)
     {
         parent::__construct();
         $this->setParameter('min', $min);
@@ -54,6 +54,6 @@ class DigitsMin extends AbstractRule
         }
 
         $length = $this->getPositiveNumberLength($value);
-        return $length >= $this->getParameter('min');
+        return $length >= $this->min;
     }
 }

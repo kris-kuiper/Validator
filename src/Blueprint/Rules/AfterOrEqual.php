@@ -20,15 +20,16 @@ class AfterOrEqual extends AbstractRule
      * Constructor
      * @throws ValidatorException
      */
-    public function __construct(string $date, string $format = 'Y-m-d')
+    public function __construct(private string $date, private string $format = 'Y-m-d')
     {
         if (false === DateTime::createFromFormat($format, $date)) {
             throw ValidatorException::incorrectDateFormatUsed($date, $format);
         }
 
         parent::__construct();
-        $this->setParameter('date', $date);
-        $this->setParameter('format', $format);
+
+        $this->setParameter('date', $this->date);
+        $this->setParameter('format', $this->format);
     }
 
     /**
@@ -48,9 +49,8 @@ class AfterOrEqual extends AbstractRule
         $value = $this->getValue();
 
         if (true === is_string($value) || true === is_numeric($value)) {
-            $format = $this->getParameter('format');
-            $timestamp = DateTime::createFromFormat($format, $this->getParameter('date'))->getTimestamp();
-            $date = DateTime::createFromFormat($format, (string) $value);
+            $timestamp = DateTime::createFromFormat($this->format, $this->date)->getTimestamp();
+            $date = DateTime::createFromFormat($this->format, (string) $value);
 
             if (false === $date) {
                 return false;

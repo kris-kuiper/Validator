@@ -18,7 +18,7 @@ class StartsNotWith extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(string|int|float $value, bool $caseSensitive = false)
+    public function __construct(private string|int|float $value, private bool $caseSensitive = false)
     {
         parent::__construct();
         $this->setParameter('value', $value);
@@ -40,16 +40,15 @@ class StartsNotWith extends AbstractRule
     public function isValid(): bool
     {
         $value = $this->getValue();
-        $startsWith = $this->getParameter('value');
 
         if (false === is_string($value) && false === is_numeric($value)) {
             return true;
         }
 
-        if (true === $this->getParameter('caseSensitive')) {
-            return true !== str_starts_with((string) $value, (string) $startsWith);
+        if (true === $this->caseSensitive) {
+            return true !== str_starts_with((string) $value, (string) $this->value);
         }
 
-        return true !== str_starts_with(strtolower((string) $value), strtolower((string) $startsWith));
+        return true !== str_starts_with(strtolower((string) $value), strtolower((string) $this->value));
     }
 }

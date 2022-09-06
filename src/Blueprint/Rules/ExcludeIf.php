@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
-use KrisKuiper\Validator\Exceptions\ValidatorException;
-
 class ExcludeIf extends AbstractRequired
 {
     public const NAME = 'excludeIf';
@@ -13,7 +11,7 @@ class ExcludeIf extends AbstractRequired
     /**
      * Constructor
      */
-    public function __construct(string|int|float $fieldName, mixed $value)
+    public function __construct(private string|int|float $fieldName, private mixed $value)
     {
         $this->setParameter('fieldName', $fieldName);
         $this->setParameter('value', $value);
@@ -30,20 +28,17 @@ class ExcludeIf extends AbstractRequired
 
     /**
      * @inheritdoc
-     * @throws ValidatorException
      */
     public function isValid(): bool
     {
-        $fieldName = $this->getParameter('fieldName');
-        $value = $this->getParameter('value');
-        $paths = $this->getPaths($fieldName);
+        $paths = $this->getPaths($this->fieldName);
 
         if (0 === $paths->count()) {
             return true;
         }
 
         foreach ($paths as $path) {
-            if ($value === $path->getValue()) {
+            if ($this->value === $path->getValue()) {
                 $this->getField()?->setBailed(true);
                 return true;
             }

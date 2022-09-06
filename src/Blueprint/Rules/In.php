@@ -18,7 +18,7 @@ class In extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(array $collection, bool $strict = false)
+    public function __construct(private array $collection, private bool $strict = false)
     {
         parent::__construct();
         $this->setParameter('collection', $collection);
@@ -39,6 +39,6 @@ class In extends AbstractRule
      */
     public function isValid(): bool
     {
-        return true === in_array($this->getValue(), $this->getParameter('collection'), $this->getParameter('strict'));
+        return true === in_array($this->getValue(), $this->collection, $this->strict);
     }
 }

@@ -18,7 +18,7 @@ class LengthBetween extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(int $minimum, int $maximum)
+    public function __construct(private int $minimum, private int $maximum)
     {
         parent::__construct();
         $this->setParameter('minimum', $minimum);
@@ -46,6 +46,6 @@ class LengthBetween extends AbstractRule
         }
 
         $length = strlen((string) $value);
-        return $length >= $this->getParameter('minimum') && $length <= $this->getParameter('maximum');
+        return $length >= $this->minimum && $length <= $this->maximum;
     }
 }

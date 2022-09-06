@@ -15,20 +15,21 @@ class AcceptedIf extends AbstractRule
      */
     protected string $message = 'Should be accepted';
 
+    private array $accepted = ['yes', 'on', '1', 'true', 1, true];
+
     /**
      * Constructor
      */
-    public function __construct(string $fieldName, mixed $value, array $accepted = [])
+    public function __construct(private string $fieldName, private mixed $value, array $accepted = [])
     {
         parent::__construct();
 
-        if (0 === count($accepted)) {
-            $accepted = ['yes', 'on', '1', 'true', 1, true];
+        if (0 !== count($accepted)) {
+            $this->accepted = $accepted;
         }
 
-        $this->setParameter('fieldName', $fieldName);
-        $this->setParameter('value', $value);
-        $this->setParameter('accepted', $accepted);
+        $this->setParameter('fieldName', $this->fieldName);
+        $this->setParameter('accepted', $this->accepted);
     }
 
     /**
@@ -46,10 +47,10 @@ class AcceptedIf extends AbstractRule
     public function isValid(): bool
     {
         $accepted = $this->getValue();
-        $targetValue = $this->getValidationData()->path($this->getParameter('fieldName'))->getValue();
+        $targetValue = $this->getValidationData()->path($this->fieldName)->getValue();
 
-        if ($this->getParameter('value') === $targetValue) {
-            return true === in_array($accepted, $this->getParameter('accepted'), true);
+        if ($this->value === $targetValue) {
+            return true === in_array($accepted, $this->accepted, true);
         }
 
         return true;

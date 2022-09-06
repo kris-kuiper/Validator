@@ -23,7 +23,7 @@ class DigitsMax extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(int $max)
+    public function __construct(private int $max)
     {
         parent::__construct();
         $this->setParameter('max', $max);
@@ -54,6 +54,6 @@ class DigitsMax extends AbstractRule
         }
 
         $length = $this->getPositiveNumberLength($value);
-        return $length <= $this->getParameter('max');
+        return $length <= $this->max;
     }
 }

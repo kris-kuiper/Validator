@@ -77,7 +77,7 @@ final class BlueprintTest extends TestCase
     {
         $blueprint = new Blueprint();
         $blueprint->combine('year', 'month', 'day')->glue('-')->alias('date');
-        $blueprint->field('date')->isDate();
+        $blueprint->field('date')->date();
 
         $validator = new Validator(['day' => '01', 'month' => '01', 'year' => '2000']);
         $validator->loadBlueprint($blueprint);
@@ -92,7 +92,7 @@ final class BlueprintTest extends TestCase
     {
         $blueprint = new Blueprint();
         $blueprint->combine('year', 'month', 'day')->glue('-')->alias('date');
-        $blueprint->field('date')->isDate();
+        $blueprint->field('date')->date();
 
         $validator = new Validator(['day' => 'a', 'month' => 'b', 'year' => 'c']);
         $validator->loadBlueprint($blueprint);
@@ -109,7 +109,7 @@ final class BlueprintTest extends TestCase
         $blueprint->combine('year', 'month', 'day')->glue('-')->alias('date');
 
         $validator = new Validator(['day' => '01', 'month' => '01', 'year' => '2000']);
-        $validator->field('date')->isDate();
+        $validator->field('date')->date();
         $validator->loadBlueprint($blueprint);
 
         $this->assertTrue($validator->execute());
@@ -255,7 +255,7 @@ final class BlueprintTest extends TestCase
     {
         $blueprint = new Blueprint();
         $blueprint->combine('year', 'month', 'day')->glue('-')->alias('date');
-        $blueprint->field('date')->isDate('Y/m/d');
+        $blueprint->field('date')->date('Y/m/d');
 
         $validator = new Validator(['year' => '1952', 'month' => '03', 'day' => '28']);
         $validator->loadBlueprint($blueprint);

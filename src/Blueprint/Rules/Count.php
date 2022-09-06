@@ -19,7 +19,7 @@ class Count extends AbstractRule
     /**
      * Constructor
      */
-    public function __construct(int $amount)
+    public function __construct(private int $amount)
     {
         parent::__construct();
         $this->setParameter('amount', $amount);
@@ -45,6 +45,6 @@ class Count extends AbstractRule
             return false;
         }
 
-        return count($value) === $this->getParameter('amount');
+        return count($value) === $this->amount;
     }
 }

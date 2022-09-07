@@ -1,7 +1,7 @@
 {
   "name": "kris-kuiper/validator",
   "type": "library",
-  "description": "Modern PHP validator for validating forms and/or array's on steroids.",
+  "description": "Modern PHP validator on steroids for validating forms and/or array's.",
   "keywords": [
     "modern",
     "validate",

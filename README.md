@@ -70,25 +70,21 @@ Modern PHP Validator provides several approaches to validate your application's 
 
 ```php
 $data = [
-    'programmers' => [
+    'department' => 'office',
+    'color' => 'black',
+    'programmer' => [
         'name' => 'Morris',
         'email' => 'morris@domain.com'
     ],
-    'developers' => [
-        'name' => 'Smith',
-        'email' => 'smith@domain.com'
-    ],
-    'department' => 'office',
-    'color' => 'black'
 ];
 
 $validator = new Validator($data);
 
-//Select every email field within an array using wildcards and attach rules
-$validator->field('*.email')->required()->email()->lengthMax(50);
-
 //Select department and color field and attach rules
 $validator->field('department', 'color')->required(false)->isString()->lengthBetween(5, 20);
+
+//Select email field within the programmer array and attach rules
+$validator->field('programmer.email')->required()->email()->lengthMax(50);
 
 if($validator->passes()) {
     //Validation passes
@@ -103,15 +99,16 @@ And this is just the beginning...
 
 Modern PHP Validator is available on Packagist (using semantic versioning). Installation via [Composer](https://getcomposer.org/) is the recommended way.
 
-Just add this line to your composer.json file:
-```shell script
-"kris-kuiper/validator": "^1.1"
-```
-
-or run:
+Run:
 ```shell script
 composer require kris-kuiper/validator
 ```
+
+Or add this line to your composer.json file:
+```shell script
+"kris-kuiper/validator": "^1.2"
+```
+
 
 
 
@@ -862,7 +859,7 @@ $valdiator->field('fieldName')->ip();
 
 
 
-##### IP private 
+##### IP private
 
 Checks if the data under validation is a private IP address (v4 or v6).
 
@@ -872,7 +869,7 @@ $valdiator->field('fieldName')->ipPrivate();
 
 
 
-##### IP public 
+##### IP public
 
 Checks if the data under validation is a public ip address (v4 or v6).
 
@@ -1722,7 +1719,7 @@ $error = $validator->errors()->first();
 $error = $validator->errors('username')->first();
 ```
 
-We now have a single error object stored in the `$error` variable. 
+We now have a single error object stored in the `$error` variable.
 
 This object has several handy methods:
 

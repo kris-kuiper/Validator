@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tests\unit\Extend;
+namespace tests\unit;
 
 use KrisKuiper\Validator\Blueprint\Custom\Current;
 use KrisKuiper\Validator\Exceptions\ValidatorException;

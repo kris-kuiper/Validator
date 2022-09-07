@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tests\unit;
+namespace tests\unit\Middleware;
 
 use KrisKuiper\Validator\Validator;
 use KrisKuiper\Validator\Exceptions\ValidatorException;

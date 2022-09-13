@@ -38,9 +38,9 @@ abstract class AbstractRule
     private ?Field $field = null;
 
     /**
-     * Contains the field under validation
+     * Contains a storage object for arbitrary data
      */
-    private Storage $cache;
+    private Storage $storage;
 
     /**
      * Constructor
@@ -48,15 +48,15 @@ abstract class AbstractRule
     public function __construct()
     {
         $this->validationData = new PathTranslator();
-        $this->cache = new Storage();
+        $this->storage = new Storage();
     }
 
     /**
      * Sets a storage object for storing/retrieving arbitrary data
      */
-    public function setCache(Storage $cache): void
+    public function setStorage(Storage $storage): void
     {
-        $this->cache = $cache;
+        $this->storage = $storage;
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class AbstractRule
      */
     public function getStorage(): Storage
     {
-        return $this->cache;
+        return $this->storage;
     }
 
     /**

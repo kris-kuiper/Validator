@@ -32,7 +32,7 @@ class Validator
     private Blueprint $blueprint;
     private ValidatedData $validatedData;
     private ErrorCollection $errorCollection;
-    private Storage $cache;
+    private Storage $storage;
 
     /**
      * Constructor
@@ -43,7 +43,7 @@ class Validator
         $this->errorCollection = new ErrorCollection();
         $this->validatedData = new ValidatedData();
 
-        $this->cache = new Storage();
+        $this->storage = new Storage();
         $this->blueprint = new Blueprint();
         $this->blueprintParser = new BlueprintParser($this->validationData);
         $this->blueprintParser->getBlueprintCollection()->append($this->blueprint);
@@ -54,7 +54,7 @@ class Validator
      */
     public function storage(): Storage
     {
-        return $this->cache;
+        return $this->storage;
     }
 
     /**
@@ -193,7 +193,7 @@ class Validator
 
                     $rule->setValidationData($this->validationData);
                     $rule->setField($field);
-                    $rule->setCache($this->cache);
+                    $rule->setStorage($this->storage);
 
                     //Check if the rule is valid or not
                     if (true === $this->executeRule($rule)) {

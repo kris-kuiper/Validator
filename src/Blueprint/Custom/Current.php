@@ -13,7 +13,7 @@ class Current
     /**
      * Constructor
      */
-    public function __construct(private AbstractRule $rule, private string $ruleName, private Storage $cache)
+    public function __construct(private AbstractRule $rule, private string $ruleName, private Storage $storage)
     {
     }
 
@@ -74,6 +74,6 @@ class Current
      */
     public function storage(): Storage
     {
-        return $this->cache;
+        return $this->storage;
     }
 }

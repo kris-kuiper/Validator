@@ -83,7 +83,7 @@ final class AcceptedIfTest extends TestCase
      */
     public function testIfCorrectErrorMessageIsReturnedWhenCustomMessageIsSet(): void
     {
-        $validator = new Validator(['field' => '', 'foo' =>'bar']);
+        $validator = new Validator(['field' => '', 'foo' => 'bar']);
         $validator->field('field')->acceptedIf('foo', 'bar');
         $validator->messages('field')->acceptedIf('Message accepted if');
         $this->assertFalse($validator->execute());

@@ -11,7 +11,7 @@ final class GetParametersMiddleware extends AbstractMiddleware
 {
     public function handle(MiddlewareFieldInterface $field): void
     {
-        if($this->getParameters() === ['foo' => 'bar', 'quez' => 'bazz']) {
+        if (['foo' => 'bar', 'quez' => 'bazz'] === $this->getParameters()) {
             $field->setValue($field->getFieldName());
         }
     }

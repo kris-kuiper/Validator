@@ -82,7 +82,7 @@ class Error
      */
     public function getId(): string
     {
-        $message = $this->getRawMessage();
+        $message = (string) $this->getRawMessage();
         return substr(md5($message), 0, 10);
     }
 

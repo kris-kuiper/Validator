@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace KrisKuiper\Validator\Cache;
+namespace KrisKuiper\Validator\Storage;
 
-class Cache
+class Storage
 {
-    private array $cache = [];
+    private array $storage = [];
 
     public function get(string|int $key): mixed
     {
-        return $this->cache[$key] ?? null;
+        return $this->storage[$key] ?? null;
     }
 
     public function has(string|int $key): bool
     {
-        return array_key_exists($key, $this->cache);
+        return array_key_exists($key, $this->storage);
     }
 
     public function set(string|int $key, mixed $value): void
     {
-        $this->cache[$key] = $value;
+        $this->storage[$key] = $value;
     }
 }

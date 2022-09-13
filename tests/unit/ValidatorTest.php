@@ -461,10 +461,10 @@ final class ValidatorTest extends TestCase
     {
         $validator = new Validator(['foo' => 'bar']);
         $validator->field('foo')->required();
-        $validator->cache()->set('foo', 'bar');
-        $this->assertTrue($validator->cache()->has('foo'));
-        $this->assertFalse($validator->cache()->has('quez'));
-        $this->assertSame('bar', $validator->cache()->get('foo'));
-        $this->assertNull($validator->cache()->get('quez'));
+        $validator->storage()->set('foo', 'bar');
+        $this->assertTrue($validator->storage()->has('foo'));
+        $this->assertFalse($validator->storage()->has('quez'));
+        $this->assertSame('bar', $validator->storage()->get('foo'));
+        $this->assertNull($validator->storage()->get('quez'));
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
-use KrisKuiper\Validator\Cache\Cache;
+use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Collections\PathCollection;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Fields\Field;
@@ -40,7 +40,7 @@ abstract class AbstractRule
     /**
      * Contains the field under validation
      */
-    private Cache $cache;
+    private Storage $cache;
 
     /**
      * Constructor
@@ -48,21 +48,21 @@ abstract class AbstractRule
     public function __construct()
     {
         $this->validationData = new PathTranslator();
-        $this->cache = new Cache();
+        $this->cache = new Storage();
     }
 
     /**
-     * Sets a caching object for storing/retrieving arbitrary data
+     * Sets a storage object for storing/retrieving arbitrary data
      */
-    public function setCache(Cache $cache): void
+    public function setCache(Storage $cache): void
     {
         $this->cache = $cache;
     }
 
     /**
-     * Returns a caching object for storing/retrieving arbitrary data
+     * Returns a storage object for storing/retrieving arbitrary data
      */
-    public function getCache(): Cache
+    public function getStorage(): Storage
     {
         return $this->cache;
     }

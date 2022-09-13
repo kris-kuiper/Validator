@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Custom;
 
 use KrisKuiper\Validator\Blueprint\Rules\AbstractRule;
-use KrisKuiper\Validator\Cache\Cache;
+use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 class Current
@@ -13,7 +13,7 @@ class Current
     /**
      * Constructor
      */
-    public function __construct(private AbstractRule $rule, private string $ruleName, private Cache $cache)
+    public function __construct(private AbstractRule $rule, private string $ruleName, private Storage $cache)
     {
     }
 
@@ -70,9 +70,9 @@ class Current
     }
 
     /**
-     * Returns a caching object for storing/retrieving arbitrary data
+     * Returns a storage object for storing/retrieving arbitrary data
      */
-    public function cache(): Cache
+    public function storage(): Storage
     {
         return $this->cache;
     }

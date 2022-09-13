@@ -11,7 +11,7 @@ use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
 use KrisKuiper\Validator\Blueprint\Custom\Custom;
 use KrisKuiper\Validator\Blueprint\MessageList;
 use KrisKuiper\Validator\Blueprint\MiddlewareList;
-use KrisKuiper\Validator\Cache\Cache;
+use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Middleware\Field as MiddlewareField;
 use KrisKuiper\Validator\Blueprint\FieldOptions;
 use KrisKuiper\Validator\Blueprint\Rules\AbstractRule;
@@ -32,7 +32,7 @@ class Validator
     private Blueprint $blueprint;
     private ValidatedData $validatedData;
     private ErrorCollection $errorCollection;
-    private Cache $cache;
+    private Storage $cache;
 
     /**
      * Constructor
@@ -43,16 +43,16 @@ class Validator
         $this->errorCollection = new ErrorCollection();
         $this->validatedData = new ValidatedData();
 
-        $this->cache = new Cache();
+        $this->cache = new Storage();
         $this->blueprint = new Blueprint();
         $this->blueprintParser = new BlueprintParser($this->validationData);
         $this->blueprintParser->getBlueprintCollection()->append($this->blueprint);
     }
 
     /**
-     * Returns a caching object for storing/retrieving arbitrary data
+     * Returns a storage object for storing/retrieving arbitrary data
      */
-    public function cache(): Cache
+    public function storage(): Storage
     {
         return $this->cache;
     }

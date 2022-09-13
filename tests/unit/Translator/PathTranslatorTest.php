@@ -189,7 +189,7 @@ final class PathTranslatorTest extends TestCase
     {
         $data = [
             'foo' => 'bar',
-            'quez' =>'bazz'
+            'quez' => 'bazz'
         ];
 
         $translator = new PathTranslator($data);
@@ -201,7 +201,7 @@ final class PathTranslatorTest extends TestCase
     public function testIfCorrectDataIsReturnedWhenOverwritingData(): void
     {
         $data1 = ['foo' => 'bar'];
-        $data2 = ['quez' =>'bazz'];
+        $data2 = ['quez' => 'bazz'];
 
         $translator = new PathTranslator($data1);
         $translator->setData($data2);
@@ -212,7 +212,7 @@ final class PathTranslatorTest extends TestCase
     public function testIfCorrectArrayIsReturnedWhenAddingDataBasedOnString(): void
     {
         $data1 = [];
-        $data2 =['foo' => 'bar'];
+        $data2 = ['foo' => 'bar'];
 
         $translator = new PathTranslator($data1);
         $translator->set($data2);

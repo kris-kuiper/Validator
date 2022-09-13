@@ -20,7 +20,7 @@ final class CollectionsTest extends TestCase
 {
     public function testIfCustomCollectionReturnsCorrectItemWhenUsingCurrentMethod(): void
     {
-        $item = new Custom('custom', static function() {
+        $item = new Custom('custom', static function () {
         });
 
         $collection = new CustomCollection($item);

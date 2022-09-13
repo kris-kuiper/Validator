@@ -61,21 +61,21 @@ final class CustomTest extends TestCase
 
         $validator->custom($ruleName, function (Current $validator) {
 
-            $this->assertFalse($validator->cache()->has('foo'));
-            $this->assertNull($validator->cache()->get('foo'));
-            $validator->cache()->set('foo', 'bar');
-            $this->assertTrue($validator->cache()->has('foo'));
-            $this->assertSame('bar', $validator->cache()->get('foo'));
+            $this->assertFalse($validator->storage()->has('foo'));
+            $this->assertNull($validator->storage()->get('foo'));
+            $validator->storage()->set('foo', 'bar');
+            $this->assertTrue($validator->storage()->has('foo'));
+            $this->assertSame('bar', $validator->storage()->get('foo'));
             return false;
         });
 
         $validator->field('name')->custom($ruleName);
 
-        $this->assertFalse($validator->cache()->has('foo'));
-        $this->assertNull($validator->cache()->get('foo'));
+        $this->assertFalse($validator->storage()->has('foo'));
+        $this->assertNull($validator->storage()->get('foo'));
         $this->assertFalse($validator->execute());
-        $this->assertTrue($validator->cache()->has('foo'));
-        $this->assertSame('bar', $validator->cache()->get('foo'));
+        $this->assertTrue($validator->storage()->has('foo'));
+        $this->assertSame('bar', $validator->storage()->get('foo'));
     }
 
     /**

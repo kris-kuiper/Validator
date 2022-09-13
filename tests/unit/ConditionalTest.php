@@ -358,19 +358,19 @@ final class ConditionalTest extends TestCase
     public function testIfCacheReturnsCorrectResultWhenUsingConditionalRules(): void
     {
         $validator = new Validator(['foo' => 5]);
-        $validator->cache()->set('foo', 'bar');
+        $validator->storage()->set('foo', 'bar');
         $validator
             ->field('foo')
             ->conditional(function (Current $current) {
-                $this->assertTrue($current->cache()->has('foo'));
-                $this->assertSame('bar', $current->cache()->get('foo'));
-                $current->cache()->set('quez', 'bazz');
-                return 'bar' === $current->cache()->get('foo');
+                $this->assertTrue($current->storage()->has('foo'));
+                $this->assertSame('bar', $current->storage()->get('foo'));
+                $current->storage()->set('quez', 'bazz');
+                return 'bar' === $current->storage()->get('foo');
             })
             ->min(3);
 
         $this->assertTrue($validator->execute());
-        $this->assertTrue($validator->cache()->has('quez'));
-        $this->assertSame('bazz', $validator->cache()->get('quez'));
+        $this->assertTrue($validator->storage()->has('quez'));
+        $this->assertSame('bazz', $validator->storage()->get('quez'));
     }
 }

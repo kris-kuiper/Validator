@@ -14,25 +14,25 @@ interface TranslatorInterface
     /**
      * Stores a new piece of data and tries to merge the data if already exists
      */
-    public function add(string|int|float $key, mixed $value);
+    public function add(string|int $key, mixed $value): void;
 
     /**
      * Stores a new piece of data and overwrites the data if already exists
      */
-    public function set(string|int|float|array $key, mixed $value): void;
+    public function set(string|int|array $key, mixed $value): void;
 
     /**
      * Returns if an item exists
      */
-    public function has(string|int|float $key): bool;
+    public function has(string|int $key): bool;
 
     /**
      * Removes data based on key
      */
-    public function remove(string|int|float $key): void;
+    public function remove(string|int $key): void;
 
     /**
      * Retrieves data based on key
      */
-    public function get(string|int|float $key): array;
+    public function get(string|int $key): array;
 }

@@ -13,7 +13,7 @@ class LengthMin extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should have at least :characters characters';
+    protected string|int|float $message = 'Value should have at least :characters characters';
 
     /**
      * Constructor

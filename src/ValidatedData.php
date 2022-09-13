@@ -19,7 +19,7 @@ class ValidatedData
     /**
      * Excludes (blacklist) all given field names in the result set
      */
-    public function not(...$fieldNames): self
+    public function not(string ...$fieldNames): self
     {
         return $this->createInstance($fieldNames, $this->only, $this->pluck);
     }
@@ -27,7 +27,7 @@ class ValidatedData
     /**
      * Includes (whitelist) all given field names in the result set
      */
-    public function only(...$fieldNames): self
+    public function only(string ...$fieldNames): self
     {
         return $this->createInstance($this->not, $fieldNames, $this->pluck);
     }
@@ -81,6 +81,10 @@ class ValidatedData
         $array = [];
 
         if (count($path) > 0) {
+            if (false === is_int($index) && false === is_string($index)) {
+                $index = (string) $index;
+            }
+
             $this->insertIntoArray($array, $path, [$index => $value]);
         } elseif (null === $index) {
             $array = [$value];
@@ -118,7 +122,9 @@ class ValidatedData
             }
 
             foreach ($paths as $keys) {
-                $this->removeFromArray($output, $keys->getPath());
+                if (null !== $keys) {
+                    $this->removeFromArray($output, $keys->getPath());
+                }
             }
         }
 
@@ -145,7 +151,9 @@ class ValidatedData
             }
 
             foreach ($paths as $keys) {
-                $this->insertIntoArray($only, $keys->getPath(), $keys->getValue());
+                if (null !== $keys) {
+                    $this->insertIntoArray($only, $keys->getPath(), $keys->getValue());
+                }
             }
         }
 
@@ -155,7 +163,7 @@ class ValidatedData
     /**
      * Inserts element into a multidimensional array by giving an array path which represents the path (depth) to the value
      */
-    private function insertIntoArray(&$array, array $path, $value): void
+    private function insertIntoArray(array &$array, array $path, mixed $value): void
     {
         $last = array_pop($path);
 
@@ -183,7 +191,7 @@ class ValidatedData
     /**
      * Removes element from a multidimensional array by giving an array path which represents the path (depth) to the value
      */
-    private function removeFromArray(&$array, array $path): void
+    private function removeFromArray(array &$array, array $path): void
     {
         $previous = null;
         $tmp = &$array;
@@ -203,7 +211,7 @@ class ValidatedData
      */
     private function createInstance(array $not = [], array $only = [], ?string $pluck = null): self
     {
-        $instance = new static();
+        $instance = new self();
         $instance->data = $this->data;
         $instance->not = $not;
         $instance->only = $only;

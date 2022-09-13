@@ -13,7 +13,7 @@ class ContainsNumber extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Requires at least one number';
+    protected string|int|float $message = 'Requires at least one number';
 
     /**
      * @inheritdoc

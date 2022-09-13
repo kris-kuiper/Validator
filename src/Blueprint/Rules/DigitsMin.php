@@ -18,7 +18,7 @@ class DigitsMin extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be at least :min digits long';
+    protected string|int|float $message = 'Value should be at least :min digits long';
 
     /**
      * Constructor

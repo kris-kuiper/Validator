@@ -15,7 +15,7 @@ class Field
     private Path $path;
     private bool $bailed = false;
     private bool $shouldBail = false;
-    private string|int|float $fieldName;
+    private string|int $fieldName;
     private FieldOptionCollection $fieldOptionCollection;
     private CombineProxyCollection $combineProxyCollection;
     private MiddlewareProxyCollection $middlewareProxyCollection;
@@ -23,7 +23,7 @@ class Field
     /**
      * Constructor
      */
-    public function __construct(Path $path, float|int|string $fieldName, CombineProxyCollection $combineProxyCollection)
+    public function __construct(Path $path, int|string $fieldName, CombineProxyCollection $combineProxyCollection)
     {
         $this->path = $path;
         $this->fieldName = $fieldName;
@@ -51,7 +51,7 @@ class Field
     /**
      * Returns the name of the field
      */
-    public function getFieldName(): float|int|string
+    public function getFieldName(): int|string
     {
         return $this->fieldName;
     }

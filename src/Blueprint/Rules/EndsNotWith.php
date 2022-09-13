@@ -13,7 +13,7 @@ class EndsNotWith extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value may not end with ":value"';
+    protected string|int|float $message = 'Value may not end with ":value"';
 
     /**
      * Constructor

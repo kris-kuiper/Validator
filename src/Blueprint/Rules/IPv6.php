@@ -13,7 +13,7 @@ class IPv6 extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be a valid IP V6 address';
+    protected string|int|float $message = 'Value should be a valid IP V6 address';
 
     /**
      * @inheritdoc
@@ -35,6 +35,6 @@ class IPv6 extends AbstractRule
             return false;
         }
 
-        return true === (bool) preg_match('/^(([\da-fA-F]{1,4}:){7}[\da-fA-F]{1,4}|([\da-fA-F]{1,4}:){1,7}:|([\da-fA-F]{1,4}:){1,6}:[\da-fA-F]{1,4}|([\da-fA-F]{1,4}:){1,5}(:[\da-fA-F]{1,4}){1,2}|([\da-fA-F]{1,4}:){1,4}(:[\da-fA-F]{1,4}){1,3}|([\da-fA-F]{1,4}:){1,3}(:[\da-fA-F]{1,4}){1,4}|([\da-fA-F]{1,4}:){1,2}(:[\da-fA-F]{1,4}){1,5}|[\da-fA-F]{1,4}:((:[\da-fA-F]{1,4}){1,6})|:((:[\da-fA-F]{1,4}){1,7}|:)|fe80:(:[\da-fA-F]{0,4}){0,4}%[\da-zA-Z]+|::(ffff(:0{1,4})?:)?((25[0-5]|(2[0-4]|1?\d)?\d)\.){3}(25[0-5]|(2[0-4]|1?\d)?\d)|([\da-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1?\d)?\d)\.){3}(25[0-5]|(2[0-4]|1?\d)?\d))$/i', $value);
+        return false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
     }
 }

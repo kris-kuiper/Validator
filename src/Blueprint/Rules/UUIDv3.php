@@ -13,7 +13,7 @@ class UUIDv3 extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be a valid v3 UUID string';
+    protected string|int|float $message = 'Value should be a valid v3 UUID string';
 
     /**
      * @inheritdoc
@@ -35,6 +35,6 @@ class UUIDv3 extends AbstractRule
             return false;
         }
 
-        return true === (bool) preg_match('/^[\dA-F]{8}-[\dA-F]{4}-3[\dA-F]{3}-[89AB][\dA-F]{3}-[\dA-F]{12}$/i', (string) $value);
+        return true === (bool) preg_match('/^[\dA-F]{8}-[\dA-F]{4}-3[\dA-F]{3}-[89AB][\dA-F]{3}-[\dA-F]{12}$/i', $value);
     }
 }

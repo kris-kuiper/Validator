@@ -11,9 +11,9 @@ class PathTranslator extends AbstractTranslator
     /**
      * @inheritdoc
      */
-    public function add(string|int|float $key, $value = null): void
+    public function add(string|int $key, mixed $value = null): void
     {
-        $keys = explode('.', $key);
+        $keys = explode('.', (string) $key);
         $last = array_pop($keys);
 
         foreach ($keys as $index) {
@@ -34,7 +34,7 @@ class PathTranslator extends AbstractTranslator
     /**
      * @inheritdoc
      */
-    public function set(string|int|float|array $key, $value = null): void
+    public function set(string|int|array $key, mixed $value = null): void
     {
         if (true === is_array($key)) {
             $this->data = array_replace_recursive($this->data, $key);
@@ -47,20 +47,20 @@ class PathTranslator extends AbstractTranslator
     /**
      * @inheritdoc
      */
-    public function has(string|int|float $key): bool
+    public function has(string|int $key): bool
     {
         $pathCollection = new PathCollection();
-        return $this->paths(explode('.', $key), $this->data, $pathCollection, [])->count() > 0;
+        return $this->paths(explode('.', (string) $key), $this->data, $pathCollection, [])->count() > 0;
     }
 
     /**
      * @inheritdoc
      */
-    public function remove(string|int|float $key): void
+    public function remove(string|int $key): void
     {
         $pathCollection = new PathCollection();
 
-        $output = $this->paths(explode('.', $key), $this->data, $pathCollection, []);
+        $output = $this->paths(explode('.', (string) $key), $this->data, $pathCollection, []);
 
         /** @var Path $item */
         foreach ($output as $item) {
@@ -71,7 +71,7 @@ class PathTranslator extends AbstractTranslator
     /**
      * @inheritdoc
      */
-    public function get(string|int|float $key): array
+    public function get(string|int $key): array
     {
         return $this->path($key)->getValues();
     }
@@ -87,7 +87,7 @@ class PathTranslator extends AbstractTranslator
             return $this->paths([$key], $this->data, $pathCollection, []);
         }
 
-        return $this->paths(explode('.', (string) $key), $this->data, $pathCollection, []);
+        return $this->paths(explode('.', $key), $this->data, $pathCollection, []);
     }
 
     /**
@@ -115,7 +115,7 @@ class PathTranslator extends AbstractTranslator
      * Searches the given data array for values based on a flat key array and returns these values with the corresponding paths
      * @param array $match A flat key array structure
      */
-    private function paths(array $match, $data, PathCollection $pathCollection, $path = []): PathCollection
+    private function paths(array $match, mixed $data, PathCollection $pathCollection, array $path = []): PathCollection
     {
         $current = array_shift($match);
         $end = 0 === count($match);

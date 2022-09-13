@@ -16,7 +16,7 @@ class WordsMax extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Maximum of :words words exceeded';
+    protected string|int|float $message = 'Maximum of :words words exceeded';
 
     /**
      * Constructor

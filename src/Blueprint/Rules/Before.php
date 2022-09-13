@@ -14,7 +14,7 @@ class Before extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Date should be before :date';
+    protected string|int|float $message = 'Date should be before :date';
 
     /**
      * Constructor

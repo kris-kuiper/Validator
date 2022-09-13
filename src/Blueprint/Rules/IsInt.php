@@ -13,7 +13,7 @@ class IsInt extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Must be an integer number';
+    protected string|int|float $message = 'Must be an integer number';
 
     /**
      * Constructor

@@ -13,7 +13,7 @@ class IsArray extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value should be of the type array';
+    protected string|int|float $message = 'Value should be of the type array';
 
     /**
      * @inheritdoc

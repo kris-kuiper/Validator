@@ -18,7 +18,7 @@ class Digits extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be :digits digits long';
+    protected string|int|float $message = 'Value should be :digits digits long';
 
     /**
      * Constructor

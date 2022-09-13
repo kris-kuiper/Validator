@@ -13,7 +13,7 @@ class Accepted extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Should be accepted';
+    protected string|int|float $message = 'Should be accepted';
 
     private array $accepted = ['yes', 'on', '1', 'true', 1, true];
 

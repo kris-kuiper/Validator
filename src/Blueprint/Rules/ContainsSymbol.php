@@ -13,7 +13,7 @@ class ContainsSymbol extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Requires at least one symbol';
+    protected string|int|float $message = 'Requires at least one symbol';
 
     /**
      * @inheritdoc
@@ -35,6 +35,6 @@ class ContainsSymbol extends AbstractRule
             return false;
         }
 
-        return true === (bool) preg_match('/[\W_]+/', preg_replace('/\s+/', '', (string) $value));
+        return true === (bool) preg_match('/[\W_]+/', preg_replace('/\s+/', '', $value));
     }
 }

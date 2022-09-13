@@ -13,7 +13,7 @@ class ContainsLetter extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Requires at least one letter';
+    protected string|int|float $message = 'Requires at least one letter';
 
     /**
      * @inheritdoc

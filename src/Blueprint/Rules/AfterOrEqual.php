@@ -14,7 +14,7 @@ class AfterOrEqual extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Date should be after or equal to :date';
+    protected string|int|float $message = 'Date should be after or equal to :date';
 
     /**
      * Constructor

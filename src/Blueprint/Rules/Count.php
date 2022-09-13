@@ -14,7 +14,7 @@ class Count extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Must contain :amount item(s)';
+    protected string|int|float $message = 'Must contain :amount item(s)';
 
     /**
      * Constructor

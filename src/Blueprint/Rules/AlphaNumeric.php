@@ -13,7 +13,7 @@ class AlphaNumeric extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Only letters a-z, A-Z and digits 0-9 allowed';
+    protected string|int|float $message = 'Only letters a-z, A-Z and digits 0-9 allowed';
 
     /**
      * @inheritdoc
@@ -35,6 +35,6 @@ class AlphaNumeric extends AbstractRule
             return false;
         }
 
-        return (bool) preg_match('/^[a-zA-Z\d]+$/', (string) $value);
+        return ctype_alnum((string) $value);
     }
 }

@@ -16,7 +16,7 @@ class IPPublic extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Must be a public IP address';
+    protected string|int|float $message = 'Must be a public IP address';
 
     /**
      * @inheritdoc
@@ -39,7 +39,7 @@ class IPPublic extends AbstractRule
         $ip->setField($field);
 
         if (true === $ip->isValid()) {
-            return false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE |  FILTER_FLAG_NO_RES_RANGE);
+            return false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
         }
 
         return false;

@@ -13,7 +13,7 @@ class Email extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Must be a valid email address';
+    protected string|int|float $message = 'Must be a valid email address';
 
     /**
      * @inheritdoc

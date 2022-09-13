@@ -13,7 +13,7 @@ class URL extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be a valid URL';
+    protected string|int|float $message = 'Value should be a valid URL';
 
     /**
      * Constructor

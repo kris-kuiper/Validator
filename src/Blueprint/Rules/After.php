@@ -14,7 +14,7 @@ class After extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Date should be after :date';
+    protected string|int|float $message = 'Date should be after :date';
 
     /**
      * Constructor

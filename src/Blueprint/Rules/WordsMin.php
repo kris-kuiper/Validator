@@ -16,7 +16,7 @@ class WordsMin extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Minimum of :words words required';
+    protected string|int|float $message = 'Minimum of :words words required';
 
     /**
      * Constructor

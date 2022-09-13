@@ -14,7 +14,7 @@ trait WordTrait
         $pattern = true === $onlyAlphanumeric ? '/^[a-zA-Z\d]{' . $minCharacters . ',}$/' : '/^(.*?){' . $minCharacters . ',}$/';
         $words = preg_split('/[ \n\r\t\v\x00]/', (string) $value);
 
-        return array_filter($words, static function ($word) use ($pattern) {
+        return array_filter($words, static function (string $word) use ($pattern) {
             return (bool) preg_match($pattern, $word);
         });
     }

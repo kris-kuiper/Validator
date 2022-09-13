@@ -194,7 +194,7 @@ trait RuleTrait
     /**
      * Checks if the data under validation does not contain a given value
      */
-    public function containsNot($value, bool $caseSensitive = false): self
+    public function containsNot(string|int|float $value, bool $caseSensitive = false): self
     {
         return $this->addRule(new ContainsNot($value, $caseSensitive));
     }
@@ -299,7 +299,7 @@ trait RuleTrait
     /**
      * Checks if the data under validation does not match all the values of one or more fields
      */
-    public function differentWithAll(string|int|float ...$fieldNames): self
+    public function differentWithAll(string|int ...$fieldNames): self
     {
         return $this->addRule(new DifferentWithAll(...$fieldNames));
     }
@@ -371,7 +371,7 @@ trait RuleTrait
     /**
      * Checks if the data under validation equals a provided value
      */
-    public function equals($value, bool $strict = false): self
+    public function equals(mixed $value, bool $strict = false): self
     {
         return $this->addRule(new Equals($value, $strict));
     }

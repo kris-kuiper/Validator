@@ -13,7 +13,7 @@ class Timezone extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Not a valid timezone';
+    protected string|int|float $message = 'Not a valid timezone';
 
     /**
      * Constructor

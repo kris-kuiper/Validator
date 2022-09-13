@@ -18,5 +18,5 @@ abstract class AbstractRequired extends AbstractRule
     /**
      * Contains the error message
      */
-    protected string $message = 'Field is required';
+    protected string|int|float $message = 'Field is required';
 }

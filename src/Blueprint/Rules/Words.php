@@ -16,7 +16,7 @@ class Words extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Amount of words must be equal to :words';
+    protected string|int|float $message = 'Amount of words must be equal to :words';
 
     /**
      * Constructor

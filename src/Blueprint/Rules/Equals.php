@@ -13,7 +13,7 @@ class Equals extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Input should match :value';
+    protected string|int|float $message = 'Input should match :value';
 
     /**
      * Constructor

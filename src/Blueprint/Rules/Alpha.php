@@ -13,7 +13,7 @@ class Alpha extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Only letters allowed (a-z, A-Z)';
+    protected string|int|float $message = 'Only letters allowed (a-z, A-Z)';
 
     /**
      * @inheritdoc
@@ -35,6 +35,6 @@ class Alpha extends AbstractRule
             return false;
         }
 
-        return (bool) preg_match('/^[a-zA-Z]+$/', (string) $value);
+        return (bool) preg_match('/^[a-zA-Z]+$/', $value);
     }
 }

@@ -13,7 +13,7 @@ class Length extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be :characters characters long';
+    protected string|int|float $message = 'Value should be :characters characters long';
 
     /**
      * Constructor

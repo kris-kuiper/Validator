@@ -16,7 +16,7 @@ class IP extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be a valid IP address (V4 or V6)';
+    protected string|int|float $message = 'Value should be a valid IP address (V4 or V6)';
 
     /**
      * @inheritdoc

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator;
 
+use Closure;
 use KrisKuiper\Validator\Blueprint\Blueprint;
 use KrisKuiper\Validator\Blueprint\Combine\Combine;
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
 use KrisKuiper\Validator\Blueprint\Custom\Custom;
 use KrisKuiper\Validator\Blueprint\MessageList;
 use KrisKuiper\Validator\Blueprint\MiddlewareList;
+use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Middleware\Field as MiddlewareField;
 use KrisKuiper\Validator\Blueprint\FieldOptions;
 use KrisKuiper\Validator\Blueprint\Rules\AbstractRule;
@@ -30,6 +32,7 @@ class Validator
     private Blueprint $blueprint;
     private ValidatedData $validatedData;
     private ErrorCollection $errorCollection;
+    private Storage $storage;
 
     /**
      * Constructor
@@ -40,9 +43,18 @@ class Validator
         $this->errorCollection = new ErrorCollection();
         $this->validatedData = new ValidatedData();
 
+        $this->storage = new Storage();
         $this->blueprint = new Blueprint();
         $this->blueprintParser = new BlueprintParser($this->validationData);
         $this->blueprintParser->getBlueprintCollection()->append($this->blueprint);
+    }
+
+    /**
+     * Returns a storage object for storing/retrieving arbitrary data
+     */
+    public function storage(): Storage
+    {
+        return $this->storage;
     }
 
     /**
@@ -62,7 +74,7 @@ class Validator
     }
 
     /**
-     * Sets custom error messages per rule en/or per field and rule
+     * Sets custom error messages per rule and/or per field and rule
      */
     public function messages(string ...$fieldNames): MessageList
     {
@@ -98,7 +110,7 @@ class Validator
     /**
      * Creates a new rule with a user defined callback which will be validated calling the provided rule name
      */
-    public function custom(string $ruleName, callable $callback): Custom
+    public function custom(string $ruleName, Closure $callback): Custom
     {
         return $this->blueprint->custom($ruleName, $callback);
     }
@@ -181,6 +193,7 @@ class Validator
 
                     $rule->setValidationData($this->validationData);
                     $rule->setField($field);
+                    $rule->setStorage($this->storage);
 
                     //Check if the rule is valid or not
                     if (true === $this->executeRule($rule)) {
@@ -231,7 +244,7 @@ class Validator
     private function executeMiddleware(Field $field): void
     {
         foreach ($field->getMiddleware() as $middleware) {
-            $middleware->invoke()->handle(new MiddlewareField($field));
+            $middleware?->invoke()->handle(new MiddlewareField($field));
         }
     }
 
@@ -264,7 +277,7 @@ class Validator
             $rule->setMessage($message->getMessage());
         }
 
-        $messageCollection->getFieldCollection()->each(function ($rules, $identifier) use ($rule) {
+        $messageCollection->getFieldCollection()->each(function (array $rules, string $identifier) use ($rule) {
 
             $errorMessage = $rules[$rule->getName()] ?? null;
 

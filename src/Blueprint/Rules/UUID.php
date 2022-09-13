@@ -16,7 +16,7 @@ class UUID extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be a valid v1, v3, v4 or v5 UUID string';
+    protected string|int|float $message = 'Value should be a valid v1, v3, v4 or v5 UUID string';
 
     /**
      * @inheritdoc

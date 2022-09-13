@@ -76,11 +76,17 @@ class ErrorCollection extends AbstractCollection
 
         /** @var Error $item */
         foreach ($this->items as $item) {
-            if (true === isset($errors[$item->getFieldName()])) {
+            $fieldName = $item->getFieldName();
+
+            if (null === $fieldName) {
                 continue;
             }
 
-            $errors[$item->getFieldName()] = $item;
+            if (true === isset($errors[$fieldName])) {
+                continue;
+            }
+
+            $errors[$fieldName] = $item;
         }
 
         return new self(...$errors);

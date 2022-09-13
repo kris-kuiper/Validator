@@ -13,7 +13,7 @@ class ContainsMixedCase extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Requires at least one uppercase and one lowercase letter';
+    protected string|int|float $message = 'Requires at least one uppercase and one lowercase letter';
 
     /**
      * @inheritdoc

@@ -16,7 +16,7 @@ class ContainsNot extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value may not contain ":value"';
+    protected string|int|float $message = 'Value may not contain ":value"';
 
     /**
      * Constructor

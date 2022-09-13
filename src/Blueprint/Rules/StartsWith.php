@@ -13,7 +13,7 @@ class StartsWith extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value must begin with ":value"';
+    protected string|int|float $message = 'Value must begin with ":value"';
 
     /**
      * Constructor

@@ -13,7 +13,7 @@ class Different extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value should be different than :fieldNames';
+    protected string|int|float $message = 'Value should be different than :fieldNames';
 
     /**
      * Constructor
@@ -49,6 +49,14 @@ class Different extends AbstractRule
             }
 
             foreach ($paths as $path) {
+                if (null === $path) {
+                    if (null !== $value) {
+                        return true;
+                    }
+
+                    continue;
+                }
+
                 if ($value !== $path->getValue()) {
                     return true;
                 }

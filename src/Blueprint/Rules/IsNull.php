@@ -13,7 +13,7 @@ class IsNull extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Must be null';
+    protected string|int|float $message = 'Must be null';
 
     /**
      * @inheritdoc

@@ -13,7 +13,7 @@ class Countable extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be of the type countable';
+    protected string|int|float $message = 'Value should be of the type countable';
 
     /**
      * @inheritdoc

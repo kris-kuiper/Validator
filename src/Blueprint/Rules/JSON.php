@@ -14,7 +14,7 @@ class JSON extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be a valid JSON string';
+    protected string|int|float $message = 'Value should be a valid JSON string';
 
     /**
      * @inheritdoc

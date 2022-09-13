@@ -17,6 +17,7 @@ use KrisKuiper\Validator\Blueprint\Middleware\Transforms\Trim;
 use KrisKuiper\Validator\Blueprint\MiddlewareList;
 use KrisKuiper\Validator\Blueprint\Rules\IsString;
 use KrisKuiper\Validator\Blueprint\ValueObjects\FieldName;
+use KrisKuiper\Validator\Cache\Cache;
 use PHPUnit\Framework\TestCase;
 
 final class CollectionsTest extends TestCase

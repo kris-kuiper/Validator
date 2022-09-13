@@ -19,5 +19,5 @@ interface MiddlewareFieldInterface
     /**
      * Returns the name of the field under validation
      */
-    public function getFieldName(): string;
+    public function getFieldName(): int|string;
 }

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint;
 
+use Closure;
 use KrisKuiper\Validator\Blueprint\Collections\CombineCollection;
 use KrisKuiper\Validator\Blueprint\Collections\CustomCollection;
 use KrisKuiper\Validator\Blueprint\Collections\FieldNameCollection;
 use KrisKuiper\Validator\Blueprint\Collections\MessageListCollection;
 use KrisKuiper\Validator\Blueprint\Combine\Combine;
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
+use KrisKuiper\Validator\Blueprint\Custom\Current;
 use KrisKuiper\Validator\Blueprint\Custom\Custom;
 use KrisKuiper\Validator\Blueprint\ValueObjects\FieldName;
 
@@ -59,6 +61,8 @@ class Blueprint
     {
         return $this->customCollection;
     }
+
+
 
     /**
      * Adds new field validation
@@ -120,7 +124,7 @@ class Blueprint
     {
         $this->messages()->custom($alias ?? $rule->getName(), $rule->getMessage());
 
-        $this->custom($alias ?? $rule->getName(), function ($validator) use ($rule) {
+        $this->custom($alias ?? $rule->getName(), function (Current $validator) use ($rule) {
             return $rule->isValid($validator);
         });
     }
@@ -139,7 +143,7 @@ class Blueprint
     /**
      * Loads a custom rule based on a callback function
      */
-    public function custom(string $ruleName, callable $callback): Custom
+    public function custom(string $ruleName, Closure $callback): Custom
     {
         $custom = new Custom($ruleName, $callback);
         $this->customCollection->append($custom);

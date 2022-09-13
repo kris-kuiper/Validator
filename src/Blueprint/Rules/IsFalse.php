@@ -13,7 +13,7 @@ class IsFalse extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Must be boolean false';
+    protected string|int|float $message = 'Must be boolean false';
 
     /**
      * @inheritdoc

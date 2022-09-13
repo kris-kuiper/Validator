@@ -14,7 +14,7 @@ class CountMax extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Maximum of :amount item(s)';
+    protected string|int|float $message = 'Maximum of :amount item(s)';
 
     /**
      * Constructor

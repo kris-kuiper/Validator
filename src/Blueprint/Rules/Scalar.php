@@ -13,7 +13,7 @@ class Scalar extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be of the type scalar';
+    protected string|int|float $message = 'Value should be of the type scalar';
 
     /**
      * @inheritdoc

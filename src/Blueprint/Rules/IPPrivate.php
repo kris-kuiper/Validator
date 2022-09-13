@@ -16,7 +16,7 @@ class IPPrivate extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Must be a private IP address';
+    protected string|int|float $message = 'Must be a private IP address';
 
     /**
      * @inheritdoc

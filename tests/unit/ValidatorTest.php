@@ -392,7 +392,7 @@ final class ValidatorTest extends TestCase
         $this->assertSame('min', $error->getRuleName());
         $this->assertSame(15, $error->getValue());
         $this->assertSame(['minimum' => 18.0], $error->getParameters());
-        $this->assertSame('people.age', $path->getIdentifier());
+        $this->assertSame('people.age', $path?->getIdentifier());
         $this->assertSame(15, $path->getValue());
         $this->assertSame(['people', 'age'], $path->getPath());
     }
@@ -440,7 +440,7 @@ final class ValidatorTest extends TestCase
         $executed = 0;
         $validator = new Validator(['foo' => 25]);
 
-        $custom = static function () use (&$executed) {
+        $custom = static function () use (&$executed): bool {
 
             $executed++;
             return true;
@@ -455,5 +455,16 @@ final class ValidatorTest extends TestCase
 
         $this->assertTrue($validator->revalidate());
         $this->assertSame(2, $executed);
+    }
+
+    public function testIfCacheCanBeSetWhenUsingTheValidatorObjectOnly(): void
+    {
+        $validator = new Validator(['foo' => 'bar']);
+        $validator->field('foo')->required();
+        $validator->cache()->set('foo', 'bar');
+        $this->assertTrue($validator->cache()->has('foo'));
+        $this->assertFalse($validator->cache()->has('quez'));
+        $this->assertSame('bar', $validator->cache()->get('foo'));
+        $this->assertNull($validator->cache()->get('quez'));
     }
 }

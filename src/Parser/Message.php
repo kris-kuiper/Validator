@@ -10,12 +10,12 @@ class Message
 {
     private string $ruleName;
     private string|int|float $message;
-    private string|int|float|null $fieldName;
+    private string|int|null $fieldName;
 
     /**
      * Constructor
      */
-    public function __construct(MessageInterface $message, string|int|float|null $fieldName = null)
+    public function __construct(MessageInterface $message, string|int|null $fieldName = null)
     {
         $this->fieldName = $fieldName;
         $this->ruleName = $message->getName();
@@ -25,7 +25,7 @@ class Message
     /**
      * Returns the name of the field
      */
-    public function getFieldName(): string|int|float|null
+    public function getFieldName(): string|int|null
     {
         return $this->fieldName;
     }
@@ -41,7 +41,7 @@ class Message
     /**
      * Returns the error message
      */
-    public function getMessage(): string
+    public function getMessage(): float|int|string
     {
         return $this->message;
     }

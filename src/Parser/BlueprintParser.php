@@ -59,6 +59,10 @@ class BlueprintParser
         /** @var Blueprint $blueprint */
         foreach ($this->blueprintCollection->reverse() as $blueprint) {
             foreach ($blueprint->getCustoms() as $custom) {
+                if (null === $custom) {
+                    continue;
+                }
+
                 $this->customCollection->append($custom);
             }
         }
@@ -80,7 +84,15 @@ class BlueprintParser
         /** @var Blueprint $blueprint */
         foreach ($this->blueprintCollection->reverse() as $blueprint) {
             foreach ($blueprint->getCombines() as $combine) {
+                if (null === $combine) {
+                    continue;
+                }
+
                 $alias = $combine->getAlias();
+
+                if (null === $alias) {
+                    continue;
+                }
 
                 if (true === isset($combines[$alias])) {
                     continue;
@@ -108,15 +120,35 @@ class BlueprintParser
         /** @var Blueprint $blueprint */
         foreach ($this->blueprintCollection->reverse() as $blueprint) {
             foreach ($blueprint->getFieldNames() as $fieldName) {
+                if (null === $fieldName) {
+                    continue;
+                }
+
                 foreach ($fieldName->getMessageLists() as $messageList) {
+                    if (null === $messageList) {
+                        continue;
+                    }
+
                     foreach ($messageList->getMessageCollection() as $message) {
+                        if (null === $message) {
+                            continue;
+                        }
+
                         $this->messages->getFieldCollection()->append(new Message($message, $fieldName->getFieldName()));
                     }
                 }
             }
 
             foreach ($blueprint->getMessageLists() as $messageList) {
+                if (null === $messageList) {
+                    continue;
+                }
+
                 foreach ($messageList->getMessageCollection() as $message) {
+                    if (null === $message) {
+                        continue;
+                    }
+
                     $this->messages->getRuleCollection()->append(new Message($message));
                 }
             }
@@ -137,6 +169,10 @@ class BlueprintParser
         /** @var Blueprint $blueprint */
         foreach ($this->blueprintCollection as $blueprint) {
             foreach ($blueprint->getFieldNames() as $fieldName) {
+                if (null === $fieldName) {
+                    continue;
+                }
+
                 $this->createFieldsFromFieldName($fieldName);
             }
         }
@@ -161,6 +197,10 @@ class BlueprintParser
         }
 
         foreach ($paths as $path) {
+            if (null === $path) {
+                continue;
+            }
+
             $field = $this->fieldCollection->getByPath($path);
 
             if (null === $field) {

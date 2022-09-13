@@ -13,7 +13,7 @@ class MACAddress extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value must be a valid MAC Address';
+    protected string|int|float $message = 'Value must be a valid MAC Address';
 
     /**
      * Constructor

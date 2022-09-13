@@ -13,7 +13,7 @@ class Distinct extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'May not contain duplicate values';
+    protected string|int|float $message = 'May not contain duplicate values';
 
     /**
      * @inheritdoc

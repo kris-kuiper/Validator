@@ -14,7 +14,7 @@ class CountMin extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Minimum of :amount item(s)';
+    protected string|int|float $message = 'Minimum of :amount item(s)';
 
     /**
      * Constructor

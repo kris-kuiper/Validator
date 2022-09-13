@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
+use KrisKuiper\Validator\Cache\Cache;
 use KrisKuiper\Validator\Collections\PathCollection;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Fields\Field;
@@ -19,7 +20,7 @@ abstract class AbstractRule
     /**
      * Contains the error message
      */
-    protected string $message;
+    protected string|int|float $message = '';
 
     /**
      * Contains all the parameters that the rule needs to validate the value
@@ -37,11 +38,33 @@ abstract class AbstractRule
     private ?Field $field = null;
 
     /**
+     * Contains the field under validation
+     */
+    private Cache $cache;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->validationData = new PathTranslator();
+        $this->cache = new Cache();
+    }
+
+    /**
+     * Sets a caching object for storing/retrieving arbitrary data
+     */
+    public function setCache(Cache $cache): void
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * Returns a caching object for storing/retrieving arbitrary data
+     */
+    public function getCache(): Cache
+    {
+        return $this->cache;
     }
 
     /**
@@ -58,7 +81,7 @@ abstract class AbstractRule
      * Returns the value that needs to be validated
      * @throws ValidatorException
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->field?->getValue();
     }
@@ -66,7 +89,7 @@ abstract class AbstractRule
     /**
      * Sets a new parameter that can later be used to validate the value
      */
-    public function setParameter($parameterName, $value): void
+    public function setParameter(string|int $parameterName, mixed $value): void
     {
         $this->parameters[$parameterName] = $value;
     }
@@ -120,7 +143,7 @@ abstract class AbstractRule
     /**
      * Returns the error message with parsed parameters
      */
-    public function getParsedMessage(): ?string
+    public function getParsedMessage(): int|float|string
     {
         $message = $this->getRawMessage();
 
@@ -129,7 +152,7 @@ abstract class AbstractRule
                 $value = implode(', ', $value);
             }
 
-            $message = str_replace(':' . $name, (string) $value, $message);
+            $message = str_replace(':' . $name, (string) $value, (string) $message);
         }
 
         return $message;
@@ -138,7 +161,7 @@ abstract class AbstractRule
     /**
      * Returns the raw error message without parsed name variables
      */
-    public function getRawMessage(): ?string
+    public function getRawMessage(): string|float|int
     {
         return $this->message;
     }
@@ -146,7 +169,7 @@ abstract class AbstractRule
     /**
      * Sets the error message
      */
-    public function setMessage(string $message): void
+    public function setMessage(string|int|float $message): void
     {
         $this->message = $message;
     }

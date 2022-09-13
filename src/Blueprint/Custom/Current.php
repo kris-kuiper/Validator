@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Custom;
 
 use KrisKuiper\Validator\Blueprint\Rules\AbstractRule;
+use KrisKuiper\Validator\Cache\Cache;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 class Current
@@ -12,7 +13,7 @@ class Current
     /**
      * Constructor
      */
-    public function __construct(private AbstractRule $rule, private string $ruleName)
+    public function __construct(private AbstractRule $rule, private string $ruleName, private Cache $cache)
     {
     }
 
@@ -63,8 +64,16 @@ class Current
     /**
      * Returns the name of the field under validation
      */
-    public function getFieldName(): ?string
+    public function getFieldName(): string|int|float|null
     {
         return $this->rule->getField()?->getFieldName();
+    }
+
+    /**
+     * Returns a caching object for storing/retrieving arbitrary data
+     */
+    public function cache(): Cache
+    {
+        return $this->cache;
     }
 }

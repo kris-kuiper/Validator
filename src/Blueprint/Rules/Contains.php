@@ -13,7 +13,7 @@ class Contains extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value must contain ":value"';
+    protected string|int|float $message = 'Value must contain ":value"';
 
     /**
      * Constructor

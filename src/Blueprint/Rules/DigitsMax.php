@@ -18,7 +18,7 @@ class DigitsMax extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be maximum :min digits long';
+    protected string|int|float $message = 'Value should be maximum :min digits long';
 
     /**
      * Constructor

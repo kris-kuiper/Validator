@@ -32,7 +32,7 @@ class CombineProxyCollection extends AbstractCollection
         $this->items[] = $combine;
     }
 
-    public function getByAlias(string $alias): ?CombineProxy
+    public function getByAlias(string|int $alias): ?CombineProxy
     {
         /** @var CombineProxy $item */
         foreach ($this->items as $item) {

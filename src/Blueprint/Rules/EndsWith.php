@@ -13,7 +13,7 @@ class EndsWith extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value must end with ":value"';
+    protected string|int|float $message = 'Value must end with ":value"';
 
     /**
      * Constructor

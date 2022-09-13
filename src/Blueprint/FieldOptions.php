@@ -32,9 +32,6 @@ class FieldOptions
         return $this->ruleCollection;
     }
 
-    /**
-     * Returns if the
-     */
     public function getBail(): ?bool
     {
         return $this->bail;

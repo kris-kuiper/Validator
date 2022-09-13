@@ -13,7 +13,7 @@ class IPv4 extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be a valid IPv4 IP address';
+    protected string|int|float $message = 'Value should be a valid IPv4 IP address';
 
     /**
      * @inheritdoc
@@ -35,6 +35,6 @@ class IPv4 extends AbstractRule
             return false;
         }
 
-        return true === (bool) preg_match('/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/', (string) $value);
+        return false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
     }
 }

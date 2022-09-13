@@ -13,7 +13,7 @@ class StartsNotWith extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value may not begin with ":value"';
+    protected string|int|float $message = 'Value may not begin with ":value"';
 
     /**
      * Constructor

@@ -16,7 +16,7 @@ class AcceptedNotEmpty extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Should be accepted';
+    protected string|int|float $message = 'Should be accepted';
 
     private array $accepted = ['yes', 'on', '1', 'true', 1, true];
 
@@ -59,7 +59,7 @@ class AcceptedNotEmpty extends AbstractRule
         $paths = $this->getPaths($this->fieldName);
 
         foreach ($paths as $path) {
-            if (false === $this->isEmpty($path->getValue())) {
+            if (false === $this->isEmpty($path?->getValue())) {
                 return true === $this->isAccepted($value);
             }
         }

@@ -13,7 +13,7 @@ class LengthBetween extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be between :minimum and :maximum characters long';
+    protected string|int|float $message = 'Value should be between :minimum and :maximum characters long';
 
     /**
      * Constructor

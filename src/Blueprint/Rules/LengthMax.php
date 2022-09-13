@@ -13,7 +13,7 @@ class LengthMax extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should not be longer than :characters characters';
+    protected string|int|float $message = 'Value should not be longer than :characters characters';
 
     /**
      * Constructor

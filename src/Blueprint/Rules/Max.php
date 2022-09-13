@@ -13,7 +13,7 @@ class Max extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Must be less than or equal to :maximum';
+    protected string|int|float $message = 'Must be less than or equal to :maximum';
 
     /**
      * Constructor

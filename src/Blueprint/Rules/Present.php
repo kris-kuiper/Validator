@@ -11,7 +11,7 @@ class Present extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Invalid input';
+    protected string|int|float $message = 'Invalid input';
 
     /**
      * @inheritdoc
@@ -26,6 +26,12 @@ class Present extends AbstractRule
      */
     public function isValid(): bool
     {
-        return true === array_key_exists($this->getField()?->getFieldName(), $this->getValidationData()->getData());
+        $fieldName = $this->getField()?->getFieldName();
+
+        if (null === $fieldName) {
+            return false;
+        }
+
+        return true === array_key_exists($fieldName, $this->getValidationData()->getData());
     }
 }

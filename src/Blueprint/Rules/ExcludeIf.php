@@ -38,6 +38,10 @@ class ExcludeIf extends AbstractRequired
         }
 
         foreach ($paths as $path) {
+            if (null === $path) {
+                continue;
+            }
+
             if ($this->value === $path->getValue()) {
                 $this->getField()?->setBailed(true);
                 return true;

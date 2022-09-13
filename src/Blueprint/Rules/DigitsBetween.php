@@ -18,7 +18,7 @@ class DigitsBetween extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be between :min and :max digits long';
+    protected string|int|float $message = 'Value should be between :min and :max digits long';
 
     /**
      * Constructor

@@ -13,7 +13,7 @@ class IsEmpty extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Field should be empty';
+    protected string|int|float $message = 'Field should be empty';
 
     /**
      * @inheritdoc

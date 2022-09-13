@@ -14,7 +14,7 @@ class CountBetween extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Amount of items should be between :minimum and :maximum';
+    protected string|int|float $message = 'Amount of items should be between :minimum and :maximum';
 
     /**
      * Constructor

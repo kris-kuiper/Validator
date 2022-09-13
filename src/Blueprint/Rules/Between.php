@@ -13,7 +13,7 @@ class Between extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value must be between :minimum and :maximum';
+    protected string|int|float $message = 'Value must be between :minimum and :maximum';
 
     /**
      * Constructor

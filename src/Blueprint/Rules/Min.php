@@ -13,7 +13,7 @@ class Min extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Must be higher than or equal to :minimum';
+    protected string|int|float $message = 'Must be higher than or equal to :minimum';
 
     /**
      * Constructor

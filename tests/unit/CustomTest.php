@@ -49,6 +49,38 @@ final class CustomTest extends TestCase
     /**
      * @throws ValidatorException
      */
+    public function testIfCacheIsCorrectWhenSettingCacheInsideCustomRule(): void
+    {
+        $data = [
+            'name' => 'Morris',
+            'likes' => ['dogs', 'cats']
+        ];
+
+        $validator = new Validator($data);
+        $ruleName = 'length';
+
+        $validator->custom($ruleName, function (Current $validator) {
+
+            $this->assertFalse($validator->cache()->has('foo'));
+            $this->assertNull($validator->cache()->get('foo'));
+            $validator->cache()->set('foo', 'bar');
+            $this->assertTrue($validator->cache()->has('foo'));
+            $this->assertSame('bar', $validator->cache()->get('foo'));
+            return false;
+        });
+
+        $validator->field('name')->custom($ruleName);
+
+        $this->assertFalse($validator->cache()->has('foo'));
+        $this->assertNull($validator->cache()->get('foo'));
+        $this->assertFalse($validator->execute());
+        $this->assertTrue($validator->cache()->has('foo'));
+        $this->assertSame('bar', $validator->cache()->get('foo'));
+    }
+
+    /**
+     * @throws ValidatorException
+     */
     public function testIfMultipleCustomRulesCanBeExecutedWhenProvidedMultipleCustomRules(): void
     {
         $executed = 0;

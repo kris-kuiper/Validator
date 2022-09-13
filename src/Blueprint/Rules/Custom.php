@@ -12,7 +12,7 @@ class Custom extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Invalid value';
+    protected string|int|float $message = 'Invalid value';
 
 
     /**
@@ -49,6 +49,6 @@ class Custom extends AbstractRule
     public function isValid(): bool
     {
         $callback = $this->callback;
-        return $callback(new Current($this, $this->getName()));
+        return $callback(new Current($this, $this->getName(), $this->getCache()));
     }
 }

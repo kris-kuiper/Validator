@@ -13,7 +13,7 @@ class AlphaDash extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Only letters a-z, A-Z, digits 0-9, dashes and underscores allowed';
+    protected string|int|float $message = 'Only letters a-z, A-Z, digits 0-9, dashes and underscores allowed';
 
     /**
      * @inheritdoc

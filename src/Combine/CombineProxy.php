@@ -69,7 +69,13 @@ class CombineProxy
             }
         }
 
-        return implode($this->proxy->getGlue(), $values);
+        $glue = $this->proxy->getGlue();
+
+        if (null === $glue) {
+            return '';
+        }
+
+        return implode($glue, $values);
     }
 
     /**

@@ -12,7 +12,7 @@ class Conditional extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Invalid value';
+    protected string|int|float $message = 'Invalid value';
 
     /**
      * Constructor
@@ -37,7 +37,7 @@ class Conditional extends AbstractRule
     public function isValid(): bool
     {
         $callback = $this->callback;
-        $conditional = $callback(new Current($this, $this->getName()));
+        $conditional = $callback(new Current($this, $this->getName(), $this->getCache()));
 
         if (false === $conditional) {
             $this->getField()?->setBailed(true);

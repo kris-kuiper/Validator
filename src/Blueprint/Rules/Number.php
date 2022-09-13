@@ -13,7 +13,7 @@ class Number extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value must be a number';
+    protected string|int|float $message = 'Value must be a number';
 
     /**
      * Constructor

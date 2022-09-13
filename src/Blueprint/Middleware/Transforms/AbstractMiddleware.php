@@ -24,7 +24,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     /**
      * @throws ValidatorException
      */
-    public function getParameter(string|int|float $name): mixed
+    public function getParameter(string|int $name): mixed
     {
         return array_key_exists($name, $this->parameters) ? $this->parameters[$name] : throw ValidatorException::parameterNotFound($name);
     }

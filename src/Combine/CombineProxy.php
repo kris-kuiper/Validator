@@ -35,7 +35,7 @@ class CombineProxy
      * Returns the value of the combined fields
      * @throws ValidatorException
      */
-    public function getValue(): string|array|null
+    public function getValue(): mixed
     {
         //Retrieve from cache for better performance
         if (null !== $this->value) {
@@ -56,7 +56,7 @@ class CombineProxy
      * Combines the values with the glue and returns the output
      * @throws ValidatorException
      */
-    private function getValueFromGlue(): string
+    private function getValueFromGlue(): string|int|float
     {
         $values = [];
 
@@ -69,13 +69,29 @@ class CombineProxy
             }
         }
 
+        if (1 === count($values)) {
+            return $values[0];
+        }
+
         $glue = $this->proxy->getGlue();
 
         if (null === $glue) {
             return '';
         }
 
-        return implode($glue, $values);
+        $value = implode($glue, $values);
+
+        if (true === is_numeric($value)) {
+            $count = count(array_filter($values, static function (mixed $item): bool {
+                return true === is_int($item);
+            }));
+
+            if (count($values) === $count) {
+                return (int) $value;
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -88,7 +104,7 @@ class CombineProxy
 
         /** @var Field $field */
         foreach ($this->fieldCollection as $field) {
-            $format = str_replace(':' . $field->getFieldName(), $field->getValue() ?? '', $format, $count);
+            $format = str_replace(':' . $field->getFieldName(), (string) ($field->getValue() ?? ''), $format, $count);
 
             if (0 === $count) {
                 throw ValidatorException::formatTypeNotFound($field->getFieldName(), $format);

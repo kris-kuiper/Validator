@@ -36,10 +36,12 @@ Modern PHP Validator - Standalone Validation on Steroids
 - [Working with validated data](#working-with-validated-data)
   - [Returning only validated data](#returning-only-validated-data)
   - [Filter validated data](#filter-validated-data)
+- [Field name aliases](#field-name-aliases)
 - [Using Blueprints](#using-blueprints)
 - [Using middleware](#using-middleware)
   - [Predefined middleware](#predefined-middleware)
   - [Custom middleware](#custom-middleware)
+- [Using validation storage](#using-validation-storage)
 - [Examples](#examples)
   - [Validating registration form](#example-1-validating-registration-form)
   - [Password validation](#example-2-password-validation)
@@ -298,12 +300,12 @@ The field under validation must be present and not empty *only if* any of the ot
 ```php
 $data = [
     'surname' => '', 
-    'middlename' => 'Elizabeth', 
+    'middle_name' => 'Elizabeth', 
     'lastname' => ''
 ];
 
 $validator = new Validator($data);
-$valdiator->field('surname')->requiredWith('middlename', 'lastname');
+$valdiator->field('surname')->requiredWith('middle_name', 'lastname');
 ```
 
 *Note: validation will fail in this example, because the surname is required because of the middle name field, but it is not provided*.
@@ -375,7 +377,7 @@ $validator->field('name')->requiredWithoutAll('hobby', 'age');
 Sometimes you may wish to stop running validation rules on an attribute after the first validation failure. To do so, you can use the `bail()` method.
 
 ```php
-$validator->field('fieldname')->bail()->min(1)->max(5);
+$validator->field('fieldName')->bail()->min(1)->max(5);
 ```
 
 This will prevent that the `max` rule is executed if the `min` rule fails validation.
@@ -385,7 +387,7 @@ This will prevent that the `max` rule is executed if the `min` rule fails valida
 *Unlike all other rules*, the order of the `bail` method does not matter. The example below will have the same result as the example above:
 
 ```php
-$validator->field('fieldname')->min(1)->max(5)->bail();
+$validator->field('fieldName')->min(1)->max(5)->bail();
 ```
 
 
@@ -2043,6 +2045,42 @@ array('programming', 'coding');
 
 
 
+## Field name aliases
+You can give field names aliases. This can be handy if an input field name is different from the name you expect for i.e. your database entity.
+```php
+use KrisKuiper\Validator\Validator;
+
+$data = [
+    'product' => '1850048',
+    'code' => '0718037893532',
+];
+
+$validator = new Validator($data);
+
+//Create an alias for product and code
+$validator->alias('product', 'product_id');
+$validator->alias('code', 'ean'); 
+
+//Add rules for the two new aliases
+$validator->field('product_id')->isInt()->min(1);
+$validator->field('ean')->isString()->length(13);
+
+if($validator->passes()) {
+    
+    $validator->validatedData()->toArray();
+    
+    /*
+    array(
+        'product_id' => '1850048', 
+        'ean' => '0718037893532'
+    )
+    */
+}
+```
+*Note: aliases can also be used in [blueprints](#using-blueprints).*
+
+
+
 
 ## Using blueprints
 
@@ -2459,8 +2497,6 @@ class LeadingZeroMiddleware extends AbstractMiddleware
 }
 ```
 
-
-
 Once the middleware has been defined, you may attach it to a validator by passing the namespace of the middleware object:
 
 ```php
@@ -2487,10 +2523,83 @@ if($validator->passes()) {
 //This will return ['month' => '03'] (mind the leading zero)
 $validator->validatedData()->toArray();
 ```
-
-
-
 *Note: Middleware is also attachable to [blueprint validators](#using-blueprints).*
+
+
+
+## Using validation storage
+You can store and retrieve arbitrary data within the validator after executing the validation. This can be useful when data is retrieved from a database to validate a custom rule, while the retrieved data is also needed outside of validation. 
+This ensures that the database only needs to be requested once.
+
+The validator has an `storage` object which you can use to `get()`, `set()` and `has()` methods.
+
+##### Example 1: using rule closures
+You can write your own custom [rule closures](#using-closures) that can use the validation storage:
+```php
+$data = ['product_id' => 123456];
+
+$validator = new Validator($data);
+$validator->field('product_id')->custom('existsInDB');
+
+//Attach the custom rule
+$validator->custom('existsInDB', function(Current $current) {
+    
+    //Store the product from the database in the validator storage object
+    $product = $db->product->getById($current->getValue());
+    $current->storage()->set('product', $product);
+    
+    return $product !== null;
+});
+
+$validator->execute();
+
+//Check if the storage has the product
+if($validator->storage()->has('product')) {
+
+    //Retrieve the product
+    $validator->storage()->get('product');
+}
+```
+
+##### Example 2: using rule object
+You can write your own custom [rule objects](#using-rule-objects) that can use the validation storage as well:
+```php
+$data = ['product_id' => 123456];
+
+$validator = new Validator($data);
+
+//You may also set new data for use in the custom rule object
+$validator->storage()->set('foo', 'bar');
+
+//Define the custom rule
+$validator->loadRule(new CustomRule());
+
+//Attach the custom rule
+$validator->field('product_id')->custom(CustomStorageRule::RULE_NAME);
+
+$validator->execute();
+$validator->storage()->get('foo') //bar;
+$validator->storage()->get('product') //Database product which was set within the rule object
+```
+
+And within the custom rule object (see [rule objects](#using-rule-objects) for more information):
+```php
+public function isValid(Current $current): bool
+{
+    //Check if the data exists 
+    if(true === $current->storage()->has('foo')) {
+        
+        //Store the product from the database in the validator storage object
+        $product = $db->product->getById($current->getValue());
+        $current->storage()->set('product', $product);
+        
+        //Retrieve the data
+        return 'bar' === $current->storage()->get('foo');
+    }
+
+    return false;
+}
+```
 
 
 

@@ -6,11 +6,10 @@ namespace tests\unit\assets;
 
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
 use KrisKuiper\Validator\Blueprint\Custom\Current;
-use KrisKuiper\Validator\Exceptions\ValidatorException;
 
-final class CustomRule implements RuleInterface
+final class CustomStorageRule implements RuleInterface
 {
-    public const RULE_NAME = 'customRule';
+    public const RULE_NAME = 'customStorageRule';
 
     /**
      * @inheritdoc
@@ -22,11 +21,16 @@ final class CustomRule implements RuleInterface
 
     /**
      * @inheritdoc
-     * @throws ValidatorException
      */
     public function isValid(Current $current): bool
     {
-        return strlen($current->getValue()) >= $current->getParameter('min');
+        $current->storage()->set('quez', 'bazz');
+
+        if(true === $current->storage()->has('foo')) {
+            return 'bar' === $current->storage()->get('foo');
+        }
+
+        return false;
     }
 
     public function getMessage(): string

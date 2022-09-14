@@ -62,8 +62,6 @@ class Blueprint
         return $this->customCollection;
     }
 
-
-
     /**
      * Adds new field validation
      */
@@ -138,6 +136,14 @@ class Blueprint
         $this->combineCollection->append($combine);
 
         return $combine;
+    }
+
+    /**
+     * Creates an alias for a provided field name, which can be used to define new rules, middleware, etc.
+     */
+    public function alias(string $fieldName, string $alias): void
+    {
+        $this->combine($fieldName)->glue('')->alias($alias);
     }
 
     /**

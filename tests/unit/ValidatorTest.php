@@ -467,4 +467,30 @@ final class ValidatorTest extends TestCase
         $this->assertSame('bar', $validator->storage()->get('foo'));
         $this->assertNull($validator->storage()->get('quez'));
     }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenOnlyValidatingAProvidedFieldNameAlias(): void
+    {
+        $validator = new Validator(['foo' => 5]);
+        $validator->alias('foo', 'quez');
+        $validator->field('quez')->min(3);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['quez' => 5], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenValidatingAliasAndOriginal(): void
+    {
+        $validator = new Validator(['foo' => 5]);
+        $validator->alias('foo', 'quez');
+        $validator->field('quez', 'foo')->min(3);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['quez' => 5, 'foo' => 5], $validator->validatedData()->toArray());
+    }
 }

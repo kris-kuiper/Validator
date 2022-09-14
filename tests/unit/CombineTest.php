@@ -149,4 +149,56 @@ final class CombineTest extends TestCase
         $validator->execute();
         $this->assertTrue($validator->execute());
     }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenCombiningMultipleIntegersWithGlue(): void
+    {
+        $validator = new Validator(['foo' => 5, 'bar' => 5]);
+        $validator->combine('foo', 'bar')->glue('')->alias('bazz');
+        $validator->field('bazz')->equals(55);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bazz' => 55], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenCombiningMultipleFloatsWithGlue(): void
+    {
+        $validator = new Validator(['foo' => 5.25, 'bar' => 5.25]);
+        $validator->combine('foo', 'bar')->glue('')->alias('bazz');
+        $validator->field('bazz')->equals('5.255.25');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bazz' => '5.255.25'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenCombiningOneFloatWithGlue(): void
+    {
+        $validator = new Validator(['foo' => 5.25]);
+        $validator->combine('foo')->glue('')->alias('bazz');
+        $validator->field('bazz')->equals(5.25);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bazz' => 5.25], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenCombiningOneFloatWithFormat(): void
+    {
+        $validator = new Validator(['foo' => 5.25]);
+        $validator->combine('foo')->format(':foo')->alias('bazz');
+        $validator->field('bazz')->equals('5.25', true);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bazz' => '5.25'], $validator->validatedData()->toArray());
+    }
 }

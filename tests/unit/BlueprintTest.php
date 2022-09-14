@@ -315,4 +315,36 @@ final class BlueprintTest extends TestCase
         $this->assertTrue($validator->execute());
         $this->assertSame(['foo' => 'A'], $validator->validatedData()->toArray());
     }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenUsingAliasAndFieldInBlueprint(): void
+    {
+        $blueprint = new Blueprint();
+        $blueprint->alias('foo', 'bar');
+        $blueprint->field('bar')->equals('A');
+
+        $validator = new Validator(['foo' => 'A']);
+        $validator->loadBlueprint($blueprint);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bar' => 'A'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenUsingAliasInBlueprintAndFieldInValidator(): void
+    {
+        $blueprint = new Blueprint();
+        $blueprint->alias('foo', 'bar');
+
+        $validator = new Validator(['foo' => 'A']);
+        $validator->field('bar')->equals('A');
+        $validator->loadBlueprint($blueprint);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bar' => 'A'], $validator->validatedData()->toArray());
+    }
 }

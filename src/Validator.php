@@ -82,6 +82,14 @@ class Validator
     }
 
     /**
+     * Creates an alias for a provided field name, which can be used to define new rules, middleware, etc.
+     */
+    public function alias(string $fieldName, string $alias): void
+    {
+        $this->blueprint->alias($fieldName, $alias);
+    }
+
+    /**
      * Adds new middleware for one or more field names which runs before validation
      */
     public function middleware(string ...$fieldNames): MiddlewareList

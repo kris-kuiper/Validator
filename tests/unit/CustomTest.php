@@ -9,6 +9,7 @@ use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
 use tests\unit\assets\CustomRule;
+use tests\unit\assets\CustomStorageRule;
 
 final class CustomTest extends TestCase
 {
@@ -153,18 +154,18 @@ final class CustomTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testIfCustomRuleValidationReturnCorrectErrorMessageWhenSettingNewErrorMessage(): void
+    public function testIfCustomRuleCanRetrieveAndSetValidationStorageWhenSettingStorageOutsideCustomRule(): void
     {
         $validator = new Validator([
             'name' => 'Morris'
         ]);
 
-        $validator->loadRule(new CustomRule());
-        $validator->field('name')->custom('CustomRule', ['min' => 20]);
-        $validator->messages('name')->custom('CustomRule', 'foobar');
+        $validator->loadRule(new CustomStorageRule());
+        $validator->storage()->set('foo', 'bar');
+        $validator->field('name')->custom(CustomStorageRule::RULE_NAME);
 
-        $this->assertFalse($validator->execute());
-        $this->assertSame('foobar', $validator->errors()->first('name')->getMessage());
+        $this->assertTrue($validator->execute());
+        $this->assertSame('bazz', $validator->storage()->get('quez'));
     }
 
     /**

@@ -36,6 +36,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     DigitsMax,
     DigitsMin,
     Distinct,
+    DivisibleBy,
     Email,
     EndsNotWith,
     EndsWith,
@@ -63,8 +64,12 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     MACAddress,
     Max,
     Min,
+    Negative,
+    NegativeOrZero,
     NotIn,
     Number,
+    Positive,
+    PositiveOrZero,
     Present,
     Regex,
     Required,
@@ -339,6 +344,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the divisibleBy rule
+     */
+    public function divisibleBy(string|int|float $message): self
+    {
+        return $this->addMessage(new DivisibleBy($message));
+    }
+
+    /**
      * Adds a new message for the email rule
      */
     public function email(string|int|float $message): self
@@ -555,6 +568,22 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the negative rule
+     */
+    public function negative(string|int|float $message): self
+    {
+        return $this->addMessage(new Negative($message));
+    }
+
+    /**
+     * Adds a new message for the negativeOrZero rule
+     */
+    public function negativeOrZero(string|int|float $message): self
+    {
+        return $this->addMessage(new NegativeOrZero($message));
+    }
+
+    /**
      * Adds a new message for the notIn rule
      */
     public function notIn(string|int|float $message): self
@@ -568,6 +597,22 @@ trait MessageTrait
     public function number(string|int|float $message): self
     {
         return $this->addMessage(new Number($message));
+    }
+
+    /**
+     * Adds a new message for the positive rule
+     */
+    public function positive(string|int|float $message): self
+    {
+        return $this->addMessage(new Positive($message));
+    }
+
+    /**
+     * Adds a new message for the positiveOrZero rule
+     */
+    public function positiveOrZero(string|int|float $message): self
+    {
+        return $this->addMessage(new PositiveOrZero($message));
     }
 
     /**

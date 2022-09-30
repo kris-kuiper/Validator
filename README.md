@@ -1,6 +1,8 @@
 Modern PHP Validator - Standalone Validation on Steroids
 ====================
 
+![Modern PHP Validator](logo.png)
+
 [![Latest Stable Version](http://poser.pugx.org/kris-kuiper/validator/v)](https://packagist.org/packages/kris-kuiper/validator)
 [![License](http://poser.pugx.org/kris-kuiper/validator/license)](https://packagist.org/packages/kris-kuiper/validator)
 [![PHP Version Require](http://poser.pugx.org/kris-kuiper/validator/require/php)](https://packagist.org/packages/kris-kuiper/validator)

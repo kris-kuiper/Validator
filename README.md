@@ -398,35 +398,37 @@ $validator->field('fieldName')->min(1)->max(5)->bail();
 
 Below is a list with all predefined validation rules.
 
-|                                              |                                   |                                               |
-|----------------------------------------------|-----------------------------------|-----------------------------------------------|
-| [Accepted](#accepted)                        | [Digits max](#digits-max)         | [MAC address](#mac-address)                   |
-| [Accepted if](#accepted-if)                  | [Digits min](#digits-min)         | [Max](#max)                                   |
-| [AcceptedNotEmpty](#accepted-not-empty)      | [Distinct](#distinct)             | [Min](#min)                                   |
-| [After](#after)                              | [Email](#email)                   | [Not in](#not-in)                             |
-| [After or equal](#after-or-equal)            | [Ends not with](#ends-not-with)   | [Number](#number)                             |
-| [Alpha](#alpha)                              | [Ends with](#ends-with)           | [Present](#present)                           |
-| [Alpha dash](#alpha-dash)                    | [Equals](#equals)                 | [Regex](#regex)                               |
-| [Alpha numeric](#alpha-numeric)              | [In](#in)                         | [Required](#required)                         |
-| [Before](#before)                            | [IP](#ip)                         | [Required with](#required-with)               |
-| [Before or equal](#before-or-equal)          | [IP private](#ip-private)         | [Required with all](#required-with-all)       |
-| [Between](#between)                          | [IP public](#ip-public)           | [Required without](#required-without)         |
-| [Contains](#contains)                        | [IP v4](#ip-v4)                   | [Required without all](#required-without-all) |
-| [Contains not](#contains-not)                | [IP v6](#ip-v6)                   | [Same](#same)                                 |
-| [Contains letter](#contains-letter)          | [Is array](#is-array)             | [Scalar](#scalar)                             |
-| [Contains mixed  case](#contains-mixed-case) | [Is bool](#is-boolean)            | [Starts not with](#starts-not-with)           |
-| [Contains number](#contains-number)          | [Is empty](#is-empty)             | [Starts with](#starts-with)                   |
-| [Contains symbol](#contains-symbol)          | [Is false](#is-false)             | [Time zone](#time-zone)                       |
-| [Count](#count)                              | [Is int](#is-int)                 | [Url](#url)                                   |
-| [Countable](#countable)                      | [Is not null](#is-not-null)       | [UUID](#uuid)                                 |
-| [Count between](#count-between)              | [Is null](#is-null)               | [UUID v1](#uuid-v1)                           |
-| [Count max](#count-max)                      | [Is string](#is-string)           | [UUID v3](#uuid-v3)                           |
-| [Count min](#count-min)                      | [Is true](#is-true)               | [UUID v4](#uuid-v4)                           |
-| [Date](#date)                                | [Json](#json)                     | [UUID v5](#uuid-v5)                           |
-| [Different](#different)                      | [Length](#length)                 | [Words](#words)                               |
-| [Different with all](#different-with-all)    | [Length between](#length-between) | [Words max](#words-max)                       |
-| [Digits](#digits)                            | [Length max](#length-max)         | [Words min](#words-min)                       |
-| [Digits between](#digits-between)            | [Length min](#length-min)         |                                               |
+|                                             |                                   |                                               |
+|---------------------------------------------|-----------------------------------|-----------------------------------------------|
+| [Accepted if](#accepted-if)                 | [Divisible by](#divisible-by)     | [Negative or zero](#negative-or-zero)         |
+| [AcceptedNotEmpty](#accepted-not-empty)     | [Email](#email)                   | [Not in](#not-in)                             |
+| [After](#after)                             | [Ends not with](#ends-not-with)   | [Number](#number)                             |
+| [After or equal](#after-or-equal)           | [Ends with](#ends-with)           | [Positive](#positive)                         |
+| [Alpha](#alpha)                             | [Equals](#equals)                 | [Positive or zero](#positive-or-zero)         |
+| [Alpha dash](#alpha-dash)                   | [In](#in)                         | [Present](#present)                           |
+| [Alpha numeric](#alpha-numeric)             | [IP](#ip)                         | [Regex](#regex)                               |
+| [Before](#before)                           | [IP private](#ip-private)         | [Required](#required)                         |
+| [Before or equal](#before-or-equal)         | [IP public](#ip-public)           | [Required with](#required-with)               |
+| [Between](#between)                         | [IP v4](#ip-v4)                   | [Required with all](#required-with-all)       |
+| [Contains](#contains)                       | [IP v6](#ip-v6)                   | [Required without](#required-without)         |
+| [Contains not](#contains-not)               | [Is array](#is-array)             | [Required without all](#required-without-all) |
+| [Contains letter](#contains-letter)         | [Is bool](#is-boolean)            | [Same](#same)                                 |
+| [Contains mixed case](#contains-mixed-case) | [Is empty](#is-empty)             | [Scalar](#scalar)                             |
+| [Contains number](#contains-number)         | [Is false](#is-false)             | [Starts not with](#starts-not-with)           |
+| [Contains symbol](#contains-symbol)         | [Is int](#is-int)                 | [Starts with](#starts-with)                   |
+| [Count](#count)                             | [Is not null](#is-not-null)       | [Time zone](#time-zone)                       |
+| [Countable](#countable)                     | [Is null](#is-null)               | [Url](#url)                                   |
+| [Count between](#count-between)             | [Is string](#is-string)           | [UUID](#uuid)                                 |
+| [Count max](#count-max)                     | [Is true](#is-true)               | [UUID v1](#uuid-v1)                           |
+| [Count min](#count-min)                     | [Json](#json)                     | [UUID v3](#uuid-v3)                           |
+| [Date](#date)                               | [Length](#length)                 | [UUID v4](#uuid-v4)                           |
+| [Different](#different)                     | [Length between](#length-between) | [UUID v5](#uuid-v5)                           |
+| [Different with all](#different-with-all)   | [Length max](#length-max)         | [Words](#words)                               |
+| [Digits](#digits)                           | [Length min](#length-min)         | [Words max](#words-max)                       |
+| [Digits between](#digits-between)           | [Max](#max)                       | [Words min](#words-min)                       |
+| [Digits min](#digits-min)                   | [Min](#min)                       |                                               |
+| [Distinct](#distinct)                       | [Negative](#negative)             |                                               |
+
 
 
 ##### Accepted
@@ -769,10 +771,26 @@ $valdiator->field('fieldName')->digitsMin(5);
 
 ##### Distinct
 
-Check if all the values in an array are unique
+Check if all the values in an array are unique.
 
 ```php
 $valdiator->field('fieldName')->distinct();
+```
+
+
+
+##### Divisible by
+
+Check if the field under validation is divisible by a provided number
+
+```php
+$valdiator->field('fieldName')->divisible(10);
+```
+
+You can use the strict parameter to strictly check if a value is divisible
+
+```php
+$valdiator->field('fieldName')->divisible(10, true);
 ```
 
 
@@ -1103,6 +1121,38 @@ $valdiator->field('fieldName')->notIn(['123', 123], true);
 
 
 
+##### Negative
+
+Check if the field under validation is a negative number
+
+```php
+$valdiator->field('fieldName')->negative();
+```
+
+You can use the strict parameter to strictly check if a value is negative
+
+```php
+$valdiator->field('fieldName')->negative(true);
+```
+
+
+
+##### Negative or zero
+
+Check if the field under validation is a negative number or equals to zero.
+
+```php
+$valdiator->field('fieldName')->negativeOrZero();
+```
+
+You can use the strict parameter to strictly check if a value is negative or equals to zero.
+
+```php
+$valdiator->field('fieldName')->negativeOrZero(true);
+```
+
+
+
 ##### Number
 
 Checks if the data under validation is an integer number.
@@ -1114,6 +1164,38 @@ $valdiator->field('fieldName')->number();
 You can use the strict parameter to strictly check if a value is a number:
 ```php
 $valdiator->field('fieldName')->number(true);
+```
+
+
+
+##### Positive
+
+Check if the field under validation is a positive number.
+
+```php
+$valdiator->field('fieldName')->positive();
+```
+
+You can use the strict parameter to strictly check if a value is positive.
+
+```php
+$valdiator->field('fieldName')->positive(true);
+```
+
+
+
+##### Positive or zero
+
+Check if the field under validation is a positive number or equals to zero.
+
+```php
+$valdiator->field('fieldName')->positiveOrZero();
+```
+
+You can use the strict parameter to strictly check if a value is positive or equals to zero.
+
+```php
+$valdiator->field('fieldName')->positiveOrZero(true);
 ```
 
 

@@ -36,6 +36,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     DigitsMax,
     DigitsMin,
     Distinct,
+    DivisibleBy,
     Email,
     EndsNotWith,
     EndsWith,
@@ -63,8 +64,12 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     MACAddress,
     Max,
     Min,
+    Negative,
+    NegativeOrZero,
     NotIn,
     Number,
+    Positive,
+    PositiveOrZero,
     Present,
     Regex,
     Required,
@@ -345,6 +350,14 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the value under validation is divisible by a provided number
+     */
+    public function divisibleBy(float $number, bool $strict = false): self
+    {
+        return $this->addRule(new DivisibleBy($number, $strict));
+    }
+
+    /**
      * Checks if the data under validation is a valid email address
      */
     public function email(): self
@@ -561,6 +574,22 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the data under validation is a negative number
+     */
+    public function negative(bool $strict = false): self
+    {
+        return $this->addRule(new Negative($strict));
+    }
+
+    /**
+     * Checks if the data under validation is equals to zero or below
+     */
+    public function negativeOrZero(bool $strict = false): self
+    {
+        return $this->addRule(new NegativeOrZero($strict));
+    }
+
+    /**
      * Checks if the data under validation does not exist in a given array
      */
     public function notIn(array $collection, bool $strict = false): self
@@ -574,6 +603,22 @@ trait RuleTrait
     public function number(bool $strict = false): self
     {
         return $this->addRule(new Number($strict));
+    }
+
+    /**
+     * Checks if the data under validation is a positive number
+     */
+    public function positive(bool $strict = false): self
+    {
+        return $this->addRule(new Positive($strict));
+    }
+
+    /**
+     * Checks if the data under validation is higher or equal to zero
+     */
+    public function positiveOrZero(bool $strict = false): self
+    {
+        return $this->addRule(new PositiveOrZero($strict));
     }
 
     /**

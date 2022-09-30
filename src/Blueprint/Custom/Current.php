@@ -75,8 +75,13 @@ class Current
     public function message(string $message): void
     {
         $fieldName = $this->getFieldName();
+
+        if (null === $fieldName) {
+            return;
+        }
+
         $ruleName = $this->getRuleName();
-        $this->rule->messages($fieldName)->custom($ruleName, $message);
+        $this->rule->messages((string) $fieldName)->custom($ruleName, $message);
     }
 
     /**
@@ -85,5 +90,10 @@ class Current
     public function storage(): Storage
     {
         return $this->storage;
+    }
+
+    public function field(string $fieldName): Validation
+    {
+        return new Validation($this->getValidationData(), $fieldName);
     }
 }

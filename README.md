@@ -1480,7 +1480,14 @@ class CustomRule implements RuleInterface
 
     public function isValid(Current $current): bool
     {
-        return strlen($current->getValue()) >= $current->getParameter('min');
+        //Retrieve the minimum parameter
+        $min = $current->getParameter('min');
+        
+        //Create your own validation
+        return strlen($current->getValue()) > $min;
+        
+        //Or use the built-in validator
+        return $current->field('name')->lengthMin($min)->isValid();
     }
 
     public function getMessage(): string
@@ -1539,7 +1546,15 @@ $validator = new Validator($data);
 
 //Attach the custom rule
 $validator->custom('length', function (Current $current) {
-    return strlen($current->getValue()) > $current->getParameter('min');
+
+    //Retrieve the minimum parameter
+    $min = $current->getParameter('min');
+    
+    //Create your own validation
+    return strlen($current->getValue()) > $min;
+    
+    //Or use the built-in validator
+    return $current->field('name')->lengthMin($min)->isValid();
 });
 
 //Use the custom rule
@@ -1579,7 +1594,10 @@ $validator
     ->field('reason')
     ->conditional(function(Current $current) {
         //Retrieve the value of the amount field
-        return $current->getValue('amount') > 99;
+        return $current->getValue('amount') > 99
+        
+        //Or us ethe built-in validator
+        return $current->field('amount')->isInt()->min(99)->isValid();
     })
     ->required()
     ->lengthMax(2000);

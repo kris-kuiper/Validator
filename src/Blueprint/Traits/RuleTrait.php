@@ -27,7 +27,6 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     CountBetween,
     CountMax,
     CountMin,
-    Custom,
     Date,
     Different,
     DifferentWithAll,
@@ -274,15 +273,6 @@ trait RuleTrait
     public function countMin(int $minimum): self
     {
         return $this->addRule(new CountMin($minimum));
-    }
-
-    /**
-     * Executes a custom defined rule based on a given rule name
-     */
-    public function custom(string $ruleName, array $parameters = []): self
-    {
-        return $this->addRule(new Custom($ruleName, static function () {
-        }, $parameters));
     }
 
     /**

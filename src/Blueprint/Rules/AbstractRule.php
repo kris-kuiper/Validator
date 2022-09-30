@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
+use KrisKuiper\Validator\Blueprint\Blueprint;
+use KrisKuiper\Validator\Blueprint\MessageList;
 use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Collections\PathCollection;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
@@ -42,6 +44,9 @@ abstract class AbstractRule
      */
     private Storage $storage;
 
+
+    private Blueprint $blueprint;
+
     /**
      * Constructor
      */
@@ -49,6 +54,7 @@ abstract class AbstractRule
     {
         $this->validationData = new PathTranslator();
         $this->storage = new Storage();
+        $this->blueprint = new Blueprint();
     }
 
     /**
@@ -57,6 +63,22 @@ abstract class AbstractRule
     public function setStorage(Storage $storage): void
     {
         $this->storage = $storage;
+    }
+
+    /**
+     * Sets a storage object for storing/retrieving arbitrary data
+     */
+    public function setBlueprint(Blueprint $blueprint): void
+    {
+        $this->blueprint = $blueprint;
+    }
+
+    /**
+     * Sets custom error messages per rule and/or per field and rule
+     */
+    public function messages(string ...$fieldNames): MessageList
+    {
+        return $this->blueprint->messages(...$fieldNames);
     }
 
     /**

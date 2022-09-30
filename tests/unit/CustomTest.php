@@ -8,6 +8,7 @@ use KrisKuiper\Validator\Blueprint\Custom\Current;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
+use tests\unit\assets\CustomMessageRule;
 use tests\unit\assets\CustomRule;
 use tests\unit\assets\CustomStorageRule;
 
@@ -198,5 +199,50 @@ final class CustomTest extends TestCase
         $validator->loadRule(new CustomRule());
         $validator->field('name')->custom('foo');
         $validator->execute();
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfCorrectErrorMessageIsReturnedWhenSettingMessageInCustomMethod(): void
+    {
+        $data = [
+            'name' => 'Morris',
+            'likes' => ['dogs', 'cats']
+        ];
+
+        $validator = new Validator($data);
+        $parameters = ['min' => 10];
+        $ruleName = 'length';
+
+        $validator->custom($ruleName, function (Current $current): bool {
+
+            $current->message('foo :min');
+            return false;
+        });
+
+        $validator->messages('name')->custom('length', 'foo');
+        $validator->field('name')->custom($ruleName, $parameters);
+
+        $this->assertFalse($validator->execute());
+        $this->assertSame('foo :min', $validator->errors()->first('name')->getRawMessage());
+        $this->assertSame('foo 10', $validator->errors()->first('name')->getMessage());
+    }
+
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfCorrectErrorMessageIsReturnedWhenSettingMessageInCustomRule(): void
+    {
+        $validator = new Validator([
+            'name' => 'Morris'
+        ]);
+
+        $validator->loadRule(new CustomMessageRule());
+        $validator->field('name')->custom(CustomMessageRule::RULE_NAME);
+
+        $this->assertFalse($validator->execute());
+        $this->assertSame('foo bar', $validator->errors()->first('name')->getMessage());
     }
 }

@@ -70,6 +70,16 @@ class Current
     }
 
     /**
+     * Sets custom error message for current rule and field
+     */
+    public function message(string $message): void
+    {
+        $fieldName = $this->getFieldName();
+        $ruleName = $this->getRuleName();
+        $this->rule->messages($fieldName)->custom($ruleName, $message);
+    }
+
+    /**
      * Returns a storage object for storing/retrieving arbitrary data
      */
     public function storage(): Storage

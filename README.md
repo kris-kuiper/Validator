@@ -1987,7 +1987,7 @@ $validator
 
 #### Filter validated data
 
-You can include or exclude fields from the validated array by using the `not`, `only` and `pluck` methods:
+You can include or exclude fields from the validated array by using the `not()`, `only()`, `empty()` and `pluck()` methods:
 
 ```php
 $data = [
@@ -2011,7 +2011,7 @@ $validator->execute();
 
 
 
-##### Include field names
+##### Include field names using `only()` method
 
 ```php
 $validator
@@ -2031,7 +2031,7 @@ array(
 
 
 
-##### Exclude field names
+##### Exclude field names using `not()` method
 
 ```php
 $validator
@@ -2048,7 +2048,7 @@ array('password' => '123');
 
 
 
-##### Extract multiple columns in key-pair value
+##### Extract multiple columns in key-pair value using `pluck()` method
 
 ```php
 $validator
@@ -2064,6 +2064,119 @@ array('programming', 'coding');
 ```
 
 
+##### Filter empty values using `filter()` method
+The filter method will filter all empty values. Empty strings, empty array's and `NULL` values are considered empty. By default, all empty values are filtered, but this can be set.
+
+```php
+$data = ['notes' => '', 'amount' => 0];
+
+$validator = new Validator($data);
+
+$validator
+    ->field('notes', 'amount')
+    ->required(false);
+
+$validator->execute();
+
+$validator
+    ->validatedData()
+    ->filter()
+    ->toArray();
+```
+
+This will return:
+
+```php
+array('amount' => 0);
+```
+
+Also by default, all values are filtered out recursively.
+```php
+use KrisKuiper\Validator\ValidatedData;
+
+$data = [
+    'hobbies' => [
+        'programming', 
+        '', 
+        null, 
+        [], 
+        'coding'
+    ], 
+    'notes' => null
+];
+
+$validator = new Validator($data);
+
+$validator
+    ->field('hobbies')
+    ->required(false);
+
+$validator->execute();
+
+$validator
+    ->validatedData()
+    ->filter()
+    ->toArray();
+```
+
+This will return:
+
+```php
+array('hobbies' => array('programming', 'coding')); //All empty values (including "notes" field) are filtered out
+```
+
+This can be disabled:
+```php
+$validator
+  ->validatedData()
+  ->filter(ValidatedData::FILTER_EMPTY, false)
+  ->toArray();
+```
+
+Will return:
+```php
+array('hobbies' => array('programming', '', null, [], 'coding')); //"notes" field is filtered out
+```
+
+###### Filter only empty array's:
+```php
+use KrisKuiper\Validator\ValidatedData;
+
+$validator
+    ->validatedData()
+    ->filter(ValidatedData::FILTER_EMPTY_ARRAYS)
+    ->toArray();
+```
+
+###### Filter only `NULL` values:
+```php
+use KrisKuiper\Validator\ValidatedData;
+
+$validator
+    ->validatedData()
+    ->filter(ValidatedData::FILTER_NULL)
+    ->toArray();
+```
+
+###### Filter only empty string values:
+```php
+use KrisKuiper\Validator\ValidatedData;
+
+$validator
+    ->validatedData()
+    ->filter(ValidatedData::FILTER_EMPTY_STRINGS)
+    ->toArray();
+```
+
+###### Combine filters
+```php
+use KrisKuiper\Validator\ValidatedData;
+
+$validator
+    ->validatedData()
+    ->filter(ValidatedData::FILTER_EMPTY_STRINGS | ValidatedData::FILTER_EMPTY_ARRAYS)
+    ->toArray();
+```
 
 
 ## Field name aliases

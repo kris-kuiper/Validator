@@ -11,9 +11,16 @@ use stdClass;
 
 class ValidatedData
 {
+    public const FILTER_EMPTY = 1;
+    public const FILTER_EMPTY_ARRAYS = 2;
+    public const FILTER_EMPTY_STRINGS = 4;
+    public const FILTER_NULL = 8;
+
     private array $data = [];
     private array $not = [];
     private array $only = [];
+    private int $filter = 0;
+    private bool $filterRecursive = true;
     private ?string $pluck = null;
 
     /**
@@ -21,7 +28,9 @@ class ValidatedData
      */
     public function not(string ...$fieldNames): self
     {
-        return $this->createInstance($fieldNames, $this->only, $this->pluck);
+        $instance = clone $this;
+        $instance->not = $fieldNames;
+        return $instance;
     }
 
     /**
@@ -29,7 +38,9 @@ class ValidatedData
      */
     public function only(string ...$fieldNames): self
     {
-        return $this->createInstance($this->not, $fieldNames, $this->pluck);
+        $instance = clone $this;
+        $instance->only = $fieldNames;
+        return $instance;
     }
 
     /**
@@ -37,7 +48,22 @@ class ValidatedData
      */
     public function pluck(string $fieldName): self
     {
-        return $this->createInstance($this->not, $this->only, $fieldName);
+        $instance = clone $this;
+        $instance->pluck = $fieldName;
+        return $instance;
+    }
+
+    public function filter(int $filter = self::FILTER_EMPTY, bool $recursive = true): self
+    {
+        $instance = clone $this;
+
+        if (self::FILTER_EMPTY === $filter) {
+            $filter = self::FILTER_EMPTY_ARRAYS + self::FILTER_NULL + self::FILTER_EMPTY_STRINGS;
+        }
+
+        $instance->filter = $filter;
+        $instance->filterRecursive = $recursive;
+        return $instance;
     }
 
     /**
@@ -64,9 +90,9 @@ class ValidatedData
     public function toArray(): array
     {
         $output = $this->data;
-
         $output = $this->filterNotItems($output);
         $output = $this->filterOnlyItems($output);
+        $output = $this->filterEmpty($output);
         return $this->pluckItems($output);
     }
 
@@ -161,6 +187,34 @@ class ValidatedData
     }
 
     /**
+     * Filters empty values i.e. empty arrays, strings or NULL values
+     */
+    private function filterEmpty(array $output): array
+    {
+
+        if (0 === $this->filter) {
+            return $output;
+        }
+
+        foreach ($output as $key => $value) {
+            //Check if filtering should be executed recursively
+            if (true === is_array($value) && true === $this->filterRecursive) {
+                $output[$key] = $this->filterEmpty($value);
+            }
+
+            if (self::FILTER_EMPTY_STRINGS & $this->filter && '' === $output[$key]) { //Check for empty string
+                unset($output[$key]);
+            } elseif (self::FILTER_NULL & $this->filter && null === $output[$key]) { //Check if value is null
+                unset($output[$key]);
+            } elseif (self::FILTER_EMPTY_ARRAYS & $this->filter && true === is_countable($output[$key]) && 0 === count($output[$key])) { //Check if empty countable i.e. array
+                unset($output[$key]);
+            }
+        }
+
+        return $output;
+    }
+
+    /**
      * Inserts element into a multidimensional array by giving an array path which represents the path (depth) to the value
      */
     private function insertIntoArray(array &$array, array $path, mixed $value): void
@@ -204,19 +258,5 @@ class ValidatedData
         if (null !== $previous && true === isset($node)) {
             unset($previous[$node]);
         }
-    }
-
-    /**
-     * Creates a new validated data instance
-     */
-    private function createInstance(array $not = [], array $only = [], ?string $pluck = null): self
-    {
-        $instance = new self();
-        $instance->data = $this->data;
-        $instance->not = $not;
-        $instance->only = $only;
-        $instance->pluck = $pluck;
-
-        return $instance;
     }
 }

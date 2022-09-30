@@ -8,6 +8,7 @@ use Closure;
 use KrisKuiper\Validator\Blueprint\Collections\RuleCollection;
 use KrisKuiper\Validator\Blueprint\Rules\AbstractRule;
 use KrisKuiper\Validator\Blueprint\Rules\Conditional;
+use KrisKuiper\Validator\Blueprint\Rules\Custom;
 use KrisKuiper\Validator\Blueprint\Rules\ExcludeIf;
 use KrisKuiper\Validator\Blueprint\Traits\RuleTrait;
 
@@ -60,6 +61,15 @@ class FieldOptions
     public function excludeIf(string|int|float $fieldName, mixed $value): self
     {
         return $this->addRule(new ExcludeIf($fieldName, $value));
+    }
+
+    /**
+     * Executes a custom defined rule based on a given rule name
+     */
+    public function custom(string $ruleName, array $parameters = []): self
+    {
+        return $this->addRule(new Custom($ruleName, static function () {
+        }, $parameters));
     }
 
     /**

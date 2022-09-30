@@ -229,7 +229,6 @@ final class CustomTest extends TestCase
         $this->assertSame('foo 10', $validator->errors()->first('name')->getMessage());
     }
 
-
     /**
      * @throws ValidatorException
      */
@@ -244,5 +243,22 @@ final class CustomTest extends TestCase
 
         $this->assertFalse($validator->execute());
         $this->assertSame('foo bar', $validator->errors()->first('name')->getMessage());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfCustomValidationCanBeExecutedWhenUsingACustomRule(): void
+    {
+        $data = ['amount' => 10, 'notes' => 'foo'];
+
+        $validator = new Validator($data);
+        $validator->custom('amount', function (Current $validator) {
+            return $validator->getValue() >= 10 && $validator->field('notes')->required()->lengthMin(10)->isValid();
+        });
+
+        $validator->field('amount')->custom('amount');
+
+        $this->assertFalse($validator->execute());
     }
 }

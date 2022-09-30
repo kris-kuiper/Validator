@@ -1438,6 +1438,8 @@ if($validator->passes()) {
 
 *Note 2: The error message will be used from the `getMessage()` method from the rule object, unless you set an optional custom error message like in the example above.*
 
+*Note 3: You can also set [custom error messages](#example-5-using-custom-error-messages-within-custom-rules) with the `message()` method.*
+
 
 
 #### Using closures
@@ -1470,7 +1472,7 @@ if($validator->passes()) {
     //Validation passes   
 }
 ```
-
+*Note: You can set [custom error messages](#example-5-using-custom-error-messages-within-custom-rules) within rule closures*
 
 
 ## Conditionally adding rules
@@ -1934,6 +1936,25 @@ $validator
 	//Amount should be between 1 and 5'
 ```
 
+
+
+#### Example 5: Using custom error messages within custom rules
+You can set custom error messages within [custom rule closures](#using-closures) or [custom rule objects](#using-rule-objects) using the `message()` method:
+```php
+$data = ['amount' => 5];
+
+$validator = new Validator($data);
+
+//Define the customer rule
+$validator->custom('min10', function (Current $current): bool {
+
+    $current->message('Amount should be at least :min');
+    return $current->geValue() >= $current->getParameter('min');
+});
+
+//Attach the custom rule to the amount field
+$validator->field('amount')->custom('min10', ['min' => 10]);
+```
 
 
 ## Working with validated data

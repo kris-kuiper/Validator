@@ -202,6 +202,7 @@ class Validator
                     $rule->setValidationData($this->validationData);
                     $rule->setField($field);
                     $rule->setStorage($this->storage);
+                    $rule->setBlueprint($this->blueprint);
 
                     //Check if the rule is valid or not
                     if (true === $this->executeRule($rule)) {

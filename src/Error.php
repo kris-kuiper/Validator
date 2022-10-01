@@ -98,12 +98,7 @@ class Error
         }
 
         $pathIdentifier = $this->getPath()?->getIdentifier();
-
-        if (null === $pathIdentifier) {
-            return false;
-        }
-
-        return (bool) preg_match($this->identifierToRegex($identifier), $pathIdentifier);
+        return (bool) preg_match($this->identifierToRegex($identifier), $pathIdentifier ?? '');
     }
 
     /**

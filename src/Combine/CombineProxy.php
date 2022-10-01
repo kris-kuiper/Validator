@@ -74,12 +74,7 @@ class CombineProxy
         }
 
         $glue = $this->proxy->getGlue();
-
-        if (null === $glue) {
-            return '';
-        }
-
-        $value = implode($glue, $values);
+        $value = implode($glue ?? '', $values);
 
         if (true === is_numeric($value)) {
             $count = count(array_filter($values, static function (mixed $item): bool {

@@ -92,11 +92,9 @@ class BlueprintParser
         /** @var Blueprint $blueprint */
         foreach ($this->blueprintCollection->reverse() as $blueprint) {
             foreach ($blueprint->getCustoms() as $custom) {
-                if (null === $custom) {
-                    continue;
+                if (null !== $custom) {
+                    $this->customCollection->append($custom);
                 }
-
-                $this->customCollection->append($custom);
             }
         }
 
@@ -117,28 +115,26 @@ class BlueprintParser
         /** @var Blueprint $blueprint */
         foreach ($this->blueprintCollection->reverse() as $blueprint) {
             foreach ($blueprint->getCombines() as $combine) {
-                if (null === $combine) {
-                    continue;
+                if (null !== $combine) {
+                    $alias = $combine->getAlias();
+
+                    if (null === $alias) {
+                        continue;
+                    }
+
+                    if (true === isset($combines[$alias])) {
+                        continue;
+                    }
+
+                    $combines[$alias] = $combine;
+                    $fieldCollection = new FieldCollection();
+
+                    foreach ($combine->getFieldNames() as $fieldName) {
+                        $fieldCollection->append(...$this->createFieldsFromFieldName(new FieldName($fieldName)));
+                    }
+
+                    $this->combineProxyCollection->append(new CombineProxy($combine, $fieldCollection));
                 }
-
-                $alias = $combine->getAlias();
-
-                if (null === $alias) {
-                    continue;
-                }
-
-                if (true === isset($combines[$alias])) {
-                    continue;
-                }
-
-                $combines[$alias] = $combine;
-                $fieldCollection = new FieldCollection();
-
-                foreach ($combine->getFieldNames() as $fieldName) {
-                    $fieldCollection->append(...$this->createFieldsFromFieldName(new FieldName($fieldName)));
-                }
-
-                $this->combineProxyCollection->append(new CombineProxy($combine, $fieldCollection));
             }
         }
 
@@ -153,36 +149,26 @@ class BlueprintParser
         /** @var Blueprint $blueprint */
         foreach ($this->blueprintCollection->reverse() as $blueprint) {
             foreach ($blueprint->getFieldNames() as $fieldName) {
-                if (null === $fieldName) {
-                    continue;
-                }
-
-                foreach ($fieldName->getMessageLists() as $messageList) {
-                    if (null === $messageList) {
-                        continue;
-                    }
-
-                    foreach ($messageList->getMessageCollection() as $message) {
-                        if (null === $message) {
-                            continue;
+                if (null !== $fieldName) {
+                    foreach ($fieldName->getMessageLists() as $messageList) {
+                        if (null !== $messageList) {
+                            foreach ($messageList->getMessageCollection() as $message) {
+                                if (null !== $message) {
+                                    $this->messages->getFieldCollection()->append(new Message($message, $fieldName->getFieldName()));
+                                }
+                            }
                         }
-
-                        $this->messages->getFieldCollection()->append(new Message($message, $fieldName->getFieldName()));
                     }
                 }
             }
 
             foreach ($blueprint->getMessageLists() as $messageList) {
-                if (null === $messageList) {
-                    continue;
-                }
-
-                foreach ($messageList->getMessageCollection() as $message) {
-                    if (null === $message) {
-                        continue;
+                if (null !== $messageList) {
+                    foreach ($messageList->getMessageCollection() as $message) {
+                        if (null !== $message) {
+                            $this->messages->getRuleCollection()->append(new Message($message));
+                        }
                     }
-
-                    $this->messages->getRuleCollection()->append(new Message($message));
                 }
             }
         }
@@ -202,11 +188,9 @@ class BlueprintParser
         /** @var Blueprint $blueprint */
         foreach ($this->blueprintCollection as $blueprint) {
             foreach ($blueprint->getFieldNames() as $fieldName) {
-                if (null === $fieldName) {
-                    continue;
+                if (null !== $fieldName) {
+                    $this->createFieldsFromFieldName($fieldName);
                 }
-
-                $this->createFieldsFromFieldName($fieldName);
             }
         }
 
@@ -230,18 +214,16 @@ class BlueprintParser
         }
 
         foreach ($paths as $path) {
-            if (null === $path) {
-                continue;
+            if (null !== $path) {
+                $field = $this->fieldCollection->getByPath($path);
+
+                if (null === $field) {
+                    $field = new Field($path, $name, $this->combineProxyCollection);
+                    $this->fieldCollection->append($field);
+                }
+
+                $fields[] = $field;
             }
-
-            $field = $this->fieldCollection->getByPath($path);
-
-            if (null === $field) {
-                $field = new Field($path, $name, $this->combineProxyCollection);
-                $this->fieldCollection->append($field);
-            }
-
-            $fields[] = $field;
         }
 
         foreach ($fields as $field) {

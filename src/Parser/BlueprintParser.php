@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Parser;
 
 use KrisKuiper\Validator\Blueprint\Blueprint;
+use KrisKuiper\Validator\Blueprint\Collections\EventCollection;
 use KrisKuiper\Validator\Blueprint\FieldOptions;
 use KrisKuiper\Validator\Blueprint\Middleware\Middleware;
 use KrisKuiper\Validator\Blueprint\MiddlewareList;
@@ -26,6 +27,8 @@ class BlueprintParser
     private CombineProxyCollection $combineProxyCollection;
     private Messages $messages;
     private CustomCollection $customCollection;
+    private EventCollection $beforeEventCollection;
+    private EventCollection $afterEventCollection;
 
     /**
      * Constructor
@@ -35,6 +38,8 @@ class BlueprintParser
         $this->combineProxyCollection = new CombineProxyCollection();
         $this->blueprintCollection = new BlueprintCollection();
         $this->customCollection = new CustomCollection();
+        $this->beforeEventCollection = new EventCollection();
+        $this->afterEventCollection = new EventCollection();
         $this->fieldCollection = new FieldCollection();
         $this->messages = new Messages();
     }
@@ -45,6 +50,34 @@ class BlueprintParser
     public function getBlueprintCollection(): BlueprintCollection
     {
         return $this->blueprintCollection;
+    }
+
+    /**
+     * Returns the before event handler collection
+     */
+    public function getBeforeEventCollection(): EventCollection
+    {
+        foreach ($this->getBlueprintCollection() as $blueprint) {
+            foreach ($blueprint->getBeforeEventHandlers() as $beforeEventHandler) {
+                $this->beforeEventCollection->append($beforeEventHandler);
+            }
+        }
+
+        return $this->beforeEventCollection;
+    }
+
+    /**
+     * Returns the after event handler collection
+     */
+    public function getAfterEventCollection(): EventCollection
+    {
+        foreach ($this->getBlueprintCollection() as $blueprint) {
+            foreach ($blueprint->getAfterEventHandlers() as $afterEventHandler) {
+                $this->afterEventCollection->append($afterEventHandler);
+            }
+        }
+
+        return $this->afterEventCollection;
     }
 
     /**

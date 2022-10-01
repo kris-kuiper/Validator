@@ -14,7 +14,7 @@ class Date extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string|int|float $message = 'Must be a valid date';
+    protected string|int|float $message = 'Must be a valid date in ":format" format';
 
     /**
      * Constructor

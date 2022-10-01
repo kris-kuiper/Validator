@@ -5,22 +5,29 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint;
 
 use Closure;
+use KrisKuiper\Validator\Blueprint\Collections\EventCollection;
 use KrisKuiper\Validator\Blueprint\Collections\CombineCollection;
 use KrisKuiper\Validator\Blueprint\Collections\CustomCollection;
 use KrisKuiper\Validator\Blueprint\Collections\FieldNameCollection;
 use KrisKuiper\Validator\Blueprint\Collections\MessageListCollection;
 use KrisKuiper\Validator\Blueprint\Combine\Combine;
+use KrisKuiper\Validator\Blueprint\Contracts\AfterEventInterface;
+use KrisKuiper\Validator\Blueprint\Contracts\BeforeEventInterface;
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
 use KrisKuiper\Validator\Blueprint\Custom\Current;
 use KrisKuiper\Validator\Blueprint\Custom\Custom;
+use KrisKuiper\Validator\Blueprint\Events\AfterEvent;
+use KrisKuiper\Validator\Blueprint\Events\BeforeEvent;
 use KrisKuiper\Validator\Blueprint\ValueObjects\FieldName;
 
 class Blueprint
 {
-    private FieldNameCollection $fieldNameCollection;
     private MessageListCollection $messageListCollection;
+    private FieldNameCollection $fieldNameCollection;
     private CombineCollection $combineCollection;
     private CustomCollection $customCollection;
+    private EventCollection $beforeCollection;
+    private EventCollection $afterCollection;
 
     public function __construct()
     {
@@ -28,6 +35,8 @@ class Blueprint
         $this->messageListCollection = new MessageListCollection();
         $this->combineCollection = new CombineCollection();
         $this->customCollection = new CustomCollection();
+        $this->beforeCollection = new EventCollection();
+        $this->afterCollection = new EventCollection();
     }
 
     /**
@@ -60,6 +69,22 @@ class Blueprint
     public function getCustoms(): CustomCollection
     {
         return $this->customCollection;
+    }
+
+    /**
+     * Returns all the before event handlers as a collection
+     */
+    public function getBeforeEventHandlers(): EventCollection
+    {
+        return $this->beforeCollection;
+    }
+
+    /**
+     * Returns all the after event handlers as a collection
+     */
+    public function getAfterEventHandlers(): EventCollection
+    {
+        return $this->afterCollection;
     }
 
     /**
@@ -128,6 +153,26 @@ class Blueprint
     }
 
     /**
+     * Loads a custom before event handler object which will be executed before validation starts
+     */
+    public function loadBeforeEvent(BeforeEventInterface $eventHandler): void
+    {
+        $this->before(function (BeforeEvent $beforeEvent) use ($eventHandler) {
+            $eventHandler->handle($beforeEvent);
+        });
+    }
+
+    /**
+     * Loads a custom after event handler object which will be executed after validation
+     */
+    public function loadAfterEvent(AfterEventInterface $eventHandler): void
+    {
+        $this->after(function (AfterEvent $afterEvent) use ($eventHandler) {
+            $eventHandler->handle($afterEvent);
+        });
+    }
+
+    /**
      * Combines multiple fields to one for validation
      */
     public function combine(string ...$fieldNames): Combine
@@ -144,6 +189,22 @@ class Blueprint
     public function alias(string $fieldName, string $alias): void
     {
         $this->combine($fieldName)->glue('')->alias($alias);
+    }
+
+    /**
+     * Adds a new before event handler closure to the collection
+     */
+    public function before(Closure $callback): void
+    {
+        $this->beforeCollection->append($callback);
+    }
+
+    /**
+     * Adds a new after event handler closure to the collection
+     */
+    public function after(Closure $callback): void
+    {
+        $this->afterCollection->append($callback);
     }
 
     /**

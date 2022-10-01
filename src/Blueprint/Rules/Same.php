@@ -46,11 +46,7 @@ class Same extends AbstractRule
             $paths = $this->getPaths($fieldName);
 
             foreach ($paths as $path) {
-                if (null === $path) {
-                    return false;
-                }
-
-                if ($value !== $path->getValue()) {
+                if (null !== $path && $value !== $path->getValue()) {
                     return false;
                 }
             }

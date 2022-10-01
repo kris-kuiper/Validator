@@ -26,7 +26,7 @@ final class CustomStorageRule implements RuleInterface
     {
         $current->storage()->set('quez', 'bazz');
 
-        if(true === $current->storage()->has('foo')) {
+        if (true === $current->storage()->has('foo')) {
             return 'bar' === $current->storage()->get('foo');
         }
 

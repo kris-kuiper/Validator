@@ -2763,7 +2763,219 @@ $validator->validatedData()->toArray();
 
 
 
+## Validation events
+
+There are two types of validation events; `before` and `after` event. These event will be triggered before validation is executed and after.
+
+
+
+### Before event
+
+The before event will be executed before validation is executed. This can be handy if you want to check if multiple product id's exists in the database. Instead of querying the database per product id, you can query the database just once based on all product id's at once and store these to check if a product id exists in the array from product id's from the database.
+
+You can use a `closure` function or an object class as event handler.
+
+##### Example - using a closure function:
+
+```php
+use KrisKuiper\Validator\Blueprint\Events\BeforeEvent;
+use KrisKuiper\Validator\Validator;
+
+$data = [
+    'products' => [
+        ['id' => 1, 'title' => 'Product 1'],
+        ['id' => 2, 'title' => 'Product 2'],
+        ['id' => 3, 'title' => 'Product 3'],
+        ['id' => 4, 'title' => 'Product 4'],
+    ]
+];
+
+$validator = new Validator($data);
+
+//Attach a new before event listener
+$validator->before(function (BeforeEvent $event) {
+
+    //All product id's should be an integer number
+	if($event->field('product.*.id')->isInt()->isValid() === false) {
+        return;
+    }    
+    
+    //Retrieve all product ids as an array
+    $ids = $event->getValue('product.*.id');
+
+    //Retrieve the products from a database
+    $products = $DB->getProductsByIds($ids);
+
+    //Store the ids in the validation storage for later use
+    $event->storage()->set('ids', $products->pluck('id'));
+});
+
+//Retrieve all product id's and validate the provided id's
+$productIds = $validator->storage()->get('ids');//[1, 2, 3, 4]
+$validator->field('product.*.id')->required()->isInt()->in($productIds);
+
+//Execute validation
+$validator->execute();
+```
+
+
+
+**Example - using a class object:**
+
+Create a new class `CustomBeforeHandler` that implements the `BeforeEventInterface`:
+
+```php
+use KrisKuiper\Validator\Blueprint\Contracts\BeforeEventInterface;
+use KrisKuiper\Validator\Blueprint\Events\BeforeEvent;
+
+class CustomBeforeHandler implements BeforeEventInterface
+{
+    public function handle(BeforeEvent $event): void
+    {
+        //All product id's should be an integer number
+        if($event->field('product.*.id')->isInt()->isValid() === false) {
+            return;
+        }    
+
+        //Retrieve all product ids as an array
+        $ids = $event->getValue('product.*.id');
+
+        //Retrieve the products from a database
+        $products = $DB->getProductsByIds($ids);
+
+        //Store the ids in the validation storage for later use
+        $event->storage()->set('ids', $products->pluck('id'));
+    }
+}
+```
+
+
+
+Use this class in the validation:
+
+```php
+use KrisKuiper\Validator\Validator;
+
+$data = [
+    'products' => [
+        ['id' => 1, 'title' => 'Product 1'],
+        ['id' => 2, 'title' => 'Product 2'],
+        ['id' => 3, 'title' => 'Product 3'],
+        ['id' => 4, 'title' => 'Product 4'],
+    ]
+];
+
+$validator = new Validator($data);
+
+//Attach the before event handler
+$validator->loadBeforeEvent(new CustomBeforeHandler());
+
+//Retrieve all product id's and validate the provided id's
+$productIds = $validator->storage()->get('ids');//[1, 2, 3, 4]
+$validator->field('product.*.id')->required()->isInt()->in($productIds);
+
+//Execute validation
+$validator->execute();
+```
+
+
+
+*Note: The `before` event is also attachable to [blueprint validators](#using-blueprints).*
+
+
+
+### After event
+
+The `after` event will be triggered after validation is complete. Here you can check the validated data, if validation passed or not, retrieve the error bag and more. This can be handy if you want to log all failed validation to a database i.e.
+
+Like with the `before` event, you can use a `closure` function or an object class as event handler.
+
+**Example - using a closure function:**
+
+```php
+use KrisKuiper\Validator\Blueprint\Events\AfterEvent;
+use KrisKuiper\Validator\Validator;
+
+$data = ['email' => 'email@domain.com'];
+$validator = new Validator($data);
+
+//Attach a new before event listener
+$validator->after(function (AfterEvent $event) {
+
+    //Check if validation failed
+    if($event->failed()) {
+        
+        //Log all the validated data and errors into the database
+        $DB->logFailedValidation(
+            $event->getValidatedData()->toArray(), 
+            $event->errors()
+        );
+    }
+});
+
+//Attach validation rules
+$validator->field('email')->required()->email();
+
+//Execute validation
+$validator->execute();
+```
+
+
+
+**Example - using a class object:**
+
+Create a new class `CustomAfterHandler` that implements the `AfterEventInterface`:
+
+```php
+use KrisKuiper\Validator\Blueprint\Contracts\AfterEventInterface;
+use KrisKuiper\Validator\Blueprint\Events\AfterEvent;
+
+final class CustomAfterEventHandler implements AfterEventInterface
+{
+    public function handle(AfterEvent $event): void
+    {
+        //Check if validation failed
+        if($event->failed()) {
+
+            //Log all the validated data and errors into the database
+            $DB->logFailedValidation(
+                $event->getValidatedData()->toArray(), 
+                $event->errors()
+            );
+        }
+    }
+}
+```
+
+
+
+Use this class in the validation:
+
+```php
+use KrisKuiper\Validator\Blueprint\Events\AfterEvent;
+use KrisKuiper\Validator\Validator;
+
+$data = ['email' => 'email@domain.com'];
+$validator = new Validator($data);
+
+//Attach the after event listener
+$validator->loadAfterEvent(new CustomAfterEventHandler());
+
+//Attach validation rules
+$validator->field('email')->required()->email();
+
+//Execute validation
+$validator->execute();
+```
+
+
+
+*Note: The `after` event is also attachable to [blueprint validators](#using-blueprints).*
+
+
+
 ## Using validation storage
+
 You can store and retrieve arbitrary data within the validator after executing the validation. This can be useful when data is retrieved from a database to validate a custom rule, while the retrieved data is also needed outside of validation. 
 This ensures that the database only needs to be requested once.
 

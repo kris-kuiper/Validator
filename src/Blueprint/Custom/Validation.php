@@ -35,10 +35,6 @@ class Validation
         $field = $this->validator->field($this->fieldName);
 
         foreach ($this->ruleCollection as $rule) {
-            if (null === $rule) {
-                continue;
-            }
-
             $field->{$rule->getName()}(...$rule->getParameters());
         }
 

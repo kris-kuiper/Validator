@@ -75,13 +75,8 @@ class Current
     public function message(string $message): void
     {
         $fieldName = $this->getFieldName();
-
-        if (null === $fieldName) {
-            return;
-        }
-
         $ruleName = $this->getRuleName();
-        $this->rule->messages((string) $fieldName)->custom($ruleName, $message);
+        $this->rule->messages((string) ($fieldName ?? ''))->custom($ruleName, $message);
     }
 
     /**

@@ -27,11 +27,6 @@ class Present extends AbstractRule
     public function isValid(): bool
     {
         $fieldName = $this->getField()?->getFieldName();
-
-        if (null === $fieldName) {
-            return false;
-        }
-
-        return true === array_key_exists($fieldName, $this->getValidationData()->getData());
+        return true === array_key_exists($fieldName ?? '', $this->getValidationData()->getData());
     }
 }

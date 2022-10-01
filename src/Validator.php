@@ -7,8 +7,12 @@ namespace KrisKuiper\Validator;
 use Closure;
 use KrisKuiper\Validator\Blueprint\Blueprint;
 use KrisKuiper\Validator\Blueprint\Combine\Combine;
+use KrisKuiper\Validator\Blueprint\Contracts\AfterEventInterface;
+use KrisKuiper\Validator\Blueprint\Contracts\BeforeEventInterface;
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
 use KrisKuiper\Validator\Blueprint\Custom\Custom;
+use KrisKuiper\Validator\Blueprint\Events\AfterEvent;
+use KrisKuiper\Validator\Blueprint\Events\BeforeEvent;
 use KrisKuiper\Validator\Blueprint\MessageList;
 use KrisKuiper\Validator\Blueprint\MiddlewareList;
 use KrisKuiper\Validator\Storage\Storage;
@@ -106,12 +110,48 @@ class Validator
     }
 
     /**
+     * Loads a custom before event handler object which will be executed before validation starts
+     */
+    public function loadBeforeEvent(BeforeEventInterface $eventHandler): void
+    {
+        $this->blueprint->loadBeforeEvent($eventHandler);
+    }
+
+    /**
+     * Loads a custom after event handler object which will be executed after validation
+     */
+    public function loadAfterEvent(AfterEventInterface $eventHandler): void
+    {
+        $this->blueprint->loadAfterEvent($eventHandler);
+    }
+
+    /**
      * Loads a blueprint for extending/inheritance other validators
      */
     public function loadBlueprint(Blueprint ...$blueprints): void
     {
         foreach ($blueprints as $blueprint) {
             $this->blueprintParser->getBlueprintCollection()->prepend($blueprint);
+        }
+    }
+
+    /**
+     * Adds new before event handler to the collection
+     */
+    public function before(Closure ...$eventHandlers): void
+    {
+        foreach ($eventHandlers as $blueprint) {
+            $this->blueprint->getBeforeEventHandlers()->append($blueprint);
+        }
+    }
+
+    /**
+     * Adds new after event handler to the collection
+     */
+    public function after(Closure ...$eventHandlers): void
+    {
+        foreach ($eventHandlers as $blueprint) {
+            $this->blueprint->getAfterEventHandlers()->append($blueprint);
         }
     }
 
@@ -182,6 +222,40 @@ class Validator
 
         $this->isValidated = true;
 
+        //Execute the before events
+        $this->executeBeforeEvents();
+        $this->executeRules();
+        $this->executeAfterEvents();
+
+        return $this->isValid;
+    }
+
+    private function executeBeforeEvents(): void
+    {
+        $beforeEvent = new BeforeEvent($this->validationData, $this->storage);
+
+        /** @var Closure $before */
+        foreach ($this->blueprintParser->getBeforeEventCollection() as $before) {
+            $before($beforeEvent);
+        }
+    }
+
+    private function executeAfterEvents(): void
+    {
+        $afterEvent = new AfterEvent($this, $this->validationData);
+
+        /** @var Closure $after */
+        foreach ($this->blueprintParser->getAfterEventCollection() as $after) {
+            $after($afterEvent);
+        }
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    private function executeRules(): void
+    {
+        //Execute validation rules
         $this->blueprintParser->getFieldCollection()->each(function (Field $field) {
 
             $this->executeMiddleware($field);
@@ -222,8 +296,6 @@ class Validator
                 });
             });
         });
-
-        return $this->isValid;
     }
 
     /**

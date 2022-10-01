@@ -78,11 +78,7 @@ class ErrorCollection extends AbstractCollection
         foreach ($this->items as $item) {
             $fieldName = $item->getFieldName();
 
-            if (null === $fieldName) {
-                continue;
-            }
-
-            if (true === isset($errors[$fieldName])) {
+            if (true === isset($errors[$fieldName ?? ''])) {
                 continue;
             }
 

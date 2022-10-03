@@ -30,6 +30,7 @@ class FieldFilter
     }
 
     /**
+     * Filters all the valid or invalid values and converts these into a JSON string
      * @throws ValidatorException|JsonException
      */
     public function toJson(): string
@@ -38,6 +39,7 @@ class FieldFilter
     }
 
     /**
+     * Filters all the valid or invalid values and converts these into an array
      * @throws ValidatorException
      */
     public function toArray(): array

@@ -1,0 +1,16 @@
+## Introduction
+Validating incoming data or array's (i.e. POST data) should not be hard. Meet Modern PHP Validator which does the trick nice, clean and easy.
+
+Here are a couple of the many perks:
+
+- 80+ predefined validation rules;
+- 15+ predefined [middleware](#predefined-middleware) or [create your own](#custom-middleware) custom middleware;
+- No new syntax you need to learn as in the case with i.e. Laravel Validator. Your editor/IDE can complete every validation rule, custom message, middleware, etc. out of the box;
+- Easy [retrieving the validated data](#working-with-validated-data) after validation;
+- [Combine](#combining-fields-for-validation) multiple fields as one for single validation (i.e. day, month, year inputs as a single date field for validation);
+- Use validation [blueprints](#using-blueprints) to extend other validators for [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) method;
+- Define you [own validation rules](#custom-validation-rules) and [custom error messages](#setting-custom-error-messages).
+
+Modern PHP Validator provides several approaches to validate your application's (incoming) data. It makes it a breeze to validate form submit values as combining multiple input for single validation. It supports middleware and custom validation rules and error messages. It will also return the validated data to insert the data into i.e. a database.
+
+Go to the [next section](#docs/intro/head-first-example.md).

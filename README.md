@@ -2539,7 +2539,7 @@ $data = [
 $validator = new Validator($data);
 $validator->field('emails.*')->email()->lengthBetween(5, 50);
 
-//Attach the to lowercase and trim middleware
+//Attach the lowercase and trim middleware
 $validator
     ->middleware('emails.*')
     ->toLowercase()

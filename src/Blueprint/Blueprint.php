@@ -14,7 +14,7 @@ use KrisKuiper\Validator\Blueprint\Combine\Combine;
 use KrisKuiper\Validator\Blueprint\Contracts\AfterEventInterface;
 use KrisKuiper\Validator\Blueprint\Contracts\BeforeEventInterface;
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Blueprint\Custom\Custom;
 use KrisKuiper\Validator\Blueprint\Events\AfterEvent;
 use KrisKuiper\Validator\Blueprint\Events\BeforeEvent;
@@ -147,8 +147,8 @@ class Blueprint
     {
         $this->messages()->custom($alias ?? $rule->getName(), $rule->getMessage());
 
-        $this->custom($alias ?? $rule->getName(), function (Current $validator) use ($rule) {
-            return $rule->isValid($validator);
+        $this->custom($alias ?? $rule->getName(), function (Event $event) use ($rule) {
+            return $rule->isValid($event);
         });
     }
 

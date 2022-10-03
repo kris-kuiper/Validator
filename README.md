@@ -27,6 +27,7 @@ Modern PHP Validator - Standalone Validation on Steroids
 - [Custom validation rules](#custom-validation-rules)
   - [Using rule objects](#using-rule-objects)
   - [Using closures](#using-closures)
+- [Filtering values based on validation rules](#filtering-values-based-on-validation-rules)
 - [Conditionally adding rules](#conditionally-adding-rules)
 - [Combining fields for validation](#combining-fields-for-validation)
   - [Combining with the glue method](#combining-with-the-glue-method)
@@ -113,7 +114,7 @@ composer require kris-kuiper/validator
 
 Or add this line to your composer.json file:
 ```shell script
-"kris-kuiper/validator": "^1.2"
+"kris-kuiper/validator": "^1.3"
 ```
 
 
@@ -127,7 +128,7 @@ First things first: <u>rules are executed in the order they are defined</u>.
 
 ## Adding fields for validation
 
-By using the `field()` method, you can add one or more field names for validation.
+By using the `fieexcelld()` method, you can add one or more field names for validation.
 
 ##### Example 1:
 
@@ -401,36 +402,29 @@ $validator->field('fieldName')->min(1)->max(5)->bail();
 
 Below is a list with all predefined validation rules.
 
-|                                             |                                   |                                               |
-|---------------------------------------------|-----------------------------------|-----------------------------------------------|
-| [Accepted if](#accepted-if)                 | [Divisible by](#divisible-by)     | [Negative or zero](#negative-or-zero)         |
-| [AcceptedNotEmpty](#accepted-not-empty)     | [Email](#email)                   | [Not in](#not-in)                             |
-| [After](#after)                             | [Ends not with](#ends-not-with)   | [Number](#number)                             |
-| [After or equal](#after-or-equal)           | [Ends with](#ends-with)           | [Positive](#positive)                         |
-| [Alpha](#alpha)                             | [Equals](#equals)                 | [Positive or zero](#positive-or-zero)         |
-| [Alpha dash](#alpha-dash)                   | [In](#in)                         | [Present](#present)                           |
-| [Alpha numeric](#alpha-numeric)             | [IP](#ip)                         | [Regex](#regex)                               |
-| [Before](#before)                           | [IP private](#ip-private)         | [Required](#required)                         |
-| [Before or equal](#before-or-equal)         | [IP public](#ip-public)           | [Required with](#required-with)               |
-| [Between](#between)                         | [IP v4](#ip-v4)                   | [Required with all](#required-with-all)       |
-| [Contains](#contains)                       | [IP v6](#ip-v6)                   | [Required without](#required-without)         |
-| [Contains not](#contains-not)               | [Is array](#is-array)             | [Required without all](#required-without-all) |
-| [Contains letter](#contains-letter)         | [Is bool](#is-boolean)            | [Same](#same)                                 |
-| [Contains mixed case](#contains-mixed-case) | [Is empty](#is-empty)             | [Scalar](#scalar)                             |
-| [Contains number](#contains-number)         | [Is false](#is-false)             | [Starts not with](#starts-not-with)           |
-| [Contains symbol](#contains-symbol)         | [Is int](#is-int)                 | [Starts with](#starts-with)                   |
-| [Count](#count)                             | [Is not null](#is-not-null)       | [Time zone](#time-zone)                       |
-| [Countable](#countable)                     | [Is null](#is-null)               | [Url](#url)                                   |
-| [Count between](#count-between)             | [Is string](#is-string)           | [UUID](#uuid)                                 |
-| [Count max](#count-max)                     | [Is true](#is-true)               | [UUID v1](#uuid-v1)                           |
-| [Count min](#count-min)                     | [Json](#json)                     | [UUID v3](#uuid-v3)                           |
-| [Date](#date)                               | [Length](#length)                 | [UUID v4](#uuid-v4)                           |
-| [Different](#different)                     | [Length between](#length-between) | [UUID v5](#uuid-v5)                           |
-| [Different with all](#different-with-all)   | [Length max](#length-max)         | [Words](#words)                               |
-| [Digits](#digits)                           | [Length min](#length-min)         | [Words max](#words-max)                       |
-| [Digits between](#digits-between)           | [Max](#max)                       | [Words min](#words-min)                       |
-| [Digits min](#digits-min)                   | [Min](#min)                       |                                               |
-| [Distinct](#distinct)                       | [Negative](#negative)             |                                               |
+|                                             |                                           |                                       |                                               |
+|---------------------------------------------|-------------------------------------------|---------------------------------------|-----------------------------------------------|
+| [Accepted if](#accepted-if)                 | [Date](#date)                             | [Is false](#is-false)                 | [Required](#required)                         |
+| [AcceptedNotEmpty](#accepted-not-empty)     | [Different](#different)                   | [Is int](#is-int)                     | [Required with](#required-with)               |
+| [After](#after)                             | [Different with all](#different-with-all) | [Is not null](#is-not-null)           | [Required with all](#required-with-all)       |
+| [After or equal](#after-or-equal)           | [Digits](#digits)                         | [Is null](#is-null)                   | [Required without](#required-without)         |
+| [Alpha](#alpha)                             | [Digits between](#digits-between)         | [Is string](#is-string)               | [Required without all](#required-without-all) |
+| [Alpha dash](#alpha-dash)                   | [Digits min](#digits-min)                 | [Is true](#is-true)                   | [Same](#same)                                 |
+| [Alpha numeric](#alpha-numeric)             | [Distinct](#distinct)                     | [Json](#json)                         | [Scalar](#scalar)                             |
+| [Before](#before)                           | [Divisible by](#divisible-by)             | [Length](#length)                     | [Starts not with](#starts-not-with)           |
+| [Before or equal](#before-or-equal)         | [Email](#email)                           | [Length between](#length-between)     | [Starts with](#starts-with)                   |
+| [Between](#between)                         | [Ends not with](#ends-not-with)           | [Length max](#length-max)             | [Time zone](#time-zone)                       |
+| [Contains](#contains)                       | [Ends with](#ends-with)                   | [Length min](#length-min)             | [Url](#url)                                   |
+| [Contains not](#contains-not)               | [Equals](#equals)                         | [Max](#max)                           | [UUID](#uuid)                                 |
+| [Contains letter](#contains-letter)         | [In](#in)                                 | [Min](#min)                           | [UUID v1](#uuid-v1)                           |
+| [Contains mixed case](#contains-mixed-case) | [IP](#ip)                                 | [Negative](#negative)                 | [UUID v3](#uuid-v3)                           |
+| [Contains number](#contains-number)         | [IP private](#ip-private)                 | [Negative or zero](#negative-or-zero) | [UUID v4](#uuid-v4)                           |
+| [Contains symbol](#contains-symbol)         | [IP public](#ip-public)                   | [Not in](#not-in)                     | [UUID v5](#uuid-v5)                           |
+| [Count](#count)                             | [IP v4](#ip-v4)                           | [Number](#number)                     | [Words](#words)                               |
+| [Countable](#countable)                     | [IP v6](#ip-v6)                           | [Positive](#positive)                 | [Words max](#words-max)                       |
+| [Count between](#count-between)             | [Is array](#is-array)                     | [Positive or zero](#positive-or-zero) | [Words min](#words-min)                       |
+| [Count max](#count-max)                     | [Is bool](#is-boolean)                    | [Present](#present)                   |                                               |
+| [Count min](#count-min)                     | [Is empty](#is-empty)                     | [Regex](#regex)                       |                                               |
 
 
 
@@ -1470,7 +1464,7 @@ Below is a blueprint/example of a custom rule:
 
 ```php
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 class CustomRule implements RuleInterface
 {
@@ -1481,16 +1475,16 @@ class CustomRule implements RuleInterface
         return self::RULE_NAME;
     }
 
-    public function isValid(Current $current): bool
+    public function isValid(Event $event): bool
     {
         //Retrieve the minimum parameter
-        $min = $current->getParameter('min');
+        $min = $event->getParameter('min');
         
         //Create your own validation
-        return strlen($current->getValue()) > $min;
+        return strlen($event->getValue()) > $min;
         
         //Or use the built-in validator
-        return $current->field('name')->lengthMin($min)->isValid();
+        return $event->field('name')->lengthMin($min)->isValid();
     }
 
     public function getMessage(): string
@@ -1541,23 +1535,23 @@ if($validator->passes()) {
 If you only need the functionality of a custom rule once throughout your application, you may use a `closure function` instead of a rule object:
 
 ```php
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Validator;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
 
 $data = ['name' => 'Morris'];
 $validator = new Validator($data);
 
 //Attach the custom rule
-$validator->custom('length', function (Current $current) {
+$validator->custom('length', function (Event $event) {
 
     //Retrieve the minimum parameter
-    $min = $current->getParameter('min');
+    $min = $event->getParameter('min');
     
     //Create your own validation
-    return strlen($current->getValue()) > $min;
+    return strlen($event->getValue()) > $min;
     
     //Or use the built-in validator
-    return $current->field('name')->lengthMin($min)->isValid();
+    return $event->field('name')->lengthMin($min)->isValid();
 });
 
 //Use the custom rule
@@ -1577,6 +1571,88 @@ if($validator->passes()) {
 *Note: You can set [custom error messages](#example-5-using-custom-error-messages-within-custom-rules) within rule closures*
 
 
+
+## Filtering values based on validation rules
+
+Sometimes, you just want to retrieve the valid (or invalid) values from an array based on a set of validation rules. This can be done with the `filter()` method. This method is available in the validator, in the [before event](#before-event) and in [custom validation rules](#custom-validation-rules).
+
+##### Example: in the validator
+```php
+use KrisKuiper\Validator\Validator;
+
+$data = ['months' => [1, 2, '3', 4, '6', '7', 8, 13]];
+
+$validator = new Validator($data);
+$validMonths = $validator
+    ->filter('months.*')
+    ->isInt(true)
+    ->between(1, 12)
+    ->toArray(); //[1, 2, 4, 8]
+```
+
+##### Example 2: in the before event
+```php
+use KrisKuiper\Validator\Blueprint\Events\BeforeEvent;
+use KrisKuiper\Validator\Validator;
+
+$data = ['ids' => [1, 2, '3', 4, '6', '7', 8]];
+
+$validator = new Validator($data);
+$validator->before(function(BeforeEvent $event) {
+
+    //Filter all the id's that matches the validation rules
+    $ids = $event->filter('ids.*')->isInt(true)->between(0, 5)->toArray(); //[1, 2, 4]
+    
+    //Retrieve the products from the database based on the valid id's
+    //and store the result in the validator storage
+    $event->storage()->set('validIds', $database->getIds($ids));
+});
+
+$validator->field('ids.*')->in($validator->storage()->get('validIds'));
+
+//Execute validation
+$validator->passes();
+```
+
+##### Example 3: in a custom rule
+```php
+use KrisKuiper\Validator\Blueprint\Events\Event;
+use KrisKuiper\Validator\Validator;
+
+$data = ['ids' => [1, 2, '3', 4, '6', '7', 8]];
+
+$validator = new Validator($data);
+$validator->custom('myRule', function(Event $event) {
+
+    //Filter all the id's that matches the validation rules
+    $ids = $event->filter('ids.*')->isInt(true)->between(0, 5)->toArray(); //[1, 2, 4]
+    
+    return count($ids) > 2;
+});
+
+$validator->field('ids.*')->custom('myRule');
+
+//Execute validation
+$validator->passes();
+```
+
+You can also retrieve all the invalid values by setting the filter mode:
+```php
+use KrisKuiper\Validator\FieldFilter;
+use KrisKuiper\Validator\Validator;
+
+$data = ['months' => [1, 2, '3', 4, '6', '7', 8, 13]];
+
+$validator = new Validator($data);
+$validMonths = $validator
+    ->filter('months.*', FieldFilter::FILTER_MODE_FAILED)
+    ->isInt(true)
+    ->between(1, 12)
+    ->toArray(); //['3', '6', '7', 13]
+```
+
+
+
 ## Conditionally adding rules
 
 Sometimes you may wish to add validation rules based on more complex conditional logic. For example, you may want to validate the incoming data by checking if the amount of products is higher than 99, then the reason of purchase should be filled in.
@@ -1585,7 +1661,7 @@ This can be achieved by using the `conditional()` method:
 
 ```php
 use KrisKuiper\Validator\Validator;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 $data = [
     'amount' => 100,
@@ -1595,12 +1671,12 @@ $data = [
 $validator = new Validator($data);
 $validator
     ->field('reason')
-    ->conditional(function(Current $current) {
+    ->conditional(function(Event $event) {
         //Retrieve the value of the amount field
-        return $current->getValue('amount') > 99
+        return $event->getValue('amount') > 99
         
-        //Or us ethe built-in validator
-        return $current->field('amount')->isInt()->min(99)->isValid();
+        //Or use the built-in validator
+        return $event->field('amount')->isInt()->min(99)->isValid();
     })
     ->required()
     ->lengthMax(2000);
@@ -1608,9 +1684,7 @@ $validator
 $validator->execute());
 ```
 
-In this example, the validation will fail because the amount is higher than 99, so the reason field is required.
-
-If the amount is below 100, validation will pass.
+In this example, the validation will fail because the amount is higher than 99, so the reason field is required. If the amount was below 100, validation would have pass.
 
 
 
@@ -1620,7 +1694,7 @@ Although the last rule `isString`, in the example below, requires the provided d
 
 ```php
 use KrisKuiper\Validator\Validator;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 $data = ['age' => 25];
 $validator = new Validator($data);
@@ -2051,10 +2125,10 @@ $data = ['amount' => 5];
 $validator = new Validator($data);
 
 //Define the customer rule
-$validator->custom('min10', function (Current $current): bool {
+$validator->custom('min10', function (Event $event): bool {
 
-    $current->message('Amount should be at least :min');
-    return $current->geValue() >= $current->getParameter('min');
+    $event->message('Amount should be at least :min');
+    return $event->geValue() >= $event->getParameter('min');
 });
 
 //Attach the custom rule to the amount field
@@ -2378,7 +2452,7 @@ You can also define custom error messages, custom validation rules and middlewar
 
 ```php
 use KrisKuiper\Validator\Blueprint\Blueprint;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Validator;
 
 
@@ -2403,8 +2477,8 @@ $blueprint
     ->trim();
 
 //Define a custom rule
-$blueprint->custom('morrisRule', function (Current $current) {
-    return $current->getValue() === 'Morris';
+$blueprint->custom('morrisRule', function (Event $event) {
+    return $event->getValue() === 'Morris';
 });
 ```
 
@@ -2993,11 +3067,11 @@ $validator = new Validator($data);
 $validator->field('product_id')->custom('existsInDB');
 
 //Attach the custom rule
-$validator->custom('existsInDB', function(Current $current) {
+$validator->custom('existsInDB', function(Event $event) {
     
     //Store the product from the database in the validator storage object
-    $product = $db->product->getById($current->getValue());
-    $current->storage()->set('product', $product);
+    $product = $db->product->getById($event->getValue());
+    $event->storage()->set('product', $product);
     
     return $product !== null;
 });
@@ -3035,17 +3109,17 @@ $validator->storage()->get('product') //Database product which was set within th
 
 And within the custom rule object (see [rule objects](#using-rule-objects) for more information):
 ```php
-public function isValid(Current $current): bool
+public function isValid(Event $event): bool
 {
     //Check if the data exists 
-    if(true === $current->storage()->has('foo')) {
+    if(true === $event->storage()->has('foo')) {
         
         //Store the product from the database in the validator storage object
-        $product = $db->product->getById($current->getValue());
-        $current->storage()->set('product', $product);
+        $product = $db->product->getById($event->getValue());
+        $event->storage()->set('product', $product);
         
         //Retrieve the data
-        return 'bar' === $current->storage()->get('foo');
+        return 'bar' === $event->storage()->get('foo');
     }
 
     return false;
@@ -3059,7 +3133,7 @@ public function isValid(Current $current): bool
 ##### Example 1: Validating registration form
 
 ```php
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Error;
 use KrisKuiper\Validator\Validator;
 
@@ -3109,8 +3183,8 @@ $validator
     ->after('1900-01-01')
     ->before(date('Y-m-d'));
 
-$validator->custom('inDatabase', function(Current $current) {
-    return $current->getValue() !== 'already exists in database code';
+$validator->custom('inDatabase', function(Event $event) {
+    return $event->getValue() !== 'already exists in database code';
 });
 
 //Validation passes

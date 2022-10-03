@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
 use Closure;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 class Conditional extends AbstractRule
 {
@@ -37,7 +37,7 @@ class Conditional extends AbstractRule
     public function isValid(): bool
     {
         $callback = $this->callback;
-        $conditional = $callback(new Current($this, $this->getName(), $this->getStorage()));
+        $conditional = $callback(new Event($this, $this->getName(), $this->getStorage()));
 
         if (false === $conditional) {
             $this->getField()?->setBailed(true);

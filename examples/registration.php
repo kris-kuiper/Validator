@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Error;
 use KrisKuiper\Validator\Validator;
 
@@ -24,8 +24,8 @@ $validator->field('name')->lengthBetween(2, 20)->isString()->required();
 $validator->field('email')->lengthMax(40)->email()->required()->custom('inDatabase')->bail();
 $validator->field('terms')->accepted();
 $validator->field('date_of_birth')->date()->after('1900-01-01')->before(date('Y-m-d'));
-$validator->custom('inDatabase', function (Current $callback) {
-    return 'already exists in database code' !== $callback->getValue();
+$validator->custom('inDatabase', function (Event $event) {
+    return 'already exists in database code' !== $event->getValue();
 });
 
 //Validation passes

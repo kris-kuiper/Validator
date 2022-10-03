@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace tests\unit;
 
+use JsonException;
 use KrisKuiper\Validator\Blueprint\Rules\Between;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
+use KrisKuiper\Validator\FieldFilter;
 use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
 use tests\unit\assets\ExceptionRule;
@@ -492,5 +494,57 @@ final class ValidatorTest extends TestCase
 
         $this->assertTrue($validator->execute());
         $this->assertSame(['quez' => 5, 'foo' => 5], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfFilterReturnsCorrectArrayWhenUsingThreeDimensionalArray(): void
+    {
+        $data = ['months' => [1, 2, '3', 4, 'a', 'b', 5]];
+
+        $validator = new Validator($data);
+        $months = $validator->filter('months.*')->isInt(true)->toArray();
+
+        $this->assertSame([1, 2, 4, 5], $months);
+    }
+
+    /**
+     * @throws ValidatorException|JsonException
+     */
+    public function testIfFilterReturnsCorrectJSONWhenUsingThreeDimensionalArray(): void
+    {
+        $data = ['months' => [1, 2, '3', 4, 'a', 'b', 5]];
+
+        $validator = new Validator($data);
+        $months = $validator->filter('months.*')->isInt(true)->toJson();
+
+        $this->assertSame(json_encode([1, 2, 4, 5], JSON_THROW_ON_ERROR), $months);
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfFilterReturnsCorrectArrayWhenUsingTwoDimensionalArray(): void
+    {
+        $data = ['foo' => 12];
+
+        $validator = new Validator($data);
+        $output = $validator->filter('foo')->isInt()->toArray();
+
+        $this->assertSame([$data['foo']], $output);
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfFilterReturnsCorrectArrayWhenUsingReverseFilterMode(): void
+    {
+        $data = ['months' => [1, 2, '3', 4, 'a', 'b', 5]];
+
+        $validator = new Validator($data);
+        $months = $validator->filter('months.*', FieldFilter::FILTER_MODE_FAILED)->isInt(true)->toArray();
+
+        $this->assertSame(['3', 'a', 'b'], $months);
     }
 }

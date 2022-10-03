@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Events;
 
 use KrisKuiper\Validator\Blueprint\Custom\Validation;
+use KrisKuiper\Validator\FieldFilter;
 use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Translator\PathTranslator;
 
@@ -39,8 +40,21 @@ class BeforeEvent
         return $this->storage;
     }
 
+    /**
+     * Validates the provided field name against validation rules
+     */
     public function field(string $fieldName): Validation
     {
         return new Validation($this->getValidationData(), $fieldName);
+    }
+
+    /**
+     * Filters values based on a field name and provided validation rules
+     * Use FILTER_MODE_PASSED to only include values that pass the validation rules
+     * Use FILTER_MODE_FAILED to only include values that fail the validation rules
+     */
+    public function filter(string|int|float $fieldName, int $filterMode = FieldFilter::FILTER_MODE_PASSED): FieldFilter
+    {
+        return new FieldFilter($this->validationData, $fieldName, $filterMode);
     }
 }

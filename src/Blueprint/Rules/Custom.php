@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
 use Closure;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 class Custom extends AbstractRule
 {
@@ -49,6 +49,6 @@ class Custom extends AbstractRule
     public function isValid(): bool
     {
         $callback = $this->callback;
-        return $callback(new Current($this, $this->getName(), $this->getStorage()));
+        return $callback(new Event($this, $this->getName(), $this->getStorage()));
     }
 }

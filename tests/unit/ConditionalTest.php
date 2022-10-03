@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace tests\unit;
 
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
@@ -22,8 +22,8 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         })->equals('1');
 
         $this->assertFalse($validator->execute());
@@ -40,8 +40,8 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         })->equals('1')->between(0, 1);
 
         $validator->execute();
@@ -60,8 +60,8 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business', 'product')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business', 'product')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         })->equals('1');
 
         $validator->execute();
@@ -80,8 +80,8 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business', 'product')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business', 'product')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         })->equals('1');
 
         $validator->execute();
@@ -99,8 +99,8 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->equals('1')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business')->equals('1')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         });
 
         $this->assertFalse($validator->execute());
@@ -117,8 +117,8 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->equals('1')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business')->equals('1')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         });
 
         $this->assertTrue($validator->execute());
@@ -130,8 +130,8 @@ final class ConditionalTest extends TestCase
     public function testIfValidationFailsWhenBusinessIsOnlyRequiredWhenConditionalIsTrue(): void
     {
         $validator = new Validator(['amount' => 100]);
-        $validator->field('business')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         })->required();
 
         $this->assertFalse($validator->execute());
@@ -143,8 +143,8 @@ final class ConditionalTest extends TestCase
     public function testIfValidationPassesWhenBusinessIsNotRequiredWhenConditionalIsFalse(): void
     {
         $validator = new Validator(['amount' => 1]);
-        $validator->field('business')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         })->required();
 
         $this->assertTrue($validator->execute());
@@ -161,8 +161,8 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         })->min(2);
 
         $validator->field('business')->equals(2);
@@ -180,8 +180,8 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->conditional(static function (Current $current) {
-            return $current->getValue('amount') > 99;
+        $validator->field('business')->conditional(static function (Event $event) {
+            return $event->getValue('amount') > 99;
         })->required();
 
         $this->assertTrue($validator->execute());
@@ -361,11 +361,11 @@ final class ConditionalTest extends TestCase
         $validator->storage()->set('foo', 'bar');
         $validator
             ->field('foo')
-            ->conditional(function (Current $current) {
-                $this->assertTrue($current->storage()->has('foo'));
-                $this->assertSame('bar', $current->storage()->get('foo'));
-                $current->storage()->set('quez', 'bazz');
-                return 'bar' === $current->storage()->get('foo');
+            ->conditional(function (Event $event) {
+                $this->assertTrue($event->storage()->has('foo'));
+                $this->assertSame('bar', $event->storage()->get('foo'));
+                $event->storage()->set('quez', 'bazz');
+                return 'bar' === $event->storage()->get('foo');
             })
             ->min(3);
 

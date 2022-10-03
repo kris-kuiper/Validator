@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace tests\unit\assets;
 
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 final class CustomMessageRule implements RuleInterface
 {
@@ -22,9 +22,9 @@ final class CustomMessageRule implements RuleInterface
     /**
      * @inheritdoc
      */
-    public function isValid(Current $current): bool
+    public function isValid(Event $event): bool
     {
-        $current->message('foo bar');
+        $event->message('foo bar');
         return false;
     }
 

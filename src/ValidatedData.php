@@ -7,7 +7,6 @@ namespace KrisKuiper\Validator;
 use JsonException;
 use KrisKuiper\Validator\Translator\Path;
 use KrisKuiper\Validator\Translator\PathTranslator;
-use stdClass;
 
 class ValidatedData
 {
@@ -64,15 +63,6 @@ class ValidatedData
         $instance->filter = $filter;
         $instance->filterRecursive = $recursive;
         return $instance;
-    }
-
-    /**
-     * Returns an stdClass with the validated data
-     * @throws JsonException
-     */
-    public function toObject(): stdClass
-    {
-        return json_decode($this->toJson(), false, 512, JSON_THROW_ON_ERROR);
     }
 
     /**

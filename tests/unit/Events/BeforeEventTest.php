@@ -122,4 +122,27 @@ final class BeforeEventTest extends TestCase
         $this->assertTrue($validator->storage()->has('ids'));
         $this->assertSame([1, 2, 3, 4], $validator->storage()->get('ids'));
     }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfFilterTurnsCorrectResultWhenUsingInBeforeEvent(): void
+    {
+        $data = [
+            'product' => [
+                ['id' => 1],
+                ['id' => null],
+                ['id' => 3],
+            ]
+        ];
+
+        $validator = new Validator($data);
+        $validator->before(function (BeforeEvent $event) {
+
+            $ids = $event->filter('product.*.id')->isInt()->toArray();
+            $this->assertSame([1, 3], $ids);
+        });
+
+        $validator->execute();
+    }
 }

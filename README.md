@@ -27,6 +27,7 @@ Modern PHP Validator - Standalone Validation on Steroids
 - [Custom validation rules](#custom-validation-rules)
   - [Using rule objects](#using-rule-objects)
   - [Using closures](#using-closures)
+- [Filtering values based on validation rules](#filtering-values-based-on-validation-rules)
 - [Conditionally adding rules](#conditionally-adding-rules)
 - [Combining fields for validation](#combining-fields-for-validation)
   - [Combining with the glue method](#combining-with-the-glue-method)
@@ -113,7 +114,7 @@ composer require kris-kuiper/validator
 
 Or add this line to your composer.json file:
 ```shell script
-"kris-kuiper/validator": "^1.2"
+"kris-kuiper/validator": "^1.3"
 ```
 
 
@@ -1470,7 +1471,7 @@ Below is a blueprint/example of a custom rule:
 
 ```php
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 class CustomRule implements RuleInterface
 {
@@ -1481,16 +1482,16 @@ class CustomRule implements RuleInterface
         return self::RULE_NAME;
     }
 
-    public function isValid(Current $current): bool
+    public function isValid(Event $event): bool
     {
         //Retrieve the minimum parameter
-        $min = $current->getParameter('min');
+        $min = $event->getParameter('min');
         
         //Create your own validation
-        return strlen($current->getValue()) > $min;
+        return strlen($event->getValue()) > $min;
         
         //Or use the built-in validator
-        return $current->field('name')->lengthMin($min)->isValid();
+        return $event->field('name')->lengthMin($min)->isValid();
     }
 
     public function getMessage(): string
@@ -1542,22 +1543,22 @@ If you only need the functionality of a custom rule once throughout your applica
 
 ```php
 use KrisKuiper\Validator\Validator;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 $data = ['name' => 'Morris'];
 $validator = new Validator($data);
 
 //Attach the custom rule
-$validator->custom('length', function (Current $current) {
+$validator->custom('length', function (Event $event) {
 
     //Retrieve the minimum parameter
-    $min = $current->getParameter('min');
+    $min = $event->getParameter('min');
     
     //Create your own validation
-    return strlen($current->getValue()) > $min;
+    return strlen($event->getValue()) > $min;
     
     //Or use the built-in validator
-    return $current->field('name')->lengthMin($min)->isValid();
+    return $event->field('name')->lengthMin($min)->isValid();
 });
 
 //Use the custom rule
@@ -1577,6 +1578,67 @@ if($validator->passes()) {
 *Note: You can set [custom error messages](#example-5-using-custom-error-messages-within-custom-rules) within rule closures*
 
 
+## Filtering values based on validation rules
+Sometimes, you just want to retrieve the valid (or invalid) values from an array based on a set of validation rules. This can be done with the `filter()` method. This method is available in the validator, in the [before event](#before-event) and in [custom validation rules](#custom-validation-rules).
+
+##### Example: in the validator
+```php
+$data = ['months' => [1, 2, '3', 4, '6', '7', 8, 13]];
+
+$validator = new Validator($data);
+$validMonths = $validator->filter('months.*')->isInt(true)->between(1, 12)->toArray(); //[1, 2, 4, 8]
+```
+
+##### Example 2: in the before event
+```php
+$data = ['ids' => [1, 2, '3', 4, '6', '7', 8]];
+
+$validator = new Validator($data);
+$validator->before(function(BeforeEvent $event) {
+
+    //Filter all the id's that matches the validation rules
+    $ids = $event->filter('ids.*')->isInt(true)->between(0, 5)->toArray(); //[1, 2, 4]
+    
+    //Retrieve the products from the database based on the valid id's and store the result in the validator storage
+    $event->storage()->set('validIds', $database->getIds($ids));
+});
+
+$validator->field('ids.*')->in($validator->storage()->get('validIds'));
+
+//Execute validation
+$validator->passes();
+```
+
+##### Example 3: in a custom rule
+```php
+$data = ['ids' => [1, 2, '3', 4, '6', '7', 8]];
+
+$validator = new Validator($data);
+$validator->custom('myRule', function(Event $event) {
+
+    //Filter all the id's that matches the validation rules
+    $ids = $event->filter('ids.*')->isInt(true)->between(0, 5)->toArray(); //[1, 2, 4]
+    
+    return count($ids) > 2;
+});
+
+$validator->field('ids.*')->custom('myRule');
+
+//Execute validation
+$validator->passes();
+```
+
+You can also retrieve all the invalid values by setting the filter mode:
+```php
+use KrisKuiper\Validator\FieldFilter;
+
+$data = ['months' => [1, 2, '3', 4, '6', '7', 8, 13]];
+
+$validator = new Validator($data);
+$validMonths = $validator->filter('months.*', FieldFilter::FILTER_MODE_FAILED)->isInt(true)->between(1, 12)->toArray(); //['3', '6', '7', 13]
+```
+
+
 ## Conditionally adding rules
 
 Sometimes you may wish to add validation rules based on more complex conditional logic. For example, you may want to validate the incoming data by checking if the amount of products is higher than 99, then the reason of purchase should be filled in.
@@ -1585,7 +1647,7 @@ This can be achieved by using the `conditional()` method:
 
 ```php
 use KrisKuiper\Validator\Validator;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 $data = [
     'amount' => 100,
@@ -1595,12 +1657,12 @@ $data = [
 $validator = new Validator($data);
 $validator
     ->field('reason')
-    ->conditional(function(Current $current) {
+    ->conditional(function(Event $event) {
         //Retrieve the value of the amount field
-        return $current->getValue('amount') > 99
+        return $event->getValue('amount') > 99
         
-        //Or us ethe built-in validator
-        return $current->field('amount')->isInt()->min(99)->isValid();
+        //Or use the built-in validator
+        return $event->field('amount')->isInt()->min(99)->isValid();
     })
     ->required()
     ->lengthMax(2000);
@@ -1608,9 +1670,7 @@ $validator
 $validator->execute());
 ```
 
-In this example, the validation will fail because the amount is higher than 99, so the reason field is required.
-
-If the amount is below 100, validation will pass.
+In this example, the validation will fail because the amount is higher than 99, so the reason field is required. If the amount was below 100, validation would have pass.
 
 
 
@@ -1620,7 +1680,7 @@ Although the last rule `isString`, in the example below, requires the provided d
 
 ```php
 use KrisKuiper\Validator\Validator;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 $data = ['age' => 25];
 $validator = new Validator($data);
@@ -2051,10 +2111,10 @@ $data = ['amount' => 5];
 $validator = new Validator($data);
 
 //Define the customer rule
-$validator->custom('min10', function (Current $current): bool {
+$validator->custom('min10', function (Event $event): bool {
 
-    $current->message('Amount should be at least :min');
-    return $current->geValue() >= $current->getParameter('min');
+    $event->message('Amount should be at least :min');
+    return $event->geValue() >= $event->getParameter('min');
 });
 
 //Attach the custom rule to the amount field
@@ -2378,7 +2438,7 @@ You can also define custom error messages, custom validation rules and middlewar
 
 ```php
 use KrisKuiper\Validator\Blueprint\Blueprint;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Validator;
 
 
@@ -2403,8 +2463,8 @@ $blueprint
     ->trim();
 
 //Define a custom rule
-$blueprint->custom('morrisRule', function (Current $current) {
-    return $current->getValue() === 'Morris';
+$blueprint->custom('morrisRule', function (Event $event) {
+    return $event->getValue() === 'Morris';
 });
 ```
 
@@ -2993,11 +3053,11 @@ $validator = new Validator($data);
 $validator->field('product_id')->custom('existsInDB');
 
 //Attach the custom rule
-$validator->custom('existsInDB', function(Current $current) {
+$validator->custom('existsInDB', function(Event $event) {
     
     //Store the product from the database in the validator storage object
-    $product = $db->product->getById($current->getValue());
-    $current->storage()->set('product', $product);
+    $product = $db->product->getById($event->getValue());
+    $event->storage()->set('product', $product);
     
     return $product !== null;
 });
@@ -3035,17 +3095,17 @@ $validator->storage()->get('product') //Database product which was set within th
 
 And within the custom rule object (see [rule objects](#using-rule-objects) for more information):
 ```php
-public function isValid(Current $current): bool
+public function isValid(Event $event): bool
 {
     //Check if the data exists 
-    if(true === $current->storage()->has('foo')) {
+    if(true === $event->storage()->has('foo')) {
         
         //Store the product from the database in the validator storage object
-        $product = $db->product->getById($current->getValue());
-        $current->storage()->set('product', $product);
+        $product = $db->product->getById($event->getValue());
+        $event->storage()->set('product', $product);
         
         //Retrieve the data
-        return 'bar' === $current->storage()->get('foo');
+        return 'bar' === $event->storage()->get('foo');
     }
 
     return false;
@@ -3059,7 +3119,7 @@ public function isValid(Current $current): bool
 ##### Example 1: Validating registration form
 
 ```php
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Error;
 use KrisKuiper\Validator\Validator;
 
@@ -3109,8 +3169,8 @@ $validator
     ->after('1900-01-01')
     ->before(date('Y-m-d'));
 
-$validator->custom('inDatabase', function(Current $current) {
-    return $current->getValue() !== 'already exists in database code';
+$validator->custom('inDatabase', function(Event $event) {
+    return $event->getValue() !== 'already exists in database code';
 });
 
 //Validation passes

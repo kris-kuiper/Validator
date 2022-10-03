@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace tests\unit\assets;
 
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 final class CustomStorageRule implements RuleInterface
 {
@@ -22,12 +22,12 @@ final class CustomStorageRule implements RuleInterface
     /**
      * @inheritdoc
      */
-    public function isValid(Current $current): bool
+    public function isValid(Event $event): bool
     {
-        $current->storage()->set('quez', 'bazz');
+        $event->storage()->set('quez', 'bazz');
 
-        if (true === $current->storage()->has('foo')) {
-            return 'bar' === $current->storage()->get('foo');
+        if (true === $event->storage()->has('foo')) {
+            return 'bar' === $event->storage()->get('foo');
         }
 
         return false;

@@ -210,6 +210,16 @@ class Validator
     }
 
     /**
+     * Filters values based on a field name and provided validation rules
+     * Use FILTER_MODE_PASSED to only include values that pass the validation rules
+     * Use FILTER_MODE_FAILED to only include values that fail the validation rules
+     */
+    public function filter(string|int|float $fieldName, int $filterMode = FieldFilter::FILTER_MODE_PASSED): FieldFilter
+    {
+        return new FieldFilter($this->validationData, $fieldName, $filterMode);
+    }
+
+    /**
      * Executes all the given validation rules for all given fields and returns if validation passes or not
      * @throws ValidatorException
      */

@@ -66,24 +66,6 @@ final class ValidatedDataTest extends TestCase
     }
 
     /**
-     * @throws ValidatorException|JsonException
-     */
-    public function testIfCorrectSTDClassObjectIsReturnedWhenUsingObjectResponse(): void
-    {
-        $data = [
-            'name' => 'Brenda',
-            'age' => 67
-        ];
-
-        $validator = new Validator($data);
-        $validator->field('name')->alpha();
-        $validator->field('age')->between(25, 100);
-        $validator->execute();
-
-        $this->assertEquals((object) $data, $validator->validatedData()->toObject());
-    }
-
-    /**
      * @throws ValidatorException
      */
     public function testIfCorrectArrayIsReturnedWhenSubDataFieldIsValidated(): void

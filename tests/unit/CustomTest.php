@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace tests\unit;
 
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
@@ -28,16 +28,16 @@ final class CustomTest extends TestCase
         $parameters = ['min' => 10];
         $ruleName = 'length';
 
-        $validator->custom($ruleName, function (Current $validator) use ($data, $parameters, $ruleName) {
+        $validator->custom($ruleName, function (Event $event) use ($data, $parameters, $ruleName) {
 
-            $this->assertEquals($data['name'], $validator->getValue());
-            $this->assertEquals($parameters, $validator->getParameters());
-            $this->assertEquals('name', $validator->getFieldName());
-            $this->assertEquals($data, $validator->getValidationData());
-            $this->assertEquals(10, $validator->getParameter('min'));
-            $this->assertEquals($ruleName, $validator->getRuleName());
+            $this->assertEquals($data['name'], $event->getValue());
+            $this->assertEquals($parameters, $event->getParameters());
+            $this->assertEquals('name', $event->getFieldName());
+            $this->assertEquals($data, $event->getValidationData());
+            $this->assertEquals(10, $event->getParameter('min'));
+            $this->assertEquals($ruleName, $event->getRuleName());
 
-            return strlen($validator->getValue()) > $validator->getParameter('min');
+            return strlen($event->getValue()) > $event->getParameter('min');
         });
 
         $validator->messages('name')->custom('length', 'Invalid value, at least :min characters');
@@ -61,13 +61,13 @@ final class CustomTest extends TestCase
         $validator = new Validator($data);
         $ruleName = 'length';
 
-        $validator->custom($ruleName, function (Current $validator) {
+        $validator->custom($ruleName, function (Event $event) {
 
-            $this->assertFalse($validator->storage()->has('foo'));
-            $this->assertNull($validator->storage()->get('foo'));
-            $validator->storage()->set('foo', 'bar');
-            $this->assertTrue($validator->storage()->has('foo'));
-            $this->assertSame('bar', $validator->storage()->get('foo'));
+            $this->assertFalse($event->storage()->has('foo'));
+            $this->assertNull($event->storage()->get('foo'));
+            $event->storage()->set('foo', 'bar');
+            $this->assertTrue($event->storage()->has('foo'));
+            $this->assertSame('bar', $event->storage()->get('foo'));
             return false;
         });
 
@@ -215,9 +215,9 @@ final class CustomTest extends TestCase
         $parameters = ['min' => 10];
         $ruleName = 'length';
 
-        $validator->custom($ruleName, function (Current $current): bool {
+        $validator->custom($ruleName, function (Event $event): bool {
 
-            $current->message('foo :min');
+            $event->message('foo :min');
             return false;
         });
 
@@ -253,12 +253,28 @@ final class CustomTest extends TestCase
         $data = ['amount' => 10, 'notes' => 'foo'];
 
         $validator = new Validator($data);
-        $validator->custom('amount', function (Current $validator) {
-            return $validator->getValue() >= 10 && $validator->field('notes')->required()->lengthMin(10)->isValid();
+        $validator->custom('amount', function (Event $event) {
+            return $event->getValue() >= 10 && $event->field('notes')->required()->lengthMin(10)->isValid();
         });
 
         $validator->field('amount')->custom('amount');
 
         $this->assertFalse($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfFilterReturnsCorrectAmountWhenUsingCustomRule(): void
+    {
+        $data = ['product' => [1, 2, 3]];
+
+        $validator = new Validator($data);
+        $validator->custom('product', function (Event $event) use ($data) {
+            return count($data['product']) === count($event->filter('product.*')->isInt()->max(3)->toArray());
+        });
+
+        $validator->field('product')->custom('product');
+        $this->assertTrue($validator->execute());
     }
 }

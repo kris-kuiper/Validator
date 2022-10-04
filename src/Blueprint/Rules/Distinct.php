@@ -32,7 +32,7 @@ class Distinct extends AbstractRule
         $value = $this->getValue();
 
         if (true === is_array($value)) {
-            return count($value) === count(array_unique(array_values($value)));
+            return count($value) === count(array_unique(array_values($value), SORT_REGULAR));
         }
 
         return true;

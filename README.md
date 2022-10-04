@@ -28,9 +28,10 @@ Modern PHP Validator provides several approaches to validate your application's 
 
 
 
-## Documentation:
-
+## Documentation
 All documentation can be found in the [docs](/docs) folder.
+
+### Index:
 
 - Intro
   - [Introduction](/docs/01%20-%20Intro/1.1%20-%20Introduction.md)

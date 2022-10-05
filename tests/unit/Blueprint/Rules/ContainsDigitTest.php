@@ -8,16 +8,16 @@ use KrisKuiper\Validator\Validator;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use PHPUnit\Framework\TestCase;
 
-final class ContainsMixedCaseTest extends TestCase
+final class ContainsDigitTest extends TestCase
 {
     /**
      * @throws ValidatorException
      */
     public function testIfValidationPassesWhenOnlyBoolValuesAreProvided(): void
     {
-        foreach (['aB', 'Ab', 'This is a test', '1000AA - foo'] as $data) {
+        foreach (['a1', '1', '1a', 1, 'This is a 8 test', 'Foo 5.2', 5.2, -5.2, -3, 3] as $data) {
             $validator = new Validator(['field' => $data]);
-            $validator->field('field')->containsMixedCase();
+            $validator->field('field')->containsDigit();
             $validator->execute();
             $this->assertTrue($validator->execute());
         }
@@ -26,11 +26,11 @@ final class ContainsMixedCaseTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testIfValidationPassesWhenCorrectAmountOfMixedCaseAreProvided(): void
+    public function testIfValidationPassesWhenCorrectAmountOfNumbersAreProvided(): void
     {
-        foreach (['abcBCD', 'Ab12CdEf', 'This is A tesT', '1000AA - Foo bar'] as $data) {
+        foreach (['12a3', 123, 1234, 12.34, '12.34', '-5.22', -5.22, '1 2 3', 'This 1 is 2 a 3 test'] as $data) {
             $validator = new Validator(['field' => $data]);
-            $validator->field('field')->containsMixedCase(3, 3);
+            $validator->field('field')->containsDigit(3);
             $validator->execute();
             $this->assertTrue($validator->execute());
         }
@@ -39,11 +39,11 @@ final class ContainsMixedCaseTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testIfValidationFailsWhenIncorrectAmountOfMixedCaseAreProvided(): void
+    public function testIfValidationFailsWhenIncorrectAmountOfNumbersAreProvided(): void
     {
-        foreach (['acBCD', 'abcBC', 'A12CdEf', 'Ab12dEf', '1000AA - Foo', 'ab'] as $data) {
+        foreach (['12a3', 123, 1234, 12.34, '12.34', '-5.22', -5.22, '1 2 3', 'This 1 is 2 a 3 test'] as $data) {
             $validator = new Validator(['field' => $data]);
-            $validator->field('field')->containsMixedCase(3, 3);
+            $validator->field('field')->containsDigit(5);
             $validator->execute();
             $this->assertFalse($validator->execute());
         }
@@ -54,9 +54,9 @@ final class ContainsMixedCaseTest extends TestCase
      */
     public function testIfValidationFailsWhenNonBoolValuesAreProvided(): void
     {
-        foreach ([null, (object) [], 2552, 1, 0, '2817334', 'abcd', '1238ab', 'ABCD'] as $data) {
+        foreach ([null, (object) [], true, false, 'abcd', 'ABCD'] as $data) {
             $validator = new Validator(['field' => $data]);
-            $validator->field('field')->containsMixedCase();
+            $validator->field('field')->containsDigit();
             $this->assertFalse($validator->execute());
         }
     }
@@ -67,7 +67,7 @@ final class ContainsMixedCaseTest extends TestCase
     public function testIfValidationFailsWhenNoValuesAreProvided(): void
     {
         $validator = new Validator();
-        $validator->field('field')->containsMixedCase();
+        $validator->field('field')->containsDigit();
         $this->assertFalse($validator->execute());
     }
 
@@ -77,9 +77,9 @@ final class ContainsMixedCaseTest extends TestCase
     public function testIfCorrectErrorMessageIsReturnedWhenCustomMessageIsSet(): void
     {
         $validator = new Validator(['field' => '']);
-        $validator->field('field')->containsMixedCase();
-        $validator->messages('field')->containsMixedCase('Message mixedCase');
+        $validator->field('field')->containsDigit();
+        $validator->messages('field')->containsDigit('Message digit');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message mixedCase', $validator->errors()->first('field')?->getMessage());
+        $this->assertSame('Message digit', $validator->errors()->first('field')?->getMessage());
     }
 }

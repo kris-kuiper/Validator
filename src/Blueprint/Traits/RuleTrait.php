@@ -20,7 +20,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     ContainsLetter,
     ContainsMixedCase,
     ContainsNot,
-    ContainsNumber,
+    ContainsDigit,
     ContainsSymbol,
     Count,
     Countable,
@@ -204,35 +204,35 @@ trait RuleTrait
     }
 
     /**
-     * Checks if the data under validation has at least one letter
+     * Checks if the data under validation has at least a provided amount of letters
      */
-    public function containsLetter(): self
+    public function containsLetter(int $minimumLettersCount = 1): self
     {
-        return $this->addRule(new ContainsLetter());
+        return $this->addRule(new ContainsLetter($minimumLettersCount));
     }
 
     /**
-     * Checks if the data under validation has at least one uppercase and one lowercase letter
+     * Checks if the data under validation has at least a provided amount of uppercase and lowercase letters
      */
-    public function containsMixedCase(): self
+    public function containsMixedCase(int $minimumLowercaseCount = 1, int $minimumUppercaseCount = 1): self
     {
-        return $this->addRule(new ContainsMixedCase());
+        return $this->addRule(new ContainsMixedCase($minimumLowercaseCount, $minimumUppercaseCount));
     }
 
     /**
-     * Checks if the data under validation has at least one number
+     * Checks if the data under validation has at least a provided amount of digits
      */
-    public function containsNumber(): self
+    public function containsDigit(int $minimumDigitCount = 1): self
     {
-        return $this->addRule(new ContainsNumber());
+        return $this->addRule(new ContainsDigit($minimumDigitCount));
     }
 
     /**
-     * Checks if the data under validation has at least one symbol
+     * Checks if the data under validation has at least a provided amount of symbols
      */
-    public function containsSymbol(): self
+    public function containsSymbol(int $minimumSymbolsCount = 1): self
     {
-        return $this->addRule(new ContainsSymbol());
+        return $this->addRule(new ContainsSymbol($minimumSymbolsCount));
     }
 
     /**

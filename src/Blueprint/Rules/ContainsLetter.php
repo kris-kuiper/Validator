@@ -13,7 +13,16 @@ class ContainsLetter extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string|int|float $message = 'Requires at least one letter';
+    protected string|int|float $message = 'Requires at least :letterCount letter(s)';
+
+    /**
+     * Constructor
+     */
+    public function __construct(private int $minimumLetterCount = 1)
+    {
+        parent::__construct();
+        $this->setParameter('letterCount', $minimumLetterCount);
+    }
 
     /**
      * @inheritdoc
@@ -35,6 +44,7 @@ class ContainsLetter extends AbstractRule
             return false;
         }
 
-        return true === (bool) preg_match('/[a-zA-Z]/', $value);
+        preg_match_all('/([a-zA-Z])/', $value, $matches);
+        return count($matches[0] ?? []) >= $this->minimumLetterCount;
     }
 }

@@ -20,7 +20,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     ContainsLetter,
     ContainsMixedCase,
     ContainsNot,
-    ContainsNumber,
+    ContainsDigit,
     ContainsSymbol,
     Count,
     Countable,
@@ -216,11 +216,11 @@ trait MessageTrait
     }
 
     /**
-     * Adds a new message for the containsNumber rule
+     * Adds a new message for the containsDigit rule
      */
-    public function containsNumber(string|int|float $message): self
+    public function containsDigit(string|int|float $message): self
     {
-        return $this->addMessage(new ContainsNumber($message));
+        return $this->addMessage(new ContainsDigit($message));
     }
 
     /**

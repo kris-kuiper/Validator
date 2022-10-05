@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Messages;
 
-use KrisKuiper\Validator\Blueprint\Rules\ContainsNumber as ContainsNumberRule;
+use KrisKuiper\Validator\Blueprint\Rules\ContainsDigit as ContainsDigitRule;
 
-class ContainsNumber extends AbstractMessage
+class ContainsDigit extends AbstractMessage
 {
     /**
      * @inheritdoc
      */
     public function getName(): string
     {
-        return ContainsNumberRule::NAME;
+        return ContainsDigitRule::NAME;
     }
 }

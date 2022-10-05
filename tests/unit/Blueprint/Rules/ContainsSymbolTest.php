@@ -8,7 +8,7 @@ use KrisKuiper\Validator\Validator;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use PHPUnit\Framework\TestCase;
 
-final class SymbolsTest extends TestCase
+final class ContainsSymbolTest extends TestCase
 {
     /**
      * @throws ValidatorException
@@ -21,6 +21,39 @@ final class SymbolsTest extends TestCase
             $validator->execute();
             $this->assertTrue($validator->execute());
         }
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenProvidedTwoSymbols(): void
+    {
+        $validator = new Validator(['field' => 'p@assword!']);
+        $validator->field('field')->containsSymbol(2);
+        $validator->execute();
+        $this->assertTrue($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationFailWhenProvidingNotEnoughSymbols(): void
+    {
+        $validator = new Validator(['field' => 'p@assword!']);
+        $validator->field('field')->containsSymbol(3);
+        $validator->execute();
+        $this->assertFalse($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassWhenProvidingZeroSymbolsWhileRequestingZeroSymbols(): void
+    {
+        $validator = new Validator(['field' => 'password']);
+        $validator->field('field')->containsSymbol(0);
+        $validator->execute();
+        $this->assertTrue($validator->execute());
     }
 
     /**

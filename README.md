@@ -102,6 +102,36 @@ Or add this line to your composer.json file:
 ```
 
 
+## Validation rules
+Below is a list with all predefined validation rules.
+
+|                                             |                                           |                                       |                                               |
+|---------------------------------------------|-------------------------------------------|---------------------------------------|-----------------------------------------------|
+| [Accepted if](#accepted-if)                 | [Date](#date)                             | [Is false](#is-false)                 | [Required](#required)                         |
+| [AcceptedNotEmpty](#accepted-not-empty)     | [Different](#different)                   | [Is int](#is-int)                     | [Required with](#required-with)               |
+| [After](#after)                             | [Different with all](#different-with-all) | [Is not null](#is-not-null)           | [Required with all](#required-with-all)       |
+| [After or equal](#after-or-equal)           | [Digits](#digits)                         | [Is null](#is-null)                   | [Required without](#required-without)         |
+| [Alpha](#alpha)                             | [Digits between](#digits-between)         | [Is string](#is-string)               | [Required without all](#required-without-all) |
+| [Alpha dash](#alpha-dash)                   | [Digits min](#digits-min)                 | [Is true](#is-true)                   | [Same](#same)                                 |
+| [Alpha numeric](#alpha-numeric)             | [Distinct](#distinct)                     | [Json](#json)                         | [Scalar](#scalar)                             |
+| [Before](#before)                           | [Divisible by](#divisible-by)             | [Length](#length)                     | [Starts not with](#starts-not-with)           |
+| [Before or equal](#before-or-equal)         | [Email](#email)                           | [Length between](#length-between)     | [Starts with](#starts-with)                   |
+| [Between](#between)                         | [Ends not with](#ends-not-with)           | [Length max](#length-max)             | [Time zone](#time-zone)                       |
+| [Contains](#contains)                       | [Ends with](#ends-with)                   | [Length min](#length-min)             | [Url](#url)                                   |
+| [Contains not](#contains-not)               | [Equals](#equals)                         | [Max](#max)                           | [UUID](#uuid)                                 |
+| [Contains letter](#contains-letter)         | [In](#in)                                 | [Min](#min)                           | [UUID v1](#uuid-v1)                           |
+| [Contains mixed case](#contains-mixed-case) | [IP](#ip)                                 | [Negative](#negative)                 | [UUID v3](#uuid-v3)                           |
+| [Contains number](#contains-digit)          | [IP private](#ip-private)                 | [Negative or zero](#negative-or-zero) | [UUID v4](#uuid-v4)                           |
+| [Contains symbol](#contains-symbol)         | [IP public](#ip-public)                   | [Not in](#not-in)                     | [UUID v5](#uuid-v5)                           |
+| [Count](#count)                             | [IP v4](#ip-v4)                           | [Number](#number)                     | [Words](#words)                               |
+| [Countable](#countable)                     | [IP v6](#ip-v6)                           | [Positive](#positive)                 | [Words max](#words-max)                       |
+| [Count between](#count-between)             | [Is array](#is-array)                     | [Positive or zero](#positive-or-zero) | [Words min](#words-min)                       |
+| [Count max](#count-max)                     | [Is bool](#is-boolean)                    | [Present](#present)                   |                                               |
+| [Count min](#count-min)                     | [Is empty](#is-empty)                     | [Regex](#regex)                       |                                               |
+
+
+
+
 ## Head first example:
 
 ```php

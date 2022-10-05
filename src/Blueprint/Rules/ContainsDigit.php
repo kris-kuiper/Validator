@@ -6,14 +6,23 @@ namespace KrisKuiper\Validator\Blueprint\Rules;
 
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
-class ContainsNumber extends AbstractRule
+class ContainsDigit extends AbstractRule
 {
-    public const NAME = 'containsNumber';
+    public const NAME = 'containsDigit';
 
     /**
      * @inheritdoc
      */
-    protected string|int|float $message = 'Requires at least one number';
+    protected string|int|float $message = 'Requires at least :digitCount digit(s)';
+
+    /**
+     * Constructor
+     */
+    public function __construct(private int $minimumDigitCount = 1)
+    {
+        parent::__construct();
+        $this->setParameter('digitCount', $minimumDigitCount);
+    }
 
     /**
      * @inheritdoc
@@ -35,6 +44,7 @@ class ContainsNumber extends AbstractRule
             return false;
         }
 
-        return true === (bool) preg_match('/\d/', (string) $value);
+        preg_match_all('/(\d)/', (string) $value, $matches);
+        return count($matches[0] ?? []) >= $this->minimumDigitCount;
     }
 }

@@ -11,11 +11,17 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 {
     private array $parameters = [];
 
+    /**
+     * @inheritdoc
+     */
     public function setParameters(array $parameters): void
     {
         $this->parameters = $parameters;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getParameters(): array
     {
         return $this->parameters;

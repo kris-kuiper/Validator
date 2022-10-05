@@ -11,7 +11,7 @@ $data = [
 ];
 
 $validator = new Validator($data);
-$validator->field('password')->required()->isString()->containsNumber()->containsLetter()->containsMixedCase()->containsSymbol()->lengthBetween(8, 50);
+$validator->field('password')->required()->isString()->containsDigit()->containsLetter()->containsMixedCase()->containsSymbol()->lengthBetween(8, 50);
 $validator->field('password_repeat')->same('password');
 
 //Validation passes

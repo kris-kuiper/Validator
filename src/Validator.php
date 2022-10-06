@@ -240,6 +240,9 @@ class Validator
         return $this->isValid;
     }
 
+    /**
+     * Executes all the before events
+     */
     private function executeBeforeEvents(): void
     {
         $beforeEvent = new BeforeEvent($this->validationData, $this->storage);
@@ -250,6 +253,9 @@ class Validator
         }
     }
 
+    /**
+     * Executes all the after events
+     */
     private function executeAfterEvents(): void
     {
         $afterEvent = new AfterEvent($this, $this->validationData);

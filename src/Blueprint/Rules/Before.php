@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
 use DateTime;
+use KrisKuiper\Validator\Blueprint\Traits\DateTrait;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 class Before extends AbstractRule
 {
+    use DateTrait;
+
     public const NAME = 'before';
+
+    private DateTime $date;
 
     /**
      * @inheritdoc
@@ -20,15 +25,13 @@ class Before extends AbstractRule
      * Constructor
      * @throws ValidatorException
      */
-    public function __construct(private string $date, private string $format = 'Y-m-d')
+    public function __construct(string $date, private string $format = 'Y-m-d')
     {
-        if (false === DateTime::createFromFormat($format, $date)) {
-            throw ValidatorException::incorrectDateFormatUsed($date, $format);
-        }
+        $this->date = $this->createDate($date, $format);
 
         parent::__construct();
 
-        $this->setParameter('date', $this->date);
+        $this->setParameter('date', $date);
         $this->setParameter('format', $this->format);
     }
 
@@ -48,17 +51,17 @@ class Before extends AbstractRule
     {
         $value = $this->getValue();
 
-        if (true === is_string($value) || true === is_numeric($value)) {
-            $timestamp = DateTime::createFromFormat($this->format, $this->date)->getTimestamp();
-            $date = DateTime::createFromFormat($this->format, (string) $value);
-
-            if (false === $date) {
-                return false;
-            }
-
-            return $date->getTimestamp() < $timestamp;
+        if (false === is_string($value) && false === is_numeric($value)) {
+            return false;
         }
 
-        return false;
+        try {
+            $date = $this->createDate((string) $value, $this->format);
+        } catch (ValidatorException) {
+            return false;
+        }
+
+        $timestamp = $date->getTimestamp();
+        return $timestamp < $this->date->getTimestamp();
     }
 }

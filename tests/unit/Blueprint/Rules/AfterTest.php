@@ -71,6 +71,30 @@ final class AfterTest extends TestCase
     /**
      * @throws ValidatorException
      */
+    public function testIfExceptionIsThrownWhenInvalidDateIsProvided(): void
+    {
+        $this->expectException(ValidatorException::class);
+
+        $validator = new Validator();
+        $validator->field('field')->after('1999-12-32');
+        $this->assertFalse($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfExceptionIsThrownWhenWrongDateFormatIsProvided(): void
+    {
+        $this->expectException(ValidatorException::class);
+
+        $validator = new Validator([]);
+        $validator->field('field')->after('1999-12-31', 'foo');
+        $validator->execute();
+    }
+
+    /**
+     * @throws ValidatorException
+     */
     public function testShouldReturnCorrectMessageWhenCustomMessageIsSet(): void
     {
         $validator = new Validator([]);
@@ -78,17 +102,5 @@ final class AfterTest extends TestCase
         $validator->messages('field')->after('Message after');
         $this->assertFalse($validator->execute());
         $this->assertSame('Message after', $validator->errors()->first('field')?->getMessage());
-    }
-
-    /**
-     * @throws ValidatorException
-     */
-    public function testShouldThrowExceptionWhenWrongDateFormatIsProvided(): void
-    {
-        $this->expectException(ValidatorException::class);
-
-        $validator = new Validator([]);
-        $validator->field('field')->after('1952-03-28', 'foo');
-        $validator->execute();
     }
 }

@@ -18,7 +18,9 @@ class BeforeEvent
     {
     }
 
-
+    /**
+     * Returns the value of a given field name
+     */
     public function getValue(string $fieldName): mixed
     {
         return $this->validationData->path($fieldName)->getValue();

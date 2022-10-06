@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
-use DateTime;
+use KrisKuiper\Validator\Blueprint\Traits\DateTrait;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 class Date extends AbstractRule
 {
+    use DateTrait;
+
     public const NAME = 'date';
 
     /**
@@ -45,7 +47,12 @@ class Date extends AbstractRule
             return false;
         }
 
-        $date = DateTime::createFromFormat($this->format, (string) $value);
-        return false !== $date && $date->format($this->format) === $value;
+        try {
+            $this->createDate((string) $value, $this->format);
+        } catch (ValidatorException) {
+            return false;
+        }
+
+        return true;
     }
 }

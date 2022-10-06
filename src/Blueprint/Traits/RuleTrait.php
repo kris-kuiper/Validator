@@ -27,7 +27,9 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     CountBetween,
     CountMax,
     CountMin,
+    CSSColor,
     Date,
+    DateBetween,
     Different,
     DifferentWithAll,
     Digits,
@@ -40,6 +42,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     EndsNotWith,
     EndsWith,
     Equals,
+    Hexadecimal,
     In,
     IP,
     IPPrivate,
@@ -276,11 +279,28 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the data under validation is a valid CSS color
+     */
+    public function cssColor(bool $requireHash = false, bool $shortcodesSupport = true): self
+    {
+        return $this->addRule(new CSSColor($requireHash, $shortcodesSupport));
+    }
+
+    /**
      * Checks if the data under validation is a valid date
      */
     public function date(string $format = 'Y-m-d'): self
     {
         return $this->addRule(new Date($format));
+    }
+
+    /**
+     * Checks if the data under validation is between a provided from and to date
+     * @throws ValidatorException
+     */
+    public function dateBetween(string $from, string $to, string $format = 'Y-m-d'): self
+    {
+        return $this->addRule(new DateBetween($from, $to, $format));
     }
 
     /**
@@ -377,6 +397,14 @@ trait RuleTrait
     public function equals(mixed $value, bool $strict = false): self
     {
         return $this->addRule(new Equals($value, $strict));
+    }
+
+    /**
+     * Checks if the data under validation is a valid hexadecimal value
+     */
+    public function hexadecimal(): self
+    {
+        return $this->addRule(new Hexadecimal());
     }
 
     /**

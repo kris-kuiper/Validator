@@ -27,8 +27,10 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     CountBetween,
     CountMax,
     CountMin,
+    CSSColor,
     Custom,
     Date,
+    DateBetween,
     Different,
     DifferentWithAll,
     Digits,
@@ -41,6 +43,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     EndsNotWith,
     EndsWith,
     Equals,
+    Hexadecimal,
     In,
     IP,
     IPPrivate,
@@ -272,6 +275,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the cssColor rule
+     */
+    public function cssColor(string|int|float $message): self
+    {
+        return $this->addMessage(new CSSColor($message));
+    }
+
+    /**
      * Adds a new message for custom validation rules
      */
     public function custom(string $ruleName, string|int|float $message): self
@@ -285,6 +296,14 @@ trait MessageTrait
     public function date(string|int|float $message): self
     {
         return $this->addMessage(new Date($message));
+    }
+
+    /**
+     * Adds a new message for the dateBetween rule
+     */
+    public function dateBetween(string|int|float $message): self
+    {
+        return $this->addMessage(new DateBetween($message));
     }
 
     /**
@@ -389,6 +408,14 @@ trait MessageTrait
     public function in(string|int|float $message): self
     {
         return $this->addMessage(new In($message));
+    }
+
+    /**
+     * Adds a new message for the hexadecimal rule
+     */
+    public function hexadecimal(string|int|float $message): self
+    {
+        return $this->addMessage(new Hexadecimal($message));
     }
 
     /**

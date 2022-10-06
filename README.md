@@ -82,7 +82,7 @@ All documentation can be found in the [docs](/docs) folder.
   - [Combining multiple date fields for single validation](/docs/16%20-%20Examples/16.3%20-%20Combining%20multiple%20date%20fields%20for%20single%20validation.md)
   - [Using blueprints](/docs/16%20-%20Examples/16.4%20-%20Using%20blueprints.md)
 - License
-  - [License](/docs/04%20-%20Validation%20rules/4.2%20-%20Rules.md#license)
+  - [License](#license)
 
 
 

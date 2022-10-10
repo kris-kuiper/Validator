@@ -50,7 +50,7 @@ class FieldOptions
     /**
      * Adds a new condition to skip validation when fields have certain values
      */
-    public function conditional(Closure $callback): self
+    public function if(Closure $callback): self
     {
         return $this->addRule(new Conditional($callback));
     }

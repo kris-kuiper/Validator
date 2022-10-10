@@ -22,7 +22,7 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->conditional(static function (Event $event) {
+        $validator->field('business')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         })->equals('1');
 
@@ -40,7 +40,7 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->conditional(static function (Event $event) {
+        $validator->field('business')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         })->equals('1')->between(0, 1);
 
@@ -60,7 +60,7 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business', 'product')->conditional(static function (Event $event) {
+        $validator->field('business', 'product')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         })->equals('1');
 
@@ -80,7 +80,7 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business', 'product')->conditional(static function (Event $event) {
+        $validator->field('business', 'product')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         })->equals('1');
 
@@ -99,7 +99,7 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->equals('1')->conditional(static function (Event $event) {
+        $validator->field('business')->equals('1')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         });
 
@@ -117,7 +117,7 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->equals('1')->conditional(static function (Event $event) {
+        $validator->field('business')->equals('1')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         });
 
@@ -130,7 +130,7 @@ final class ConditionalTest extends TestCase
     public function testIfValidationFailsWhenBusinessIsOnlyRequiredWhenConditionalIsTrue(): void
     {
         $validator = new Validator(['amount' => 100]);
-        $validator->field('business')->conditional(static function (Event $event) {
+        $validator->field('business')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         })->required();
 
@@ -143,7 +143,7 @@ final class ConditionalTest extends TestCase
     public function testIfValidationPassesWhenBusinessIsNotRequiredWhenConditionalIsFalse(): void
     {
         $validator = new Validator(['amount' => 1]);
-        $validator->field('business')->conditional(static function (Event $event) {
+        $validator->field('business')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         })->required();
 
@@ -161,7 +161,7 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->conditional(static function (Event $event) {
+        $validator->field('business')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         })->min(2);
 
@@ -180,7 +180,7 @@ final class ConditionalTest extends TestCase
         ];
 
         $validator = new Validator($data);
-        $validator->field('business')->conditional(static function (Event $event) {
+        $validator->field('business')->if(static function (Event $event) {
             return $event->getValue('amount') > 99;
         })->required();
 
@@ -203,7 +203,7 @@ final class ConditionalTest extends TestCase
 
         $validator->custom('custom1', $custom);
         $validator->custom('custom2', $custom);
-        $validator->field('foo')->custom('custom1')->conditional(static function () {
+        $validator->field('foo')->custom('custom1')->if(static function () {
             return false;
         })->custom('custom2');
 
@@ -220,13 +220,13 @@ final class ConditionalTest extends TestCase
         $validator = new Validator(['foo' => 25]);
         $validator
             ->field('foo')
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
             ->min(10);
@@ -242,13 +242,13 @@ final class ConditionalTest extends TestCase
         $validator = new Validator(['foo' => 25]);
         $validator
             ->field('foo')
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
-            ->conditional(static function () {
+            ->if(static function () {
                 return false;
             })
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
             ->min(10);
@@ -264,13 +264,13 @@ final class ConditionalTest extends TestCase
         $validator = new Validator(['foo' => 5]);
         $validator
             ->field('foo')
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
-            ->conditional(static function () {
+            ->if(static function () {
                 return false;
             })
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
             ->min(10);
@@ -298,15 +298,15 @@ final class ConditionalTest extends TestCase
 
         $validator
             ->field('foo')
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
             ->custom('custom1')
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
             ->custom('custom2')
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
             ->custom('custom3');
@@ -335,15 +335,15 @@ final class ConditionalTest extends TestCase
 
         $validator
             ->field('foo')
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
             ->custom('custom1')
-            ->conditional(static function () {
+            ->if(static function () {
                 return true;
             })
             ->custom('custom2')
-            ->conditional(static function () {
+            ->if(static function () {
                 return false;
             })
             ->custom('custom3');
@@ -361,7 +361,7 @@ final class ConditionalTest extends TestCase
         $validator->storage()->set('foo', 'bar');
         $validator
             ->field('foo')
-            ->conditional(function (Event $event) {
+            ->if(function (Event $event) {
                 $this->assertTrue($event->storage()->has('foo'));
                 $this->assertSame('bar', $event->storage()->get('foo'));
                 $event->storage()->set('quez', 'bazz');

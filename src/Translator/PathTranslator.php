@@ -15,19 +15,20 @@ class PathTranslator extends AbstractTranslator
     {
         $keys = explode('.', (string) $key);
         $last = array_pop($keys);
+        $tmp = &$this->data;
 
         foreach ($keys as $index) {
             if (false === array_key_exists($index, $this->data) || (true === array_key_exists($index, $this->data) && false === is_array($this->data[$index]))) {
-                $this->data[$index] = [];
+                $tmp[$index] = [];
             }
 
-            $this->data = &$this->data[$index];
+            $tmp = &$tmp[$index];
         }
 
-        if (false === isset($this->data[$last]) || false === is_array($this->data[$last])) {
-            $this->data[$last] = $value;
+        if (false === isset($tmp[$last]) || false === is_array($tmp[$last])) {
+            $tmp[$last] = $value;
         } else {
-            $this->data[$last][] = $value;
+            $tmp[$last][] = $value;
         }
     }
 

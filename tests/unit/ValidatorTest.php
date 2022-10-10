@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace tests\unit;
 
 use JsonException;
+use KrisKuiper\Validator\Blueprint\Blueprint;
 use KrisKuiper\Validator\Blueprint\Rules\Between;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\FieldFilter;
@@ -546,5 +547,169 @@ final class ValidatorTest extends TestCase
         $months = $validator->filter('months.*', FieldFilter::FILTER_MODE_FAILED)->isInt(true)->toArray();
 
         $this->assertSame(['3', 'a', 'b'], $months);
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfCorrectFieldIsUsedWhenTargetingByIndex(): void
+    {
+        $validator = new Validator(['foo' => ['bar', 'quez']]);
+        $validator->field('foo.0')->equals('bar');
+        $validator->field('foo.1')->equals('quez');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => ['bar', 'quez']], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationFailsWhenEmptyDataSetIsUsedWhenTargetingByIndex(): void
+    {
+        $validator = new Validator([]);
+        $validator->field('foo.0')->equals('bar');
+        $validator->field('foo.1')->equals('quez');
+
+        $this->assertFalse($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenFieldIsAnEmptyString(): void
+    {
+        $data = ['foo' => ''];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->equals('bar');
+        $validator->default('foo', 'bar');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => 'bar'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenFieldIsNull(): void
+    {
+        $data = ['foo' => null];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->equals('bar');
+        $validator->default('foo', 'bar');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => 'bar'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenFieldIsAnEmptyArray(): void
+    {
+        $data = ['foo' => []];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->equals('bar');
+        $validator->default('foo', 'bar');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => 'bar'], $validator->validatedData()->toArray());
+    }
+
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenUsingWildCardFieldNames(): void
+    {
+        $data = ['foo' => ['bar' => null, 'bazz' => [], 'qaz' => '']];
+
+        $validator = new Validator($data);
+        $validator->field('foo.*')->contains('default');
+        $validator->default('foo.bar', 'default1');
+        $validator->default('foo.bazz', 'default2');
+        $validator->default('foo.qaz', 'default3');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => ['bar' => 'default1', 'bazz' => 'default2', 'qaz' => 'default3']], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenUsingWildCardDefaultValues(): void
+    {
+        $data = ['foo' => ['bar' => null, 'bazz' => [], 'qaz' => '']];
+
+        $validator = new Validator($data);
+        $validator->field('foo.*')->equals('default');
+        $validator->default('foo.*', 'default');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => ['bar' => 'default', 'bazz' => 'default', 'qaz' => 'default']], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenCombiningFields(): void
+    {
+        $data = ['day' => null, 'month' => 12, 'year' => 2000];
+
+        $validator = new Validator($data);
+        $validator->combine('year', 'month', 'day')->glue('-')->alias('date');
+        $validator->field('date')->date();
+        $validator->default('day', '01');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['date' => '2000-12-01'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenUsingBlueprints(): void
+    {
+        $data = ['foo' => ''];
+
+        $blueprint = new Blueprint();
+        $blueprint->default('foo', 'bar');
+
+        $validator = new Validator($data);
+        $validator->loadBlueprint($blueprint);
+        $validator->field('foo')->equals('bar');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => 'bar'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenNoFieldsAreProvided(): void
+    {
+        $validator = new Validator([]);
+        $validator->field('foo')->equals('bar');
+        $validator->default('foo', 'bar');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => 'bar'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenNoFieldsAreProvided2(): void
+    {
+        $validator = new Validator(['foo' => [1 => 'bar2']]);
+        $validator->field('foo.*')->contains('bar');
+        $validator->default('foo.0', 'bar1');
+        $validator->default('foo.2', 'bar3');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['foo' => [1 => 'bar2', 0 => 'bar1', 2 => 'bar3']], $validator->validatedData()->toArray());
     }
 }

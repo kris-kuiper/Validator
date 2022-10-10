@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint;
 
 use Closure;
+use KrisKuiper\Validator\Blueprint\Collections\DefaultValueCollection;
 use KrisKuiper\Validator\Blueprint\Collections\EventCollection;
 use KrisKuiper\Validator\Blueprint\Collections\CombineCollection;
 use KrisKuiper\Validator\Blueprint\Collections\CustomCollection;
@@ -22,6 +23,7 @@ use KrisKuiper\Validator\Blueprint\ValueObjects\FieldName;
 
 class Blueprint
 {
+    private DefaultValueCollection $defaultValueCollection;
     private MessageListCollection $messageListCollection;
     private FieldNameCollection $fieldNameCollection;
     private CombineCollection $combineCollection;
@@ -31,6 +33,7 @@ class Blueprint
 
     public function __construct()
     {
+        $this->defaultValueCollection = new DefaultValueCollection();
         $this->fieldNameCollection = new FieldNameCollection();
         $this->messageListCollection = new MessageListCollection();
         $this->combineCollection = new CombineCollection();
@@ -72,6 +75,14 @@ class Blueprint
     }
 
     /**
+     * Returns all the default value object as a collection
+     */
+    public function getDefaultValues(): DefaultValueCollection
+    {
+        return $this->defaultValueCollection;
+    }
+
+    /**
      * Returns all the before event handlers as a collection
      */
     public function getBeforeEventHandlers(): EventCollection
@@ -100,6 +111,14 @@ class Blueprint
         }
 
         return $fieldOptions;
+    }
+
+    /**
+     * Creates default values for field names which are considered empty (empty string, empty array and NULL)
+     */
+    public function default(string $fieldName, mixed $value): void
+    {
+        $this->defaultValueCollection->append(new DefaultValue($fieldName, $value));
     }
 
     /**

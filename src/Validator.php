@@ -15,6 +15,7 @@ use KrisKuiper\Validator\Blueprint\Events\AfterEvent;
 use KrisKuiper\Validator\Blueprint\Events\BeforeEvent;
 use KrisKuiper\Validator\Blueprint\MessageList;
 use KrisKuiper\Validator\Blueprint\MiddlewareList;
+use KrisKuiper\Validator\Blueprint\Traits\EmptyTrait;
 use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Middleware\Field as MiddlewareField;
 use KrisKuiper\Validator\Blueprint\FieldOptions;
@@ -29,6 +30,8 @@ use KrisKuiper\Validator\Translator\PathTranslator;
 
 class Validator
 {
+    use EmptyTrait;
+
     private bool $isValidated = false;
     private bool $isValid = true;
     private PathTranslator $validationData;
@@ -99,6 +102,14 @@ class Validator
     public function middleware(string ...$fieldNames): MiddlewareList
     {
         return $this->blueprint->middleware(...$fieldNames);
+    }
+
+    /**
+     * Creates default values for field names which are considered empty (empty string, empty array and NULL)
+     */
+    public function default(string $fieldName, mixed $value): void
+    {
+        $this->blueprint->default($fieldName, $value);
     }
 
     /**
@@ -232,7 +243,10 @@ class Validator
 
         $this->isValidated = true;
 
-        //Execute the before events
+        $this->fillDefaultValues();
+
+        $this->blueprintParser->populate();
+
         $this->executeBeforeEvents();
         $this->executeRules();
         $this->executeAfterEvents();
@@ -263,6 +277,28 @@ class Validator
         /** @var Closure $after */
         foreach ($this->blueprintParser->getAfterEventCollection() as $after) {
             $after($afterEvent);
+        }
+    }
+
+    /**
+     * Populates the default values within the validation data
+     */
+    public function fillDefaultValues(): void
+    {
+        foreach ($this->blueprintParser->getDefaultValueCollection() as $defaultValue) {
+            $paths = $this->validationData->path($defaultValue->getFieldName());
+
+            foreach ($paths as $path) {
+                if (false === $this->isEmpty($path->getValue())) {
+                    continue;
+                }
+
+                $this->validationData->set($path->getIdentifier(), $defaultValue->getValue());
+            }
+
+            if (0 === count($paths)) {
+                $this->validationData->add($defaultValue->getFieldName(), $defaultValue->getValue());
+            }
         }
     }
 

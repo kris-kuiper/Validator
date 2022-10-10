@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Parser;
 
 use KrisKuiper\Validator\Blueprint\Blueprint;
+use KrisKuiper\Validator\Blueprint\Collections\DefaultValueCollection;
 use KrisKuiper\Validator\Blueprint\Collections\EventCollection;
 use KrisKuiper\Validator\Blueprint\FieldOptions;
 use KrisKuiper\Validator\Blueprint\Middleware\Middleware;
@@ -22,6 +23,7 @@ use KrisKuiper\Validator\Translator\PathTranslator;
 
 class BlueprintParser
 {
+    private DefaultValueCollection $defaultValueCollection;
     private BlueprintCollection $blueprintCollection;
     private FieldCollection $fieldCollection;
     private CombineProxyCollection $combineProxyCollection;
@@ -29,12 +31,14 @@ class BlueprintParser
     private CustomCollection $customCollection;
     private EventCollection $beforeEventCollection;
     private EventCollection $afterEventCollection;
+    private bool $isPopulated = false;
 
     /**
      * Constructor
      */
     public function __construct(private PathTranslator $validationData)
     {
+        $this->defaultValueCollection = new DefaultValueCollection();
         $this->combineProxyCollection = new CombineProxyCollection();
         $this->blueprintCollection = new BlueprintCollection();
         $this->customCollection = new CustomCollection();
@@ -42,6 +46,29 @@ class BlueprintParser
         $this->afterEventCollection = new EventCollection();
         $this->fieldCollection = new FieldCollection();
         $this->messages = new Messages();
+    }
+
+    public function populate(): void
+    {
+        if (true === $this->isPopulated) {
+            return;
+        }
+
+        foreach ($this->getBlueprintCollection() as $blueprint) {
+            foreach ($blueprint->getFieldNames() as $fieldName) {
+                $this->createFieldsFromFieldName($fieldName);
+            }
+
+            foreach ($blueprint->getBeforeEventHandlers() as $beforeEventHandler) {
+                $this->beforeEventCollection->append($beforeEventHandler);
+            }
+
+            foreach ($blueprint->getAfterEventHandlers() as $afterEventHandler) {
+                $this->afterEventCollection->append($afterEventHandler);
+            }
+        }
+
+        $this->isPopulated = true;
     }
 
     /**
@@ -57,12 +84,6 @@ class BlueprintParser
      */
     public function getBeforeEventCollection(): EventCollection
     {
-        foreach ($this->getBlueprintCollection() as $blueprint) {
-            foreach ($blueprint->getBeforeEventHandlers() as $beforeEventHandler) {
-                $this->beforeEventCollection->append($beforeEventHandler);
-            }
-        }
-
         return $this->beforeEventCollection;
     }
 
@@ -71,13 +92,21 @@ class BlueprintParser
      */
     public function getAfterEventCollection(): EventCollection
     {
+        return $this->afterEventCollection;
+    }
+
+    /**
+     * Returns all the default values as one collection
+     */
+    public function getDefaultValueCollection(): DefaultValueCollection
+    {
         foreach ($this->getBlueprintCollection() as $blueprint) {
-            foreach ($blueprint->getAfterEventHandlers() as $afterEventHandler) {
-                $this->afterEventCollection->append($afterEventHandler);
+            foreach ($blueprint->getDefaultValues() as $defaultValue) {
+                $this->defaultValueCollection->append($defaultValue);
             }
         }
 
-        return $this->afterEventCollection;
+        return $this->defaultValueCollection;
     }
 
     /**
@@ -181,19 +210,6 @@ class BlueprintParser
      */
     public function getFieldCollection(): FieldCollection
     {
-        if ($this->fieldCollection->count() > 0) {
-            return $this->fieldCollection;
-        }
-
-        /** @var Blueprint $blueprint */
-        foreach ($this->blueprintCollection as $blueprint) {
-            foreach ($blueprint->getFieldNames() as $fieldName) {
-                if (null !== $fieldName) {
-                    $this->createFieldsFromFieldName($fieldName);
-                }
-            }
-        }
-
         return $this->fieldCollection;
     }
 

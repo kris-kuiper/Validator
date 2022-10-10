@@ -71,16 +71,18 @@ All documentation can be found in the [docs](/docs) folder.
   - [Using middleware](/docs/13%20-%20Middleware/13.1%20-%20Using%20middleware.md)
   - [Predefined middleware](/docs/13%20-%20Middleware/13.2%20-%20Predefined%20middleware.md)
   - [Custom middleware](/docs/13%20-%20Middleware/13.3%20-%20Custom%20middleware.md)
+- Default values
+  - [Default values](/docs/14%20-%20Default%20values/14.1%20-%20Default%20values.md)
 - Events
-  - [Before event](/docs/14%20-%20Events/14.1%20-%20Before%20validation%20event.md)
-  - [After event](/docs/14%20-%20Events/14.2%20-%20After%20validation%20event.md)
+  - [Before event](/docs/15%20-%20Events/15.1%20-%20Before%20validation%20event.md)
+  - [After event](/docs/15%20-%20Events/15.2%20-%20After%20validation%20event.md)
 - Storage
-  - [Storage](/docs/15%20-%20Storage/15.1%20-%20Validation%20storage.md)
+  - [Storage](/docs/16%20-%20Storage/16.1%20-%20Validation%20storage.md)
 - Examples
-  - [Validating registration form](/docs/16%20-%20Examples/16.1%20-%20Validating%20registration%20form.md)
-  - [Password validation](/docs/16%20-%20Examples/16.2%20-%20Password%20validation.md)
-  - [Combining multiple date fields for single validation](/docs/16%20-%20Examples/16.3%20-%20Combining%20multiple%20date%20fields%20for%20single%20validation.md)
-  - [Using blueprints](/docs/16%20-%20Examples/16.4%20-%20Using%20blueprints.md)
+  - [Validating registration form](/docs/17%20-%20Examples/17.1%20-%20Validating%20registration%20form.md)
+  - [Password validation](/docs/17%20-%20Examples/17.2%20-%20Password%20validation.md)
+  - [Combining multiple date fields for single validation](/docs/17%20-%20Examples/17.3%20-%20Combining%20multiple%20date%20fields%20for%20single%20validation.md)
+  - [Using blueprints](/docs/17%20-%20Examples/17.4%20-%20Using%20blueprints.md)
 - License
   - [License](#license)
 

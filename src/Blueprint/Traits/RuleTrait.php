@@ -16,6 +16,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Before,
     BeforeOrEqual,
     Between,
+    Confirmed,
     Contains,
     ContainsLetter,
     ContainsMixedCase,
@@ -80,6 +81,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    SameNot,
     Scalar,
     StartsNotWith,
     StartsWith,
@@ -92,7 +94,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     UUIDv5,
     Words,
     WordsMax,
-    WordsMin,
+    WordsMin
 };
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
@@ -188,6 +190,15 @@ trait RuleTrait
     public function between(float $minimum, float $maximum): self
     {
         return $this->addRule(new Between($minimum, $maximum));
+    }
+
+    /**
+     * Checks if the data under validation has a matching field of {field}_confirmation.
+     * For example, if the field under validation is password, a matching password_confirmation field must be present in the input
+     */
+    public function confirmed(): self
+    {
+        return $this->addRule(new Confirmed());
     }
 
     /**
@@ -706,6 +717,14 @@ trait RuleTrait
     public function same(string ...$fieldNames): self
     {
         return $this->addRule(new Same(...$fieldNames));
+    }
+
+    /**
+     * Checks if value is different from a value of one or more field names
+     */
+    public function sameNot(string ...$fieldNames): self
+    {
+        return $this->addRule(new SameNot(...$fieldNames));
     }
 
     /**

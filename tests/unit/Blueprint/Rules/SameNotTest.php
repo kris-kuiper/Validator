@@ -8,15 +8,15 @@ use KrisKuiper\Validator\Validator;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use PHPUnit\Framework\TestCase;
 
-final class SameTest extends TestCase
+final class SameNotTest extends TestCase
 {
     /**
      * @throws ValidatorException
      */
     public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
-        $validator = new Validator(['field' => '1', 'field2' => '1']);
-        $validator->field('field')->same('field2');
+        $validator = new Validator(['field' => '1', 'field2' => '2']);
+        $validator->field('field')->sameNot('field2');
         $this->assertTrue($validator->execute());
     }
 
@@ -25,8 +25,8 @@ final class SameTest extends TestCase
      */
     public function testIfValidationPassesWhenUsingMultipleFields(): void
     {
-        $validator = new Validator(['field' => '1', 'field2' => '1', 'field3' => '1']);
-        $validator->field('field')->same('field2', 'field3');
+        $validator = new Validator(['field' => '1', 'field2' => '1', 'field3' => '2']);
+        $validator->field('field')->sameNot('field2', 'field3');
         $this->assertTrue($validator->execute());
     }
 
@@ -35,8 +35,8 @@ final class SameTest extends TestCase
      */
     public function testIfValidationFailsWhenUsingMultipleFields(): void
     {
-        $validator = new Validator(['field' => '1', 'field2' => '1', 'field3' => '2']);
-        $validator->field('field')->same('field2', 'field3');
+        $validator = new Validator(['field' => '1', 'field2' => '1', 'field3' => '1']);
+        $validator->field('field')->sameNot('field2', 'field3');
         $this->assertFalse($validator->execute());
     }
 
@@ -45,8 +45,8 @@ final class SameTest extends TestCase
      */
     public function testIfValidationFailsWhenTwoDifferentFieldValuesAreProvided(): void
     {
-        $validator = new Validator(['field' => '1', 'field2' => '2']);
-        $validator->field('field')->same('field2', 'field3');
+        $validator = new Validator(['field' => '1', 'field2' => '1']);
+        $validator->field('field')->sameNot('field2');
         $this->assertFalse($validator->execute());
     }
 
@@ -57,8 +57,8 @@ final class SameTest extends TestCase
     {
         foreach ([(object) [], [], -10, false, true, '-10', 1, 2.5] as $data) {
             $validator = new Validator(['field' => $data, 'field2' => 52]);
-            $validator->field('field')->same('field2');
-            $this->assertFalse($validator->execute());
+            $validator->field('field')->sameNot('field2');
+            $this->assertTrue($validator->execute());
         }
     }
 
@@ -68,8 +68,8 @@ final class SameTest extends TestCase
     public function testIfValidationFailsWhenNoValuesAreProvided(): void
     {
         $validator = new Validator();
-        $validator->field('field')->same('field2');
-        $this->assertTrue($validator->execute());
+        $validator->field('field')->sameNot('field2');
+        $this->assertFalse($validator->execute());
     }
 
     /**
@@ -77,11 +77,11 @@ final class SameTest extends TestCase
      */
     public function testIfCorrectErrorMessageIsReturnedWhenCustomMessageIsSet(): void
     {
-        $validator = new Validator(['field' => '']);
-        $validator->field('field')->same('field2');
-        $validator->messages('field')->same('Message same');
+        $validator = new Validator(['field1' => null]);
+        $validator->field('field1')->sameNot('field2');
+        $validator->messages('field1')->sameNot('Message same not');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message same', $validator->errors()->first('field')?->getMessage());
+        $this->assertSame('Message same not', $validator->errors()->first('field1')?->getMessage());
     }
 }

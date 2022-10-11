@@ -60,7 +60,7 @@ class Event
      */
     public function getValidationData(): array
     {
-        return $this->rule->getValidationData()->getData();
+        return $this->rule->getValidationData()->toArray();
     }
 
     /**

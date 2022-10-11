@@ -32,7 +32,7 @@ abstract class AbstractTranslator implements TranslatorInterface
     /**
      * Returns the original data
      */
-    public function getData(): array
+    public function toArray(): array
     {
         return $this->data;
     }

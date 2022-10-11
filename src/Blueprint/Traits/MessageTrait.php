@@ -16,6 +16,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Before,
     BeforeOrEqual,
     Between,
+    Confirmed,
     Contains,
     ContainsLetter,
     ContainsMixedCase,
@@ -81,6 +82,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    SameNot,
     Scalar,
     StartsNotWith,
     StartsWith,
@@ -93,7 +95,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     UUIDv5,
     Words,
     WordsMax,
-    WordsMin,
+    WordsMin
 };
 
 trait MessageTrait
@@ -184,6 +186,14 @@ trait MessageTrait
     public function between(string|int|float $message): self
     {
         return $this->addMessage(new Between($message));
+    }
+
+    /**
+     * Adds a new message for the confirmed rule
+     */
+    public function confirmed(string|int|float $message): self
+    {
+        return $this->addMessage(new Confirmed($message));
     }
 
     /**
@@ -704,6 +714,14 @@ trait MessageTrait
     public function same(string|int|float $message): self
     {
         return $this->addMessage(new Same($message));
+    }
+
+    /**
+     * Adds a new message for the same not rule
+     */
+    public function sameNot(string|int|float $message): self
+    {
+        return $this->addMessage(new SameNot($message));
     }
 
     /**

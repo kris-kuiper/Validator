@@ -31,7 +31,7 @@ class BeforeEvent
      */
     public function getValidationData(): array
     {
-        return $this->validationData->getData();
+        return $this->validationData->toArray();
     }
 
     /**

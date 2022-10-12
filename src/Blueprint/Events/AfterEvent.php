@@ -51,7 +51,7 @@ class AfterEvent
      */
     public function getValidationData(): array
     {
-        return $this->validationData->getData();
+        return $this->validationData->toArray();
     }
 
     public function getValidatedData(): ValidatedData

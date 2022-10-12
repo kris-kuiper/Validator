@@ -16,6 +16,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Before,
     BeforeOrEqual,
     Between,
+    Confirmed,
     Contains,
     ContainsLetter,
     ContainsMixedCase,
@@ -31,6 +32,9 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Custom,
     Date,
     DateBetween,
+    Declined,
+    DeclinedIf,
+    DeclinedNotEmpty,
     Different,
     DifferentWithAll,
     Digits,
@@ -64,6 +68,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     LengthBetween,
     LengthMax,
     LengthMin,
+    Lowercase,
     MACAddress,
     Max,
     Min,
@@ -81,10 +86,12 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    SameNot,
     Scalar,
     StartsNotWith,
     StartsWith,
     Timezone,
+    Uppercase,
     URL,
     UUID,
     UUIDv1,
@@ -184,6 +191,14 @@ trait MessageTrait
     public function between(string|int|float $message): self
     {
         return $this->addMessage(new Between($message));
+    }
+
+    /**
+     * Adds a new message for the confirmed rule
+     */
+    public function confirmed(string|int|float $message): self
+    {
+        return $this->addMessage(new Confirmed($message));
     }
 
     /**
@@ -304,6 +319,30 @@ trait MessageTrait
     public function dateBetween(string|int|float $message): self
     {
         return $this->addMessage(new DateBetween($message));
+    }
+
+    /**
+     * Adds a new message for the declined rule
+     */
+    public function declined(string|int|float $message): self
+    {
+        return $this->addMessage(new Declined($message));
+    }
+
+    /**
+     * Adds a new message for the declinedIf rule
+     */
+    public function declinedIf(string|int|float $message): self
+    {
+        return $this->addMessage(new DeclinedIf($message));
+    }
+
+    /**
+     * Adds a new message for the declinedNotEmpty rule
+     */
+    public function declinedNotEmpty(string|int|float $message): self
+    {
+        return $this->addMessage(new DeclinedNotEmpty($message));
     }
 
     /**
@@ -571,6 +610,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the lowercase rule
+     */
+    public function lowercase(string|int|float $message): self
+    {
+        return $this->addMessage(new Lowercase($message));
+    }
+
+    /**
      * Adds a new message for the macAddress rule
      */
     public function macAddress(string|int|float $message): self
@@ -707,6 +754,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the same not rule
+     */
+    public function sameNot(string|int|float $message): self
+    {
+        return $this->addMessage(new SameNot($message));
+    }
+
+    /**
      * Adds a new message for the scalar rule
      */
     public function scalar(string|int|float $message): self
@@ -736,6 +791,14 @@ trait MessageTrait
     public function timezone(string|int|float $message): self
     {
         return $this->addMessage(new Timezone($message));
+    }
+
+    /**
+     * Adds a new message for the uppercase rule
+     */
+    public function uppercase(string|int|float $message): self
+    {
+        return $this->addMessage(new Uppercase($message));
     }
 
     /**

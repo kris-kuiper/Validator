@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Combine;
 
 use KrisKuiper\Validator\Blueprint\Combine\Combine;
+use KrisKuiper\Validator\Blueprint\DefaultValue;
+use KrisKuiper\Validator\Blueprint\Traits\EmptyTrait;
 use KrisKuiper\Validator\Collections\FieldCollection;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Fields\Field;
 
 class CombineProxy
 {
+    use EmptyTrait;
+
     /**
      * Contains a cached value of the combined fields
      */
@@ -19,7 +23,7 @@ class CombineProxy
     /**
      * Constructor
      */
-    public function __construct(private Combine $proxy, private FieldCollection $fieldCollection)
+    public function __construct(private Combine $proxy, private FieldCollection $fieldCollection, private ?DefaultValue $defaultValue)
     {
     }
 
@@ -45,10 +49,14 @@ class CombineProxy
         //Determine if the value should be created with the glue or format value
         if (null !== $this->proxy->getGlue()) {
             $this->value = $this->getValueFromGlue();
-            return $this->value;
+        } else {
+            $this->value = $this->getValueFromFormat();
         }
 
-        $this->value = $this->getValueFromFormat();
+        if (null !== $this->defaultValue && true === $this->isEmpty($this->value)) {
+            $this->value = $this->defaultValue->getValue();
+        }
+
         return $this->value;
     }
 

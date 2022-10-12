@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Rules\{
-    Accepted,
+use KrisKuiper\Validator\Blueprint\Rules\{Accepted,
     AcceptedIf,
     AcceptedNotEmpty,
     After,
@@ -16,6 +15,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Before,
     BeforeOrEqual,
     Between,
+    Confirmed,
     Contains,
     ContainsLetter,
     ContainsMixedCase,
@@ -30,6 +30,9 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     CSSColor,
     Date,
     DateBetween,
+    Declined,
+    DeclinedIf,
+    DeclinedNotEmpty,
     Different,
     DifferentWithAll,
     Digits,
@@ -63,6 +66,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     LengthBetween,
     LengthMax,
     LengthMin,
+    Lowercase,
     MACAddress,
     Max,
     Min,
@@ -80,10 +84,12 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     RequiredWithout,
     RequiredWithoutAll,
     Same,
+    SameNot,
     Scalar,
     StartsNotWith,
     StartsWith,
     Timezone,
+    Uppercase,
     URL,
     UUID,
     UUIDv1,
@@ -92,8 +98,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     UUIDv5,
     Words,
     WordsMax,
-    WordsMin,
-};
+    WordsMin};
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait
@@ -188,6 +193,15 @@ trait RuleTrait
     public function between(float $minimum, float $maximum): self
     {
         return $this->addRule(new Between($minimum, $maximum));
+    }
+
+    /**
+     * Checks if the data under validation has a matching field of {field}_confirmation.
+     * For example, if the field under validation is password, a matching password_confirmation field must be present in the input
+     */
+    public function confirmed(): self
+    {
+        return $this->addRule(new Confirmed());
     }
 
     /**
@@ -301,6 +315,30 @@ trait RuleTrait
     public function dateBetween(string $from, string $to, string $format = 'Y-m-d'): self
     {
         return $this->addRule(new DateBetween($from, $to, $format));
+    }
+
+    /**
+     * Checks if the data under validation is declined
+     */
+    public function declined(array $declined = []): self
+    {
+        return $this->addRule(new Declined($declined));
+    }
+
+    /**
+     * Checks if the data under validation is declined if another field under validation is equal to a specified value
+     */
+    public function declinedIf(string $fieldName, mixed $value, array $declined = []): self
+    {
+        return $this->addRule(new DeclinedIf($fieldName, $value, $declined));
+    }
+
+    /**
+     * Checks if the data under validation is declined if another fields value is not empty
+     */
+    public function declinedNotEmpty(string $fieldName, array $declined = []): self
+    {
+        return $this->addRule(new DeclinedNotEmpty($fieldName, $declined));
     }
 
     /**
@@ -568,6 +606,14 @@ trait RuleTrait
     }
 
     /**
+     * Checks if the value under validation is a lowercase string
+     */
+    public function lowercase(): self
+    {
+        return $this->addRule(new Lowercase());
+    }
+
+    /**
      * Checks if the data under validation is a valid MAC Address
      */
     public function macAddress(string $delimiter = '-'): self
@@ -709,6 +755,14 @@ trait RuleTrait
     }
 
     /**
+     * Checks if value is different from a value of one or more field names
+     */
+    public function sameNot(string ...$fieldNames): self
+    {
+        return $this->addRule(new SameNot(...$fieldNames));
+    }
+
+    /**
      * Checks if the data under validation is a scalar type
      */
     public function scalar(): self
@@ -739,6 +793,14 @@ trait RuleTrait
     public function timezone(bool $caseInsensitive = false): self
     {
         return $this->addRule(new Timezone($caseInsensitive));
+    }
+
+    /**
+     * Checks if the value under validation is an uppercase string
+     */
+    public function uppercase(): self
+    {
+        return $this->addRule(new Uppercase());
     }
 
     /**

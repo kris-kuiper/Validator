@@ -8,16 +8,16 @@ use KrisKuiper\Validator\Validator;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use PHPUnit\Framework\TestCase;
 
-final class AcceptedTest extends TestCase
+final class DeclinedTest extends TestCase
 {
     /**
      * @throws ValidatorException
      */
     public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
-        foreach ([1, '1', 'true', true, 'yes', 'on'] as $data) {
+        foreach ([0, '0', 'false', false, 'no', 'off'] as $data) {
             $validator = new Validator(['field' => $data]);
-            $validator->field('field')->accepted();
+            $validator->field('field')->declined();
             $this->assertTrue($validator->execute());
         }
     }
@@ -25,11 +25,11 @@ final class AcceptedTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testIfValidationPassesWhenOtherAcceptedValuesAreProvided(): void
+    public function testIfValidationPassesWhenOtherDeclinedValuesAreProvided(): void
     {
         foreach (['foo', 'bar', 2, '22.5'] as $data) {
             $validator = new Validator(['field' => $data]);
-            $validator->field('field')->accepted(['foo', 'bar', 2, '22.5']);
+            $validator->field('field')->declined(['foo', 'bar', 2, '22.5']);
             $this->assertTrue($validator->execute());
         }
     }
@@ -37,10 +37,10 @@ final class AcceptedTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testIfValidationFailsWhenOtherAcceptedValuesAreProvided(): void
+    public function testIfValidationFailsWhenOtherDeclinedValuesAreProvided(): void
     {
         $validator = new Validator(['foo' => '2']);
-        $validator->field('foo')->accepted([2, 'bar', 'quez']);
+        $validator->field('foo')->declined([2, 'bar', 'quez']);
         $this->assertFalse($validator->execute());
     }
 
@@ -49,9 +49,9 @@ final class AcceptedTest extends TestCase
      */
     public function testIfValidationFailsWhenInValidValuesAreProvided(): void
     {
-        foreach ([null, [], (object) [], ['a', 'b', 'c'], 2552, false, '2817334', 'no', '0', 0, 'off'] as $data) {
+        foreach ([null, [], (object) [], ['a', 'b', 'c'], 2552, true, '2817334', 'yes', '1', 1, 'on'] as $data) {
             $validator = new Validator(['field' => $data]);
-            $validator->field('field')->accepted();
+            $validator->field('field')->declined();
             $this->assertFalse($validator->execute());
         }
     }
@@ -62,7 +62,7 @@ final class AcceptedTest extends TestCase
     public function testIfValidationFailsWhenNoValuesAreProvided(): void
     {
         $validator = new Validator();
-        $validator->field('field')->accepted();
+        $validator->field('field')->declined();
         $this->assertFalse($validator->execute());
     }
 
@@ -72,9 +72,9 @@ final class AcceptedTest extends TestCase
     public function testIfCorrectErrorMessageIsReturnedWhenCustomMessageIsSet(): void
     {
         $validator = new Validator(['field' => '']);
-        $validator->field('field')->accepted();
-        $validator->messages('field')->accepted('Message accepted');
+        $validator->field('field')->declined();
+        $validator->messages('field')->declined('Message declined');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message accepted', $validator->errors()->first('field')?->getMessage());
+        $this->assertSame('Message declined', $validator->errors()->first('field')?->getMessage());
     }
 }

@@ -712,4 +712,52 @@ final class ValidatorTest extends TestCase
         $this->assertTrue($validator->execute());
         $this->assertSame(['foo' => [1 => 'bar2', 0 => 'bar1', 2 => 'bar3']], $validator->validatedData()->toArray());
     }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenUsingCombinesWithEmptyCombineFields(): void
+    {
+        $data = ['day' => '', 'month' => null, 'year' => []];
+
+        $validator = new Validator($data);
+        $validator->combine('year', 'month', 'day')->glue('-')->alias('date');
+        $validator->field('date')->date();
+        $validator->default('date', '2000-12-01');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['date' => '2000-12-01'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenUsingCombinesWithOneEmptyCombineFields(): void
+    {
+        $data = ['day' => '01', 'month' => '01', 'year' => null];
+
+        $validator = new Validator($data);
+        $validator->combine('year', 'month', 'day')->glue('-')->alias('date');
+        $validator->field('date')->date();
+        $validator->default('date', '2000-12-01');
+
+        $this->assertFalse($validator->execute());
+        $this->assertSame(['date' => '01-01'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfDefaultValueIsUsedWhenExpectingNullDefaultValue(): void
+    {
+        $data = ['day' => null, 'month' => null, 'year' => null];
+
+        $validator = new Validator($data);
+        $validator->combine('year', 'month', 'day')->glue('-')->alias('date');
+        $validator->field('date')->date();
+        $validator->default('date', null);
+
+        $this->assertFalse($validator->execute());
+        $this->assertSame(['date' => null], $validator->validatedData()->toArray());
+    }
 }

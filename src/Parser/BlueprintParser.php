@@ -7,6 +7,7 @@ namespace KrisKuiper\Validator\Parser;
 use KrisKuiper\Validator\Blueprint\Blueprint;
 use KrisKuiper\Validator\Blueprint\Collections\DefaultValueCollection;
 use KrisKuiper\Validator\Blueprint\Collections\EventCollection;
+use KrisKuiper\Validator\Blueprint\DefaultValue;
 use KrisKuiper\Validator\Blueprint\FieldOptions;
 use KrisKuiper\Validator\Blueprint\Middleware\Middleware;
 use KrisKuiper\Validator\Blueprint\MiddlewareList;
@@ -147,11 +148,7 @@ class BlueprintParser
                 if (null !== $combine) {
                     $alias = $combine->getAlias();
 
-                    if (null === $alias) {
-                        continue;
-                    }
-
-                    if (true === isset($combines[$alias])) {
+                    if (null === $alias || true === isset($combines[$alias])) {
                         continue;
                     }
 
@@ -162,7 +159,14 @@ class BlueprintParser
                         $fieldCollection->append(...$this->createFieldsFromFieldName(new FieldName($fieldName)));
                     }
 
-                    $this->combineProxyCollection->append(new CombineProxy($combine, $fieldCollection));
+                    $path = $this->validationData->path($alias)->current();
+                    $defaultValue = null;
+
+                    if (null !== $path) {
+                        $defaultValue = new DefaultValue($alias, $path->getValue());
+                    }
+
+                    $this->combineProxyCollection->append(new CombineProxy($combine, $fieldCollection, $defaultValue));
                 }
             }
         }

@@ -32,6 +32,9 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Custom,
     Date,
     DateBetween,
+    Declined,
+    DeclinedIf,
+    DeclinedNotEmpty,
     Different,
     DifferentWithAll,
     Digits,
@@ -65,6 +68,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     LengthBetween,
     LengthMax,
     LengthMin,
+    Lowercase,
     MACAddress,
     Max,
     Min,
@@ -87,6 +91,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     StartsNotWith,
     StartsWith,
     Timezone,
+    Uppercase,
     URL,
     UUID,
     UUIDv1,
@@ -95,7 +100,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     UUIDv5,
     Words,
     WordsMax,
-    WordsMin
+    WordsMin,
 };
 
 trait MessageTrait
@@ -314,6 +319,30 @@ trait MessageTrait
     public function dateBetween(string|int|float $message): self
     {
         return $this->addMessage(new DateBetween($message));
+    }
+
+    /**
+     * Adds a new message for the declined rule
+     */
+    public function declined(string|int|float $message): self
+    {
+        return $this->addMessage(new Declined($message));
+    }
+
+    /**
+     * Adds a new message for the declinedIf rule
+     */
+    public function declinedIf(string|int|float $message): self
+    {
+        return $this->addMessage(new DeclinedIf($message));
+    }
+
+    /**
+     * Adds a new message for the declinedNotEmpty rule
+     */
+    public function declinedNotEmpty(string|int|float $message): self
+    {
+        return $this->addMessage(new DeclinedNotEmpty($message));
     }
 
     /**
@@ -581,6 +610,14 @@ trait MessageTrait
     }
 
     /**
+     * Adds a new message for the lowercase rule
+     */
+    public function lowercase(string|int|float $message): self
+    {
+        return $this->addMessage(new Lowercase($message));
+    }
+
+    /**
      * Adds a new message for the macAddress rule
      */
     public function macAddress(string|int|float $message): self
@@ -754,6 +791,14 @@ trait MessageTrait
     public function timezone(string|int|float $message): self
     {
         return $this->addMessage(new Timezone($message));
+    }
+
+    /**
+     * Adds a new message for the uppercase rule
+     */
+    public function uppercase(string|int|float $message): self
+    {
+        return $this->addMessage(new Uppercase($message));
     }
 
     /**

@@ -6,6 +6,7 @@ namespace tests\unit\Collections;
 
 use KrisKuiper\Validator\Blueprint\Combine\Combine;
 use KrisKuiper\Validator\Blueprint\Custom\Custom;
+use KrisKuiper\Validator\Blueprint\DefaultValue;
 use KrisKuiper\Validator\Blueprint\Messages\ContainsLetter;
 use KrisKuiper\Validator\Collections\CustomCollection;
 use KrisKuiper\Validator\Collections\CombineProxyCollection;
@@ -36,7 +37,7 @@ final class CollectionsTest extends TestCase
 
     public function testIfCombineProxyCollectionReturnsCorrectItemWhenUsingCurrentMethod(): void
     {
-        $item = new CombineProxy(new Combine(), new FieldCollection());
+        $item = new CombineProxy(new Combine(), new FieldCollection(), new DefaultValue('', null));
         $collection = new CombineProxyCollection($item);
         $this->assertSame($item, $collection->current());
     }

@@ -100,7 +100,7 @@ composer require kris-kuiper/validator
 
 Or add this line to your composer.json file:
 ```shell script
-"kris-kuiper/validator": "^1.4"
+"kris-kuiper/validator": "^1.5"
 ```
 
 

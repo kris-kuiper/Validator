@@ -13,7 +13,7 @@ final class PresentTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testIfValidationPassesWhenTrueValuesAreProvided(): void
+    public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
         $validator = new Validator(['field' => null]);
         $validator->field('field')->present();
@@ -23,7 +23,7 @@ final class PresentTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testIfValidationFailsWhenNonTrueValuesAreProvided(): void
+    public function testIfValidationFailsWhenInValidValuesAreProvided(): void
     {
         $validator = new Validator(['field' => null]);
         $validator->field('non-existing')->present();

@@ -79,6 +79,9 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Positive,
     PositiveOrZero,
     Present,
+    Prohibited,
+    ProhibitedIf,
+    Prohibits,
     Regex,
     Required,
     RequiredWith,
@@ -100,7 +103,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     UUIDv5,
     Words,
     WordsMax,
-    WordsMin,
+    WordsMin
 };
 
 trait MessageTrait
@@ -695,6 +698,30 @@ trait MessageTrait
     public function present(string|int|float $message): self
     {
         return $this->addMessage(new Present($message));
+    }
+
+    /**
+     * Adds a new message for the prohibited rule
+     */
+    public function prohibited(string|int|float $message): self
+    {
+        return $this->addMessage(new Prohibited($message));
+    }
+
+    /**
+     * Adds a new message for the prohibitedIf rule
+     */
+    public function prohibitedIf(string|int|float $message): self
+    {
+        return $this->addMessage(new ProhibitedIf($message));
+    }
+
+    /**
+     * Adds a new message for the prohibits rule
+     */
+    public function prohibits(string|int|float $message): self
+    {
+        return $this->addMessage(new Prohibits($message));
     }
 
     /**

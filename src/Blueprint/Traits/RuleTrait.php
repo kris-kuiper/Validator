@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Rules\{Accepted,
+use KrisKuiper\Validator\Blueprint\Rules\{
+    Accepted,
     AcceptedIf,
     AcceptedNotEmpty,
     After,
@@ -77,6 +78,9 @@ use KrisKuiper\Validator\Blueprint\Rules\{Accepted,
     Positive,
     PositiveOrZero,
     Present,
+    Prohibited,
+    ProhibitedIf,
+    Prohibits,
     Regex,
     Required,
     RequiredWith,
@@ -98,7 +102,8 @@ use KrisKuiper\Validator\Blueprint\Rules\{Accepted,
     UUIDv5,
     Words,
     WordsMax,
-    WordsMin};
+    WordsMin
+};
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait
@@ -691,6 +696,30 @@ trait RuleTrait
     public function present(): self
     {
         return $this->addRule(new Present());
+    }
+
+    /**
+     * Checks if the field under validation is considered empty (null, empty string or empty array) or not present
+     */
+    public function prohibited(): self
+    {
+        return $this->addRule(new Prohibited());
+    }
+
+    /**
+     * Checks if the field under validation is considered empty (null, empty string or empty array) or not present if another field is equal to any value
+     */
+    public function prohibitedIf(string ...$fieldNames): self
+    {
+        return $this->addRule(new ProhibitedIf(...$fieldNames));
+    }
+
+    /**
+     * Checks if the field under validation is present. If so, the provided field names may not be present, event empty.
+     */
+    public function prohibits(string ...$fieldNames): self
+    {
+        return $this->addRule(new Prohibits(...$fieldNames));
     }
 
     /**

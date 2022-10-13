@@ -32,9 +32,6 @@ class Prohibited extends AbstractRule
      */
     public function isValid(): bool
     {
-        $fieldName = $this->getField()?->getFieldName();
-        $value = $this->getValue();
-
-        return false === array_key_exists($fieldName ?? '', $this->getValidationData()->toArray()) || true === $this->isEmpty($value);
+        return true === $this->isEmpty($this->getValue());
     }
 }

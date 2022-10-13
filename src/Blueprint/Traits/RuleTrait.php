@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Rules\{Accepted,
+use KrisKuiper\Validator\Blueprint\Rules\{
+    Accepted,
     AcceptedIf,
     AcceptedNotEmpty,
     After,
@@ -101,7 +102,8 @@ use KrisKuiper\Validator\Blueprint\Rules\{Accepted,
     UUIDv5,
     Words,
     WordsMax,
-    WordsMin};
+    WordsMin
+};
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 trait RuleTrait

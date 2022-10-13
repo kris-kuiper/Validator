@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Traits;
 
-use KrisKuiper\Validator\Blueprint\Messages\{Accepted,
+use KrisKuiper\Validator\Blueprint\Messages\{
+    Accepted,
     AcceptedIf,
     AcceptedNotEmpty,
     After,
@@ -102,7 +103,8 @@ use KrisKuiper\Validator\Blueprint\Messages\{Accepted,
     UUIDv5,
     Words,
     WordsMax,
-    WordsMin};
+    WordsMin
+};
 
 trait MessageTrait
 {

@@ -75,6 +75,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Negative,
     NegativeOrZero,
     NotIn,
+    Nullable,
     Number,
     Positive,
     PositiveOrZero,
@@ -673,6 +674,14 @@ trait RuleTrait
     public function notIn(array $collection, bool $strict = false): self
     {
         return $this->addRule(new NotIn($collection, $strict));
+    }
+
+    /**
+     * The field under validation may or not be null
+     */
+    public function nullable(bool $nullable = true): self
+    {
+        return $this->addRule(new Nullable($nullable));
     }
 
     /**

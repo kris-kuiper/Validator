@@ -76,6 +76,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Negative,
     NegativeOrZero,
     NotIn,
+    Nullable,
     Number,
     Positive,
     PositiveOrZero,
@@ -675,6 +676,14 @@ trait MessageTrait
     public function notIn(string|int|float $message): self
     {
         return $this->addMessage(new NotIn($message));
+    }
+
+    /**
+     * Adds a new message for the nullable rule
+     */
+    public function nullable(string|int|float $message): self
+    {
+        return $this->addMessage(new Nullable($message));
     }
 
     /**

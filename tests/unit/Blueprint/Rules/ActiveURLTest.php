@@ -31,6 +31,7 @@ final class ActiveURLTest extends TestCase
         $validator = $this->createMock(Validator::class);
         $validator->method('execute')->willReturn(false);
         $validator->field('url')->activeURL();
+        $validator->messages('field')->after('Message active URL');
 
         $this->assertFalse($validator->execute());
     }

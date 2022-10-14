@@ -45,7 +45,7 @@ class ActiveURL extends AbstractRule
         try {
             $records = dns_get_record($value, DNS_AAAA | DNS_A);
 
-            if (is_array($records) && count($records) > 0) {
+            if (true === is_array($records) && count($records) > 0) {
                 return true;
             }
         } catch (Exception) {

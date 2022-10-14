@@ -85,6 +85,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Prohibits,
     Regex,
     Required,
+    RequiredArrayKeys,
     RequiredWith,
     RequiredWithAll,
     RequiredWithout,
@@ -754,6 +755,14 @@ trait RuleTrait
     public function required(bool $required = true): self
     {
         return $this->addRule(new Required($required));
+    }
+
+    /**
+     * Adds a new rule that will require the field/value (null, '', [] are considered null)
+     */
+    public function requiredArrayKeys(string|int ...$keys): self
+    {
+        return $this->addRule(new RequiredArrayKeys(...$keys));
     }
 
     /**

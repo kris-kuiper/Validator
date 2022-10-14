@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace tests\unit\assets;
 
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 
 final class CustomRule implements RuleInterface
 {
-    public const RULE_NAME = 'CustomRule';
+    public const RULE_NAME = 'customRule';
 
     /**
      * @inheritdoc
@@ -24,9 +24,9 @@ final class CustomRule implements RuleInterface
      * @inheritdoc
      * @throws ValidatorException
      */
-    public function isValid(Current $current): bool
+    public function isValid(Event $event): bool
     {
-        return strlen($current->getValue()) >= $current->getParameter('min');
+        return strlen($event->getValue()) >= $event->getParameter('min');
     }
 
     public function getMessage(): string

@@ -19,6 +19,6 @@ class ToLowercase extends AbstractMiddleware
             return;
         }
 
-        $field->setValue(strtolower($value));
+        $field->setValue(mb_strtolower($value));
     }
 }

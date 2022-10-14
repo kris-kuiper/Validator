@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Contracts;
 
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 interface RuleInterface
 {
@@ -16,7 +16,7 @@ interface RuleInterface
     /**
      * Returns if the field under validation is valid or not
      */
-    public function isValid(Current $current): bool;
+    public function isValid(Event $event): bool;
 
     /**
      * Returns the error message

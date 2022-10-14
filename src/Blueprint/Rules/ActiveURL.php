@@ -14,7 +14,7 @@ class ActiveURL extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Should be an active URL';
+    protected string|int|float $message = 'Should be an active URL';
 
     /**
      * @inheritdoc

@@ -32,7 +32,7 @@ class Error
     /**
      * Returns the path to the value in the validation data
      */
-    public function getPath(): Path
+    public function getPath(): ?Path
     {
         return $this->field?->getPath();
     }
@@ -56,7 +56,7 @@ class Error
     /**
      * Returns the parsed (with variable parameters) error message
      */
-    public function getMessage(): ?string
+    public function getMessage(): float|int|string
     {
         return $this->rule->getParsedMessage();
     }
@@ -64,7 +64,7 @@ class Error
     /**
      * Returns the raw (without variable parameters) error message
      */
-    public function getRawMessage(): ?string
+    public function getRawMessage(): int|float|string
     {
         return $this->rule->getRawMessage();
     }
@@ -82,7 +82,8 @@ class Error
      */
     public function getId(): string
     {
-        return substr(md5($this->getRawMessage()), 0, 10);
+        $message = (string) $this->getRawMessage();
+        return substr(md5($message), 0, 10);
     }
 
     /**
@@ -90,7 +91,14 @@ class Error
      */
     public function match(string $identifier): bool
     {
-        return preg_match($this->identifierToRegex($identifier), $this->field?->getFieldName()) || preg_match($this->identifierToRegex($identifier), $this->getPath()->getIdentifier());
+        $fieldName = $this->field?->getFieldName();
+
+        if ((null !== $fieldName) && true === (bool) preg_match($this->identifierToRegex($identifier), (string) $fieldName)) {
+            return true;
+        }
+
+        $pathIdentifier = $this->getPath()?->getIdentifier();
+        return (bool) preg_match($this->identifierToRegex($identifier), $pathIdentifier ?? '');
     }
 
     /**

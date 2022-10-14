@@ -13,12 +13,12 @@ class DifferentWithAll extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value should be different than :fieldNames';
+    protected string|int|float $message = 'Value should be different than :fieldNames';
 
     /**
      * Constructor
      */
-    public function __construct(string ...$fieldNames)
+    public function __construct(string|int ...$fieldNames)
     {
         parent::__construct();
         $this->setParameter('fieldNames', $fieldNames);
@@ -45,6 +45,14 @@ class DifferentWithAll extends AbstractRule
             $paths = $this->getPaths($fieldName);
 
             foreach ($paths as $path) {
+                if (null === $path) {
+                    if (null === $value) {
+                        return false;
+                    }
+
+                    continue;
+                }
+
                 if ($value === $path->getValue()) {
                     return false;
                 }

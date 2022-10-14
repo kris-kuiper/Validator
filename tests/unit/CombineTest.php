@@ -19,7 +19,7 @@ final class CombineTest extends TestCase
 
         $validator = new Validator($data);
         $validator->combine('year', 'month', 'day')->glue('-')->alias('date');
-        $validator->field('date')->isDate();
+        $validator->field('date')->date();
 
         $this->assertTrue($validator->execute());
     }
@@ -33,7 +33,7 @@ final class CombineTest extends TestCase
 
         $validator = new Validator($data);
         $validator->combine('year', 'month', 'day')->glue('-')->alias('date');
-        $validator->field('date')->isDate('d-m-Y');
+        $validator->field('date')->date('d-m-Y');
 
         $this->assertFalse($validator->execute());
     }
@@ -47,7 +47,7 @@ final class CombineTest extends TestCase
 
         $validator = new Validator($data);
         $validator->combine('year', 'month', 'day')->glue('-')->alias('date');
-        $validator->field('date')->isDate();
+        $validator->field('date')->date();
 
         $this->assertFalse($validator->execute());
     }
@@ -97,7 +97,7 @@ final class CombineTest extends TestCase
 
         $validator = new Validator($data);
         $validator->combine('day', 'month', 'year')->glue('-')->alias('date');
-        $validator->field('date')->isDate('Y-j-d');
+        $validator->field('date')->date('Y-j-d');
         $validator->execute();
 
         $output = ['date' => '28-3-1952'];
@@ -113,7 +113,7 @@ final class CombineTest extends TestCase
         $data = [];
         $validator = new Validator($data);
         $validator->combine('day', 'month', 'year');
-        $validator->field('date')->isDate('Y-j-d');
+        $validator->field('date')->date('Y-j-d');
         $this->assertFalse($validator->execute());
     }
 
@@ -144,9 +144,61 @@ final class CombineTest extends TestCase
         $validator = new Validator($data);
         $validator->combine('date_of_birth.year', 'date_of_birth.month', 'date_of_birth.day')->glue('-')->alias('date_of_birth');
         $validator->middleware('date_of_birth.month', 'date_of_birth.day')->leadingZero();
-        $validator->field('date_of_birth')->isDate()->after('1900-01-01')->before(date('Y-m-d'));
+        $validator->field('date_of_birth')->date()->after('1900-01-01')->before(date('Y-m-d'));
 
         $validator->execute();
         $this->assertTrue($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenCombiningMultipleIntegersWithGlue(): void
+    {
+        $validator = new Validator(['foo' => 5, 'bar' => 5]);
+        $validator->combine('foo', 'bar')->glue('')->alias('bazz');
+        $validator->field('bazz')->equals(55);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bazz' => 55], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenCombiningMultipleFloatsWithGlue(): void
+    {
+        $validator = new Validator(['foo' => 5.25, 'bar' => 5.25]);
+        $validator->combine('foo', 'bar')->glue('')->alias('bazz');
+        $validator->field('bazz')->equals('5.255.25');
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bazz' => '5.255.25'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenCombiningOneFloatWithGlue(): void
+    {
+        $validator = new Validator(['foo' => 5.25]);
+        $validator->combine('foo')->glue('')->alias('bazz');
+        $validator->field('bazz')->equals(5.25);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bazz' => 5.25], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenCombiningOneFloatWithFormat(): void
+    {
+        $validator = new Validator(['foo' => 5.25]);
+        $validator->combine('foo')->format(':foo')->alias('bazz');
+        $validator->field('bazz')->equals('5.25', true);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bazz' => '5.25'], $validator->validatedData()->toArray());
     }
 }

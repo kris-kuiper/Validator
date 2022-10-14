@@ -13,12 +13,12 @@ class EndsNotWith extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value may not end with ":value"';
+    protected string|int|float $message = 'Value may not end with ":value"';
 
     /**
      * Constructor
      */
-    public function __construct(string|int|float $value, bool $caseSensitive = false)
+    public function __construct(private string|int|float $value, private bool $caseSensitive = false)
     {
         parent::__construct();
         $this->setParameter('value', $value);
@@ -40,16 +40,15 @@ class EndsNotWith extends AbstractRule
     public function isValid(): bool
     {
         $value = $this->getValue();
-        $endsWith = $this->getParameter('value');
 
         if (false === is_string($value) && false === is_numeric($value)) {
             return true;
         }
 
-        if (true === $this->getParameter('caseSensitive')) {
-            return true !== str_ends_with((string) $value, (string) $endsWith);
+        if (true === $this->caseSensitive) {
+            return true !== str_ends_with((string) $value, (string) $this->value);
         }
 
-        return true !== str_ends_with(strtolower((string) $value), strtolower((string) $endsWith));
+        return true !== str_ends_with(strtolower((string) $value), strtolower((string) $this->value));
     }
 }

@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator;
 
+use Closure;
 use KrisKuiper\Validator\Blueprint\Blueprint;
 use KrisKuiper\Validator\Blueprint\Combine\Combine;
+use KrisKuiper\Validator\Blueprint\Contracts\AfterEventInterface;
+use KrisKuiper\Validator\Blueprint\Contracts\BeforeEventInterface;
 use KrisKuiper\Validator\Blueprint\Contracts\RuleInterface;
 use KrisKuiper\Validator\Blueprint\Custom\Custom;
+use KrisKuiper\Validator\Blueprint\Events\AfterEvent;
+use KrisKuiper\Validator\Blueprint\Events\BeforeEvent;
 use KrisKuiper\Validator\Blueprint\MessageList;
 use KrisKuiper\Validator\Blueprint\MiddlewareList;
+use KrisKuiper\Validator\Blueprint\Traits\EmptyTrait;
+use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Middleware\Field as MiddlewareField;
 use KrisKuiper\Validator\Blueprint\FieldOptions;
 use KrisKuiper\Validator\Blueprint\Rules\AbstractRule;
@@ -23,6 +30,8 @@ use KrisKuiper\Validator\Translator\PathTranslator;
 
 class Validator
 {
+    use EmptyTrait;
+
     private bool $isValidated = false;
     private bool $isValid = true;
     private PathTranslator $validationData;
@@ -30,6 +39,7 @@ class Validator
     private Blueprint $blueprint;
     private ValidatedData $validatedData;
     private ErrorCollection $errorCollection;
+    private Storage $storage;
 
     /**
      * Constructor
@@ -40,9 +50,18 @@ class Validator
         $this->errorCollection = new ErrorCollection();
         $this->validatedData = new ValidatedData();
 
+        $this->storage = new Storage();
         $this->blueprint = new Blueprint();
         $this->blueprintParser = new BlueprintParser($this->validationData);
         $this->blueprintParser->getBlueprintCollection()->append($this->blueprint);
+    }
+
+    /**
+     * Returns a storage object for storing/retrieving arbitrary data
+     */
+    public function storage(): Storage
+    {
+        return $this->storage;
     }
 
     /**
@@ -62,11 +81,19 @@ class Validator
     }
 
     /**
-     * Sets custom error messages per rule en/or per field and rule
+     * Sets custom error messages per rule and/or per field and rule
      */
     public function messages(string ...$fieldNames): MessageList
     {
         return $this->blueprint->messages(...$fieldNames);
+    }
+
+    /**
+     * Creates an alias for a provided field name, which can be used to define new rules, middleware, etc.
+     */
+    public function alias(string $fieldName, string $alias): void
+    {
+        $this->blueprint->alias($fieldName, $alias);
     }
 
     /**
@@ -78,11 +105,35 @@ class Validator
     }
 
     /**
+     * Creates default values for field names which are considered empty (empty string, empty array and NULL)
+     */
+    public function default(string $fieldName, mixed $value): void
+    {
+        $this->blueprint->default($fieldName, $value);
+    }
+
+    /**
      * Loads a custom rule
      */
     public function loadRule(RuleInterface $rule, string $alias = null): void
     {
         $this->blueprint->loadRule($rule, $alias);
+    }
+
+    /**
+     * Loads a custom before event handler object which will be executed before validation starts
+     */
+    public function loadBeforeEvent(BeforeEventInterface $eventHandler): void
+    {
+        $this->blueprint->loadBeforeEvent($eventHandler);
+    }
+
+    /**
+     * Loads a custom after event handler object which will be executed after validation
+     */
+    public function loadAfterEvent(AfterEventInterface $eventHandler): void
+    {
+        $this->blueprint->loadAfterEvent($eventHandler);
     }
 
     /**
@@ -96,9 +147,29 @@ class Validator
     }
 
     /**
+     * Adds new before event handler to the collection
+     */
+    public function before(Closure ...$eventHandlers): void
+    {
+        foreach ($eventHandlers as $blueprint) {
+            $this->blueprint->getBeforeEventHandlers()->append($blueprint);
+        }
+    }
+
+    /**
+     * Adds new after event handler to the collection
+     */
+    public function after(Closure ...$eventHandlers): void
+    {
+        foreach ($eventHandlers as $blueprint) {
+            $this->blueprint->getAfterEventHandlers()->append($blueprint);
+        }
+    }
+
+    /**
      * Creates a new rule with a user defined callback which will be validated calling the provided rule name
      */
-    public function custom(string $ruleName, callable $callback): Custom
+    public function custom(string $ruleName, Closure $callback): Custom
     {
         return $this->blueprint->custom($ruleName, $callback);
     }
@@ -150,6 +221,16 @@ class Validator
     }
 
     /**
+     * Filters values based on a field name and provided validation rules
+     * Use FILTER_MODE_PASSED to only include values that pass the validation rules
+     * Use FILTER_MODE_FAILED to only include values that fail the validation rules
+     */
+    public function filter(string|int|float $fieldName, int $filterMode = FieldFilter::FILTER_MODE_PASSED): FieldFilter
+    {
+        return new FieldFilter($this->validationData, $fieldName, $filterMode);
+    }
+
+    /**
      * Executes all the given validation rules for all given fields and returns if validation passes or not
      * @throws ValidatorException
      */
@@ -162,6 +243,71 @@ class Validator
 
         $this->isValidated = true;
 
+        $this->fillDefaultValues();
+
+        $this->blueprintParser->populate();
+
+        $this->executeBeforeEvents();
+        $this->executeRules();
+        $this->executeAfterEvents();
+
+        return $this->isValid;
+    }
+
+    /**
+     * Executes all the before events
+     */
+    private function executeBeforeEvents(): void
+    {
+        $beforeEvent = new BeforeEvent($this->validationData, $this->storage);
+
+        /** @var Closure $before */
+        foreach ($this->blueprintParser->getBeforeEventCollection() as $before) {
+            $before($beforeEvent);
+        }
+    }
+
+    /**
+     * Executes all the after events
+     */
+    private function executeAfterEvents(): void
+    {
+        $afterEvent = new AfterEvent($this, $this->validationData);
+
+        /** @var Closure $after */
+        foreach ($this->blueprintParser->getAfterEventCollection() as $after) {
+            $after($afterEvent);
+        }
+    }
+
+    /**
+     * Populates the default values within the validation data
+     */
+    public function fillDefaultValues(): void
+    {
+        foreach ($this->blueprintParser->getDefaultValueCollection() as $defaultValue) {
+            $paths = $this->validationData->path($defaultValue->getFieldName());
+
+            foreach ($paths as $path) {
+                if (false === $this->isEmpty($path->getValue())) {
+                    continue;
+                }
+
+                $this->validationData->set($path->getIdentifier(), $defaultValue->getValue());
+            }
+
+            if (0 === count($paths)) {
+                $this->validationData->add($defaultValue->getFieldName(), $defaultValue->getValue());
+            }
+        }
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    private function executeRules(): void
+    {
+        //Execute validation rules
         $this->blueprintParser->getFieldCollection()->each(function (Field $field) {
 
             $this->executeMiddleware($field);
@@ -181,6 +327,8 @@ class Validator
 
                     $rule->setValidationData($this->validationData);
                     $rule->setField($field);
+                    $rule->setStorage($this->storage);
+                    $rule->setBlueprint($this->blueprint);
 
                     //Check if the rule is valid or not
                     if (true === $this->executeRule($rule)) {
@@ -200,8 +348,6 @@ class Validator
                 });
             });
         });
-
-        return $this->isValid;
     }
 
     /**
@@ -231,7 +377,7 @@ class Validator
     private function executeMiddleware(Field $field): void
     {
         foreach ($field->getMiddleware() as $middleware) {
-            $middleware->invoke()->handle(new MiddlewareField($field));
+            $middleware?->invoke()->handle(new MiddlewareField($field));
         }
     }
 
@@ -264,7 +410,7 @@ class Validator
             $rule->setMessage($message->getMessage());
         }
 
-        $messageCollection->getFieldCollection()->each(function ($rules, $identifier) use ($rule) {
+        $messageCollection->getFieldCollection()->each(function (array $rules, string $identifier) use ($rule) {
 
             $errorMessage = $rules[$rule->getName()] ?? null;
 

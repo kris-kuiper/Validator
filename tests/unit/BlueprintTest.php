@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace tests\unit;
 
 use KrisKuiper\Validator\Blueprint\Blueprint;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Validator;
 use PHPUnit\Framework\TestCase;
@@ -77,7 +77,7 @@ final class BlueprintTest extends TestCase
     {
         $blueprint = new Blueprint();
         $blueprint->combine('year', 'month', 'day')->glue('-')->alias('date');
-        $blueprint->field('date')->isDate();
+        $blueprint->field('date')->date();
 
         $validator = new Validator(['day' => '01', 'month' => '01', 'year' => '2000']);
         $validator->loadBlueprint($blueprint);
@@ -92,7 +92,7 @@ final class BlueprintTest extends TestCase
     {
         $blueprint = new Blueprint();
         $blueprint->combine('year', 'month', 'day')->glue('-')->alias('date');
-        $blueprint->field('date')->isDate();
+        $blueprint->field('date')->date();
 
         $validator = new Validator(['day' => 'a', 'month' => 'b', 'year' => 'c']);
         $validator->loadBlueprint($blueprint);
@@ -109,7 +109,7 @@ final class BlueprintTest extends TestCase
         $blueprint->combine('year', 'month', 'day')->glue('-')->alias('date');
 
         $validator = new Validator(['day' => '01', 'month' => '01', 'year' => '2000']);
-        $validator->field('date')->isDate();
+        $validator->field('date')->date();
         $validator->loadBlueprint($blueprint);
 
         $this->assertTrue($validator->execute());
@@ -192,14 +192,14 @@ final class BlueprintTest extends TestCase
     public function testIfValidationFailsWhenBlueprintCustomRuleIsProvided(): void
     {
         $blueprint = new Blueprint();
-        $blueprint->custom('length', function (Current $current) {
+        $blueprint->custom('length', function (Event $event) {
 
-            $this->assertSame('length', $current->getRuleName());
-            $this->assertSame('foo', $current->getFieldName());
-            $this->assertSame('foobar', $current->getValue());
-            $this->assertSame(5, $current->getParameter('characters'));
-            $this->assertSame(['characters' => 5], $current->getParameters());
-            $this->assertSame(['foo' => 'foobar'], $current->getValidationData());
+            $this->assertSame('length', $event->getRuleName());
+            $this->assertSame('foo', $event->getFieldName());
+            $this->assertSame('foobar', $event->getValue());
+            $this->assertSame(5, $event->getParameter('characters'));
+            $this->assertSame(['characters' => 5], $event->getParameters());
+            $this->assertSame(['foo' => 'foobar'], $event->getValidationData());
 
             return false;
         });
@@ -218,8 +218,8 @@ final class BlueprintTest extends TestCase
     public function testIfValidationFailsWhenBlueprintCustomRuleIsProvidedAndFieldIsDefinedInTheValidator(): void
     {
         $blueprint = new Blueprint();
-        $blueprint->custom('length', function (Current $current) {
-            return strlen($current->getValue()) === $current->getParameter('characters');
+        $blueprint->custom('length', function (Event $event) {
+            return strlen($event->getValue()) === $event->getParameter('characters');
         });
 
         $validator = new Validator(['foo' => 'foobar']);
@@ -235,8 +235,8 @@ final class BlueprintTest extends TestCase
     public function testIfCorrectErrorMessageIsReturnedWhileUsingBlueprint(): void
     {
         $blueprint = new Blueprint();
-        $blueprint->custom('length', function (Current $current) {
-            return strlen($current->getValue()) === $current->getParameter('characters');
+        $blueprint->custom('length', function (Event $event) {
+            return strlen($event->getValue()) === $event->getParameter('characters');
         });
         $blueprint->messages('foo')->custom('length', 'Length must be :characters characters long');
 
@@ -255,7 +255,7 @@ final class BlueprintTest extends TestCase
     {
         $blueprint = new Blueprint();
         $blueprint->combine('year', 'month', 'day')->glue('-')->alias('date');
-        $blueprint->field('date')->isDate('Y/m/d');
+        $blueprint->field('date')->date('Y/m/d');
 
         $validator = new Validator(['year' => '1952', 'month' => '03', 'day' => '28']);
         $validator->loadBlueprint($blueprint);
@@ -270,15 +270,15 @@ final class BlueprintTest extends TestCase
     public function testIfCustomCanBeOverwrittenWhenProvidedDuplicateRuleName(): void
     {
         $blueprint = new Blueprint();
-        $blueprint->custom('length', function (Current $current) {
-            return $current->getValue() < 10;
+        $blueprint->custom('length', function (Event $event) {
+            return $event->getValue() < 10;
         });
         $blueprint->field('foo')->custom('length');
 
         $validator = new Validator(['foo' => 5]);
         $validator->loadBlueprint($blueprint);
-        $validator->custom('length', function (Current $current) {
-            return $current->getValue() < 5;
+        $validator->custom('length', function (Event $event) {
+            return $event->getValue() < 5;
         });
 
         $this->assertFalse($validator->execute());
@@ -314,5 +314,37 @@ final class BlueprintTest extends TestCase
 
         $this->assertTrue($validator->execute());
         $this->assertSame(['foo' => 'A'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenUsingAliasAndFieldInBlueprint(): void
+    {
+        $blueprint = new Blueprint();
+        $blueprint->alias('foo', 'bar');
+        $blueprint->field('bar')->equals('A');
+
+        $validator = new Validator(['foo' => 'A']);
+        $validator->loadBlueprint($blueprint);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bar' => 'A'], $validator->validatedData()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenUsingAliasInBlueprintAndFieldInValidator(): void
+    {
+        $blueprint = new Blueprint();
+        $blueprint->alias('foo', 'bar');
+
+        $validator = new Validator(['foo' => 'A']);
+        $validator->field('bar')->equals('A');
+        $validator->loadBlueprint($blueprint);
+
+        $this->assertTrue($validator->execute());
+        $this->assertSame(['bar' => 'A'], $validator->validatedData()->toArray());
     }
 }

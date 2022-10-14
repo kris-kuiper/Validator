@@ -83,8 +83,8 @@ final class AcceptedNotEmptyTest extends TestCase
     {
         $validator = new Validator(['foo' => '']);
         $validator->field('foo')->acceptedNotEmpty('bar');
-        $validator->messages('foo')->acceptedNotEmpty('Message acceptedNotEmpty');
+        $validator->messages('foo')->acceptedNotEmpty('Message accepted not empty');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message acceptedNotEmpty', $validator->errors()->first('foo')->getMessage());
+        $this->assertSame('Message accepted not empty', $validator->errors()->first('foo')->getMessage());
     }
 }

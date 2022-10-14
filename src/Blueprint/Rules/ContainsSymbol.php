@@ -13,7 +13,16 @@ class ContainsSymbol extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Requires at least one symbol';
+    protected string|int|float $message = 'Requires at least :symbolsCount symbol(s)';
+
+    /**
+     * Constructor
+     */
+    public function __construct(private int $minimumSymbolsCount = 1)
+    {
+        parent::__construct();
+        $this->setParameter('symbolsCount', $minimumSymbolsCount);
+    }
 
     /**
      * @inheritdoc
@@ -35,6 +44,7 @@ class ContainsSymbol extends AbstractRule
             return false;
         }
 
-        return true === (bool) preg_match('/[\W_]+/', preg_replace('/\s+/', '', (string) $value));
+        preg_match_all('/([\W_]+)/', preg_replace('/\s+/', '', $value), $matches);
+        return count($matches[0] ?? []) >= $this->minimumSymbolsCount;
     }
 }

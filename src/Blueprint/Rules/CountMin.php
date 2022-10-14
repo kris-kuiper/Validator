@@ -14,15 +14,15 @@ class CountMin extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Minimum of :amount item(s)';
+    protected string|int|float $message = 'Minimum of :amount item(s)';
 
     /**
      * Constructor
      */
-    public function __construct(int $amount)
+    public function __construct(private int $amount)
     {
-        $this->setParameter('amount', $amount);
         parent::__construct();
+        $this->setParameter('amount', $amount);
     }
 
     /**
@@ -40,12 +40,11 @@ class CountMin extends AbstractRule
     public function isValid(): bool
     {
         $value = $this->getValue();
-        $amount = $this->getParameter('amount');
 
         if (false === is_array($value) && false === $value instanceof Countable) {
             return false;
         }
 
-        return count($value) >= $amount;
+        return count($value) >= $this->amount;
     }
 }

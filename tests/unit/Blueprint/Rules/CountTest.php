@@ -53,6 +53,6 @@ final class CountTest extends TestCase
         $validator->field('field')->count(2);
         $validator->messages('field')->count('Message count');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message count', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message count', $validator->errors()->first('field')?->getMessage());
     }
 }

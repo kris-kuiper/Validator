@@ -15,7 +15,7 @@ final class LengthTest extends TestCase
      */
     public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
-        foreach (['12345', 12345] as $data) {
+        foreach (['12345', 'foo b', 12345, '12,34', '12.34', 12.34] as $data) {
             $validator = new Validator(['field' => $data]);
             $validator->field('field')->length(5);
             $this->assertTrue($validator->execute());
@@ -27,7 +27,7 @@ final class LengthTest extends TestCase
      */
     public function testIfValidationFailsWhenInValidValuesAreProvided(): void
     {
-        foreach ([null, (object) [], [], 'abcdef', true] as $data) {
+        foreach ([null, (object) [], [], 'abcdef', true, 12.345, 12.3] as $data) {
             $validator = new Validator(['field' => $data]);
             $validator->field('field')->length(5);
             $this->assertFalse($validator->execute());
@@ -54,6 +54,6 @@ final class LengthTest extends TestCase
         $validator->messages('field')->length('Message length');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message length', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message length', $validator->errors()->first('field')?->getMessage());
     }
 }

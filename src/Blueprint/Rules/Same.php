@@ -13,7 +13,7 @@ class Same extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value should be the same as :fieldName';
+    protected string|int|float $message = 'Value should be the same as :fieldName';
 
     /**
      * Constructor
@@ -46,7 +46,7 @@ class Same extends AbstractRule
             $paths = $this->getPaths($fieldName);
 
             foreach ($paths as $path) {
-                if ($value !== $path->getValue()) {
+                if (null !== $path && $value !== $path->getValue()) {
                     return false;
                 }
             }

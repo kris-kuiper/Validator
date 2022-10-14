@@ -13,7 +13,7 @@ class IsString extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be of the type string';
+    protected string|int|float $message = 'Value should be of the type string';
 
     /**
      * @inheritdoc

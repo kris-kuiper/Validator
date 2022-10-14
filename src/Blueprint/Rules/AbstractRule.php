@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
+use KrisKuiper\Validator\Blueprint\Blueprint;
+use KrisKuiper\Validator\Blueprint\MessageList;
+use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Collections\PathCollection;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Fields\Field;
@@ -19,7 +22,7 @@ abstract class AbstractRule
     /**
      * Contains the error message
      */
-    protected string $message;
+    protected string|int|float $message = '';
 
     /**
      * Contains all the parameters that the rule needs to validate the value
@@ -37,11 +40,53 @@ abstract class AbstractRule
     private ?Field $field = null;
 
     /**
+     * Contains a storage object for arbitrary data
+     */
+    private Storage $storage;
+
+
+    private Blueprint $blueprint;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->validationData = new PathTranslator();
+        $this->storage = new Storage();
+        $this->blueprint = new Blueprint();
+    }
+
+    /**
+     * Sets a storage object for storing/retrieving arbitrary data
+     */
+    public function setStorage(Storage $storage): void
+    {
+        $this->storage = $storage;
+    }
+
+    /**
+     * Sets a storage object for storing/retrieving arbitrary data
+     */
+    public function setBlueprint(Blueprint $blueprint): void
+    {
+        $this->blueprint = $blueprint;
+    }
+
+    /**
+     * Sets custom error messages per rule and/or per field and rule
+     */
+    public function messages(string ...$fieldNames): MessageList
+    {
+        return $this->blueprint->messages(...$fieldNames);
+    }
+
+    /**
+     * Returns a storage object for storing/retrieving arbitrary data
+     */
+    public function getStorage(): Storage
+    {
+        return $this->storage;
     }
 
     /**
@@ -58,7 +103,7 @@ abstract class AbstractRule
      * Returns the value that needs to be validated
      * @throws ValidatorException
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->field?->getValue();
     }
@@ -66,7 +111,7 @@ abstract class AbstractRule
     /**
      * Sets a new parameter that can later be used to validate the value
      */
-    public function setParameter($parameterName, $value): void
+    public function setParameter(string|int $parameterName, mixed $value): void
     {
         $this->parameters[$parameterName] = $value;
     }
@@ -120,7 +165,7 @@ abstract class AbstractRule
     /**
      * Returns the error message with parsed parameters
      */
-    public function getParsedMessage(): ?string
+    public function getParsedMessage(): int|float|string
     {
         $message = $this->getRawMessage();
 
@@ -129,7 +174,7 @@ abstract class AbstractRule
                 $value = implode(', ', $value);
             }
 
-            $message = str_replace(':' . $name, (string) $value, $message);
+            $message = str_replace(':' . $name, (string) $value, (string) $message);
         }
 
         return $message;
@@ -138,7 +183,7 @@ abstract class AbstractRule
     /**
      * Returns the raw error message without parsed name variables
      */
-    public function getRawMessage(): ?string
+    public function getRawMessage(): string|float|int
     {
         return $this->message;
     }
@@ -146,7 +191,7 @@ abstract class AbstractRule
     /**
      * Sets the error message
      */
-    public function setMessage(string $message): void
+    public function setMessage(string|int|float $message): void
     {
         $this->message = $message;
     }

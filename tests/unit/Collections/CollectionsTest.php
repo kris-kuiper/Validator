@@ -6,7 +6,8 @@ namespace tests\unit\Collections;
 
 use KrisKuiper\Validator\Blueprint\Combine\Combine;
 use KrisKuiper\Validator\Blueprint\Custom\Custom;
-use KrisKuiper\Validator\Blueprint\Messages\Letters;
+use KrisKuiper\Validator\Blueprint\DefaultValue;
+use KrisKuiper\Validator\Blueprint\Messages\ContainsLetter;
 use KrisKuiper\Validator\Collections\CustomCollection;
 use KrisKuiper\Validator\Collections\CombineProxyCollection;
 use KrisKuiper\Validator\Collections\FieldCollection;
@@ -20,7 +21,7 @@ final class CollectionsTest extends TestCase
 {
     public function testIfCustomCollectionReturnsCorrectItemWhenUsingCurrentMethod(): void
     {
-        $item = new Custom('custom', static function() {
+        $item = new Custom('custom', static function () {
         });
 
         $collection = new CustomCollection($item);
@@ -29,28 +30,28 @@ final class CollectionsTest extends TestCase
 
     public function testIfRuleMessageCollectionReturnsCorrectItemWhenUsingCurrentMethod(): void
     {
-        $item = new Message(new Letters('message'));
+        $item = new Message(new ContainsLetter('message'));
         $collection = new RuleMessageCollection($item);
         $this->assertSame($item, $collection->current());
     }
 
     public function testIfCombineProxyCollectionReturnsCorrectItemWhenUsingCurrentMethod(): void
     {
-        $item = new CombineProxy(new Combine(), new FieldCollection());
+        $item = new CombineProxy(new Combine(), new FieldCollection(), new DefaultValue('', null));
         $collection = new CombineProxyCollection($item);
         $this->assertSame($item, $collection->current());
     }
 
     public function testIfFieldMessageCollectionReturnsCorrectItemWhenUsingCurrentMethod(): void
     {
-        $item = new Message(new Letters('message'));
+        $item = new Message(new ContainsLetter('message'));
         $collection = new FieldMessageCollection($item);
         $this->assertSame($item, $collection->current());
     }
 
     public function testIfCollectionReturnsCorrectDataWhenUsingToArrayMethod(): void
     {
-        $item = new Message(new Letters('message'));
+        $item = new Message(new ContainsLetter('message'));
         $collection = new RuleMessageCollection($item);
         $this->assertSame([$item], $collection->toArray());
     }

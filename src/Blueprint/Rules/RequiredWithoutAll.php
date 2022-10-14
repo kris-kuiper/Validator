@@ -51,7 +51,7 @@ class RequiredWithoutAll extends AbstractRequired
             }
 
             foreach ($paths as $path) {
-                if (true === $this->isEmpty($path->getValue())) {
+                if (null !== $path && true === $this->isEmpty($path->getValue())) {
                     $result[] = null;
                     continue;
                 }

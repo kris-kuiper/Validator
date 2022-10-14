@@ -145,7 +145,7 @@ final class PathTranslatorTest extends TestCase
         $data = ['foo' => 'bar'];
 
         $translator = new PathTranslator($data);
-        $this->assertSame($data, $translator->getData());
+        $this->assertSame($data, $translator->toArray());
     }
 
     public function testIfCorrectArrayIsReturnedWhenAddingNewKey(): void
@@ -155,7 +155,7 @@ final class PathTranslatorTest extends TestCase
         $translator = new PathTranslator($data);
         $translator->add('quez', 'bazz');
 
-        $this->assertSame(['foo' => 'bar', 'quez' => 'bazz'], $translator->getData());
+        $this->assertSame(['foo' => 'bar', 'quez' => 'bazz'], $translator->toArray());
     }
 
     public function testIfCorrectArrayIsReturnedWhenOverwritingKey(): void
@@ -165,7 +165,7 @@ final class PathTranslatorTest extends TestCase
         $translator = new PathTranslator($data);
         $translator->set('foo', 'bazz');
 
-        $this->assertSame(['foo' => 'bazz'], $translator->getData());
+        $this->assertSame(['foo' => 'bazz'], $translator->toArray());
     }
 
     public function testIfCorrectResultIsReturnedWhenCheckingIfStringKeyExists(): void
@@ -189,34 +189,34 @@ final class PathTranslatorTest extends TestCase
     {
         $data = [
             'foo' => 'bar',
-            'quez' =>'bazz'
+            'quez' => 'bazz'
         ];
 
         $translator = new PathTranslator($data);
         $translator->remove('foo');
 
-        $this->assertSame(['quez' => 'bazz'], $translator->getData());
+        $this->assertSame(['quez' => 'bazz'], $translator->toArray());
     }
 
     public function testIfCorrectDataIsReturnedWhenOverwritingData(): void
     {
         $data1 = ['foo' => 'bar'];
-        $data2 = ['quez' =>'bazz'];
+        $data2 = ['quez' => 'bazz'];
 
         $translator = new PathTranslator($data1);
         $translator->setData($data2);
 
-        $this->assertSame($data2, $translator->getData());
+        $this->assertSame($data2, $translator->toArray());
     }
 
     public function testIfCorrectArrayIsReturnedWhenAddingDataBasedOnString(): void
     {
         $data1 = [];
-        $data2 =['foo' => 'bar'];
+        $data2 = ['foo' => 'bar'];
 
         $translator = new PathTranslator($data1);
         $translator->set($data2);
 
-        $this->assertSame($data2, $translator->getData());
+        $this->assertSame($data2, $translator->toArray());
     }
 }

@@ -36,7 +36,7 @@ class Field implements MiddlewareFieldInterface
     /**
      * Returns the name of the field
      */
-    public function getFieldName(): string
+    public function getFieldName(): int|string
     {
         return $this->field->getFieldName();
     }

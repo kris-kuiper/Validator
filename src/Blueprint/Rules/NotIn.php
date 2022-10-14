@@ -13,7 +13,7 @@ class NotIn extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Invalid input';
+    protected string|int|float $message = 'Invalid input';
 
     /**
      * Constructor

@@ -7,11 +7,13 @@ namespace KrisKuiper\Validator\Blueprint\Rules;
 class Present extends AbstractRule
 {
     public const NAME = 'present';
-/**
+
+    /**
      * @inheritdoc
      */
-    protected string $message = 'Invalid input';
-/**
+    protected string|int|float $message = 'Invalid input';
+
+    /**
      * @inheritdoc
      */
     public function getName(): string
@@ -24,6 +26,7 @@ class Present extends AbstractRule
      */
     public function isValid(): bool
     {
-        return true === array_key_exists($this->getField()?->getFieldName(), $this->getValidationData()->getData());
+        $fieldName = $this->getField()?->getFieldName();
+        return true === array_key_exists($fieldName ?? '', $this->getValidationData()->toArray());
     }
 }

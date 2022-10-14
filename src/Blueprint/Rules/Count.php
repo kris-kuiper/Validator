@@ -14,12 +14,12 @@ class Count extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Must contain :amount item(s)';
+    protected string|int|float $message = 'Must contain :amount item(s)';
 
     /**
      * Constructor
      */
-    public function __construct(int $amount)
+    public function __construct(private int $amount)
     {
         parent::__construct();
         $this->setParameter('amount', $amount);
@@ -45,6 +45,6 @@ class Count extends AbstractRule
             return false;
         }
 
-        return count($value) === $this->getParameter('amount');
+        return count($value) === $this->amount;
     }
 }

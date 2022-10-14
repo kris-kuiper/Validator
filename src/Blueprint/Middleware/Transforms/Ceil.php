@@ -29,7 +29,7 @@ class Ceil extends AbstractMiddleware
                 $value = (string) ceil((int) $value);
             }
         } else {
-            $value = ceil($value);
+            $value = ceil((float) $value);
         }
 
         $field->setValue($value);

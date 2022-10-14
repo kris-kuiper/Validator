@@ -19,6 +19,6 @@ class ToUppercase extends AbstractMiddleware
             return;
         }
 
-        $field->setValue(strtoupper($value));
+        $field->setValue(mb_strtoupper($value));
     }
 }

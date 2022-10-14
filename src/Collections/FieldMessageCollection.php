@@ -31,7 +31,9 @@ class FieldMessageCollection extends AbstractCollection
     {
         $fieldName = $message->getFieldName();
 
-        $this->items[$fieldName] ??= [];
-        $this->items[$fieldName][$message->getRuleName()] = $message->getMessage();
+        if (null !== $fieldName) {
+            $this->items[$fieldName] ??= [];
+            $this->items[$fieldName][$message->getRuleName()] = $message->getMessage();
+        }
     }
 }

@@ -46,7 +46,7 @@ class RequiredWith extends AbstractRequired
             $paths = $this->getPaths($fieldName);
 
             foreach ($paths as $path) {
-                if (false === $this->isEmpty($path->getValue())) {
+                if (null !== $path && false === $this->isEmpty($path->getValue())) {
                     return false;
                 }
             }

@@ -13,12 +13,12 @@ class Max extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Must be less than or equal to :maximum';
+    protected string|int|float $message = 'Must be less than or equal to :maximum';
 
     /**
      * Constructor
      */
-    public function __construct(float $maximum)
+    public function __construct(private float $maximum)
     {
         parent::__construct();
         $this->setParameter('maximum', $maximum);
@@ -38,13 +38,12 @@ class Max extends AbstractRule
      */
     public function isValid(): bool
     {
-        $maximum = $this->getParameter('maximum');
         $value = $this->getValue();
 
         if (false === is_string($value) && false === is_numeric($value)) {
             return true;
         }
 
-        return (float) $value <= $maximum;
+        return (float) $value <= $this->maximum;
     }
 }

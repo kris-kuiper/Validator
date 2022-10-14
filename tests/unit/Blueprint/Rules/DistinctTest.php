@@ -25,6 +25,42 @@ final class DistinctTest extends TestCase
     /**
      * @throws ValidatorException
      */
+    public function testIfValidationFailsWhenDuplicateArrayValuesAreProvided(): void
+    {
+        $data = ['products' => [['id' => 10, 'title' => 'foo'], ['id' => 10, 'title' => 'foo']]];
+
+        $validator = new Validator($data);
+        $validator->field('products')->distinct();
+        $this->assertFalse($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenNonDuplicateArrayValuesAreProvided(): void
+    {
+        $data = ['products' => [['id' => 10, 'title' => 'foo'], ['id' => 10, 'title' => 'quez']]];
+
+        $validator = new Validator($data);
+        $validator->field('products')->distinct();
+        $this->assertTrue($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidationPassesWhenDifferentKeysAreProvided(): void
+    {
+        $data = ['products' => [['id' => 10, 'title' => 'foo'], ['id2' => 10, 'title' => 'foo']]];
+
+        $validator = new Validator($data);
+        $validator->field('products')->distinct();
+        $this->assertTrue($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
     public function testIfValidationFailsWhenInValidValuesAreProvided(): void
     {
         foreach ([[1, 1], ['a', 'a'], ['foo' => 'bar', 'quez' => 'bar']] as $data) {
@@ -54,6 +90,6 @@ final class DistinctTest extends TestCase
         $validator->messages('field')->distinct('Message distinct');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message distinct', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message distinct', $validator->errors()->first('field')?->getMessage());
     }
 }

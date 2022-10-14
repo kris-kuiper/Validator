@@ -14,12 +14,12 @@ class CountBetween extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Amount of items should be between :minimum and :maximum';
+    protected string|int|float $message = 'Amount of items should be between :minimum and :maximum';
 
     /**
      * Constructor
      */
-    public function __construct(int $minimum, int $maximum)
+    public function __construct(private int $minimum, private int $maximum)
     {
         parent::__construct();
         $this->setParameter('minimum', $minimum);
@@ -47,6 +47,6 @@ class CountBetween extends AbstractRule
         }
 
         $amount = count($value);
-        return $amount >= $this->getParameter('minimum') && $amount <= $this->getParameter('maximum');
+        return $amount >= $this->minimum && $amount <= $this->maximum;
     }
 }

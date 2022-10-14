@@ -13,12 +13,12 @@ class Length extends AbstractRule
     /**
      * @inheritdocs
      */
-    protected string $message = 'Value should be :characters characters long';
+    protected string|int|float $message = 'Value should be :characters characters long';
 
     /**
      * Constructor
      */
-    public function __construct(int $characters)
+    public function __construct(private int $characters)
     {
         parent::__construct();
         $this->setParameter('characters', $characters);
@@ -44,6 +44,6 @@ class Length extends AbstractRule
             return false;
         }
 
-        return strlen((string) $value) === $this->getParameter('characters');
+        return strlen((string) $value) === $this->characters;
     }
 }

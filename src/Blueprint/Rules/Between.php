@@ -13,12 +13,12 @@ class Between extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value must be between :minimum and :maximum';
+    protected string|int|float $message = 'Value must be between :minimum and :maximum';
 
     /**
      * Constructor
      */
-    public function __construct(float $minimum, float $maximum)
+    public function __construct(private float $minimum, private float $maximum)
     {
         parent::__construct();
         $this->setParameter('minimum', $minimum);
@@ -39,14 +39,12 @@ class Between extends AbstractRule
      */
     public function isValid(): bool
     {
-        $minimum = (float) $this->getParameter('minimum');
-        $maximum = (float) $this->getParameter('maximum');
         $value = $this->getValue();
 
         if (false === is_numeric($value)) {
             return false;
         }
 
-        return (float)$value >= $minimum && (float)$value <= $maximum;
+        return (float) $value >= $this->minimum && (float) $value <= $this->maximum;
     }
 }

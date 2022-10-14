@@ -13,7 +13,7 @@ class IsEmpty extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Field should be empty';
+    protected string|int|float $message = 'Field should be empty';
 
     /**
      * @inheritdoc
@@ -30,6 +30,7 @@ class IsEmpty extends AbstractRule
     public function isValid(): bool
     {
         $value = $this->getValue();
+
         return match (gettype($value)) {
             'array' => 0 === count($value),
             'string' => '' === $value,

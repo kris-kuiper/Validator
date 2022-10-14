@@ -5,23 +5,22 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Blueprint\Rules;
 
 use Closure;
-use KrisKuiper\Validator\Blueprint\Custom\Current;
-use KrisKuiper\Validator\Exceptions\ValidatorException;
+use KrisKuiper\Validator\Blueprint\Events\Event;
 
 class Conditional extends AbstractRule
 {
     /**
      * @inheritdoc
      */
-    protected string $message = 'Invalid value';
+    protected string|int|float $message = 'Invalid value';
 
     /**
      * Constructor
      */
-    public function __construct(Closure $callback)
+    public function __construct(private Closure $callback)
     {
-        $this->setParameter('callback', $callback);
         parent::__construct();
+        $this->setParameter('callback', $callback);
     }
 
     /**
@@ -34,12 +33,11 @@ class Conditional extends AbstractRule
 
     /**
      * @inheritdoc
-     * @throws ValidatorException
      */
     public function isValid(): bool
     {
-        $callback = $this->getParameter('callback');
-        $conditional = $callback(new Current($this, $this->getName()));
+        $callback = $this->callback;
+        $conditional = $callback(new Event($this, $this->getName(), $this->getStorage()));
 
         if (false === $conditional) {
             $this->getField()?->setBailed(true);

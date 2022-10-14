@@ -29,7 +29,7 @@ class Floor extends AbstractMiddleware
                 $value = (string) floor((int) $value);
             }
         } else {
-            $value = floor($value);
+            $value = floor((float) $value);
         }
 
         $field->setValue($value);

@@ -19,7 +19,7 @@ class ValidatorException extends Exception
     /**
      * Thrown when a provided parameters name does not exist in the parameter bag
      */
-    public static function parameterNotFound(string $parameterName): self
+    public static function parameterNotFound(string|int $parameterName): self
     {
         return new self(sprintf('Parameter "%s" does not exists.', $parameterName));
     }
@@ -27,7 +27,7 @@ class ValidatorException extends Exception
     /**
      * Thrown when a format for using combine objects does not exist
      */
-    public static function formatTypeNotFound(string $type, string $format): self
+    public static function formatTypeNotFound(string|int $type, string $format): self
     {
         return new self(sprintf('Format type "%s" not found in format "%s".', $type, $format));
     }
@@ -43,8 +43,8 @@ class ValidatorException extends Exception
     /**
      * Thrown when using a date format which is not a valid date
      */
-    public static function incorrectDateFormatUsed(string $date): self
+    public static function incorrectDateFormatUsed(string $date, string $format): self
     {
-        return new self(sprintf('Date "%s" is not a correct date format', $date));
+        return new self(sprintf('Date "%s" is not a correct date format in "%s" format', $date, $format));
     }
 }

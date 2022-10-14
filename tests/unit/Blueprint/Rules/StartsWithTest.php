@@ -78,6 +78,6 @@ final class StartsWithTest extends TestCase
         $validator->messages('field')->startsWith('Message starts with');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message starts with', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message starts with', $validator->errors()->first('field')?->getMessage());
     }
 }

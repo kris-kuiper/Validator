@@ -13,7 +13,14 @@ class ContainsMixedCase extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Requires at least one uppercase and one lowercase letter';
+    protected string|int|float $message = 'Requires at least :lowercaseCount uppercase and uppercaseCount: lowercase letter(s)';
+
+    public function __construct(private int $minimumLowercaseCount = 1, private int $minimumUppercaseCount = 1)
+    {
+        parent::__construct();
+        $this->setParameter('lowercaseCount', $this->minimumLowercaseCount);
+        $this->setParameter('uppercaseCount', $this->minimumUppercaseCount);
+    }
 
     /**
      * @inheritdoc
@@ -35,6 +42,9 @@ class ContainsMixedCase extends AbstractRule
             return false;
         }
 
-        return true === (bool) preg_match('/[a-z]/', $value) && true === (bool) preg_match('/[A-Z]/', $value);
+        preg_match_all('/([a-z])/', $value, $lowercaseCount);
+        preg_match_all('/([A-Z])/', $value, $uppercaseCount);
+
+        return count($lowercaseCount[0] ?? []) >= $this->minimumLowercaseCount && count($uppercaseCount[0] ?? []) >= $this->minimumUppercaseCount;
     }
 }

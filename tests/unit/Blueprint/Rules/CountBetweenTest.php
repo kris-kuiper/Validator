@@ -53,6 +53,6 @@ final class CountBetweenTest extends TestCase
         $validator->field('field')->countBetween(1, 3);
         $validator->messages('field')->countBetween('Message count between');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message count between', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message count between', $validator->errors()->first('field')?->getMessage());
     }
 }

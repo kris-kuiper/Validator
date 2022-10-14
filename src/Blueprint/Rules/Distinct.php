@@ -13,7 +13,7 @@ class Distinct extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'May not contain duplicate values';
+    protected string|int|float $message = 'May not contain duplicate values';
 
     /**
      * @inheritdoc
@@ -32,7 +32,7 @@ class Distinct extends AbstractRule
         $value = $this->getValue();
 
         if (true === is_array($value)) {
-            return count($value) === count(array_unique(array_values($value)));
+            return count($value) === count(array_unique(array_values($value), SORT_REGULAR));
         }
 
         return true;

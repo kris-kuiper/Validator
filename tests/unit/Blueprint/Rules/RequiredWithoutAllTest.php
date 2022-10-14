@@ -267,6 +267,6 @@ final class RequiredWithoutAllTest extends TestCase
         $validator->messages('field')->requiredWithoutAll('Message required without all');
 
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message required without all', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message required without all', $validator->errors()->first('field')?->getMessage());
     }
 }

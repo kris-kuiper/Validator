@@ -13,12 +13,12 @@ class Contains extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string $message = 'Value must contain ":value"';
+    protected string|int|float $message = 'Value must contain ":value"';
 
     /**
      * Constructor
      */
-    public function __construct(string|int|float $value, bool $caseSensitive = false)
+    public function __construct(private string|int|float $value, private bool $caseSensitive = false)
     {
         parent::__construct();
         $this->setParameter('value', $value);
@@ -40,13 +40,13 @@ class Contains extends AbstractRule
     public function isValid(): bool
     {
         $value = $this->getValue();
-        $contains = $this->getParameter('value');
+        $contains = $this->value;
 
         if (false === is_string($value) && false === is_numeric($value)) {
             return false;
         }
 
-        if (true === $this->getParameter('caseSensitive')) {
+        if (true === $this->caseSensitive) {
             return true === str_contains((string) $value, (string) $contains);
         }
 

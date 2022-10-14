@@ -44,6 +44,6 @@ final class IsArrayTest extends TestCase
         $validator->field('field')->isArray();
         $validator->messages('field')->isArray('Message is array');
         $this->assertFalse($validator->execute());
-        $this->assertSame('Message is array', $validator->errors()->first('field')->getMessage());
+        $this->assertSame('Message is array', $validator->errors()->first('field')?->getMessage());
     }
 }

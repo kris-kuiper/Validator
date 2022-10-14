@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator\Combine;
 
 use KrisKuiper\Validator\Blueprint\Combine\Combine;
+use KrisKuiper\Validator\Blueprint\DefaultValue;
+use KrisKuiper\Validator\Blueprint\Traits\EmptyTrait;
 use KrisKuiper\Validator\Collections\FieldCollection;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Fields\Field;
 
 class CombineProxy
 {
+    use EmptyTrait;
+
     /**
      * Contains a cached value of the combined fields
      */
@@ -19,7 +23,7 @@ class CombineProxy
     /**
      * Constructor
      */
-    public function __construct(private Combine $proxy, private FieldCollection $fieldCollection)
+    public function __construct(private Combine $proxy, private FieldCollection $fieldCollection, private ?DefaultValue $defaultValue)
     {
     }
 
@@ -35,7 +39,7 @@ class CombineProxy
      * Returns the value of the combined fields
      * @throws ValidatorException
      */
-    public function getValue(): string|array|null
+    public function getValue(): mixed
     {
         //Retrieve from cache for better performance
         if (null !== $this->value) {
@@ -45,10 +49,14 @@ class CombineProxy
         //Determine if the value should be created with the glue or format value
         if (null !== $this->proxy->getGlue()) {
             $this->value = $this->getValueFromGlue();
-            return $this->value;
+        } else {
+            $this->value = $this->getValueFromFormat();
         }
 
-        $this->value = $this->getValueFromFormat();
+        if (null !== $this->defaultValue && true === $this->isEmpty($this->value)) {
+            $this->value = $this->defaultValue->getValue();
+        }
+
         return $this->value;
     }
 
@@ -56,7 +64,7 @@ class CombineProxy
      * Combines the values with the glue and returns the output
      * @throws ValidatorException
      */
-    private function getValueFromGlue(): string
+    private function getValueFromGlue(): string|int|float
     {
         $values = [];
 
@@ -69,7 +77,24 @@ class CombineProxy
             }
         }
 
-        return implode($this->proxy->getGlue(), $values);
+        if (1 === count($values)) {
+            return $values[0];
+        }
+
+        $glue = $this->proxy->getGlue();
+        $value = implode($glue ?? '', $values);
+
+        if (true === is_numeric($value)) {
+            $count = count(array_filter($values, static function (mixed $item): bool {
+                return true === is_int($item);
+            }));
+
+            if (count($values) === $count) {
+                return (int) $value;
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -82,7 +107,7 @@ class CombineProxy
 
         /** @var Field $field */
         foreach ($this->fieldCollection as $field) {
-            $format = str_replace(':' . $field->getFieldName(), $field->getValue() ?? '', $format, $count);
+            $format = str_replace(':' . $field->getFieldName(), (string) ($field->getValue() ?? ''), $format, $count);
 
             if (0 === $count) {
                 throw ValidatorException::formatTypeNotFound($field->getFieldName(), $format);

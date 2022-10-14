@@ -8,6 +8,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Accepted,
     AcceptedIf,
     AcceptedNotEmpty,
+    ActiveURL,
     After,
     AfterOrEqual,
     Alpha,
@@ -133,6 +134,14 @@ trait MessageTrait
     public function acceptedNotEmpty(string|int|float $message): self
     {
         return $this->addMessage(new AcceptedNotEmpty($message));
+    }
+
+    /**
+     * Adds a new message for the activeURL rule
+     */
+    public function activeURL(string|int|float $message): self
+    {
+        return $this->addMessage(new ActiveURL($message));
     }
 
     /**

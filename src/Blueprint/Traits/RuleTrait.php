@@ -8,6 +8,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Accepted,
     AcceptedIf,
     AcceptedNotEmpty,
+    ActiveURL,
     After,
     AfterOrEqual,
     Alpha,
@@ -133,6 +134,14 @@ trait RuleTrait
     public function acceptedNotEmpty(string $fieldName, array $accepted = []): self
     {
         return $this->addRule(new AcceptedNotEmpty($fieldName, $accepted));
+    }
+
+    /**
+     * Checks if the data under validation is an active url (based on A or AAAA DNS records)
+     */
+    public function activeURL(): self
+    {
+        return $this->addRule(new ActiveURL());
     }
 
     /**

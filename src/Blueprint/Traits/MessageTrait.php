@@ -86,6 +86,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Prohibits,
     Regex,
     Required,
+    RequiredArrayKeys,
     RequiredWith,
     RequiredWithAll,
     RequiredWithout,
@@ -756,6 +757,14 @@ trait MessageTrait
     public function required(string|int|float $message): self
     {
         return $this->addMessage(new Required($message));
+    }
+
+    /**
+     * Adds a new message for the requiredArrayKeys rule
+     */
+    public function requiredArrayKeys(string|int|float $message): self
+    {
+        return $this->addMessage(new RequiredArrayKeys($message));
     }
 
     /**

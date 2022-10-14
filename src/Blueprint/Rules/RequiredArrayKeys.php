@@ -13,7 +13,7 @@ class RequiredArrayKeys extends AbstractRule
     /**
      * @inheritdoc
      */
-    protected string|int|float $message = 'Minimum of :amount item(s)';
+    protected string|int|float $message = 'Should contain the keys ":keys"';
 
     /**
      * Constructor
@@ -21,7 +21,8 @@ class RequiredArrayKeys extends AbstractRule
     public function __construct(string|int ...$keys)
     {
         parent::__construct();
-        $this->setParameter('keys', $keys);
+        $this->setParameter('key', $keys);
+        $this->setParameter('keys', implode(',', $keys));
     }
 
     /**
@@ -44,7 +45,7 @@ class RequiredArrayKeys extends AbstractRule
             return false;
         }
 
-        foreach ($this->getParameter('keys') as $key) {
+        foreach ($this->getParameter('key') as $key) {
             if (false === array_key_exists($key, $value)) {
                 return false;
             }

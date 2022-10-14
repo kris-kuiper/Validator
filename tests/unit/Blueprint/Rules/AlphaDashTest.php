@@ -38,6 +38,16 @@ final class AlphaDashTest extends TestCase
     /**
      * @throws ValidatorException
      */
+    public function testIfValidationFailsWhenNoValuesAreProvided(): void
+    {
+        $validator = new Validator();
+        $validator->field('field')->alphaDash();
+        $this->assertFalse($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
     public function testIfCorrectErrorMessageIsReturnedWhenCustomMessageIsSet(): void
     {
         $validator = new Validator(['field' => '']);

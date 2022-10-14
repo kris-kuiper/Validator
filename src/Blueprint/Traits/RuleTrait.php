@@ -13,6 +13,7 @@ use KrisKuiper\Validator\Blueprint\Rules\{
     Alpha,
     AlphaDash,
     AlphaNumeric,
+    AlphaSpace,
     Before,
     BeforeOrEqual,
     Between,
@@ -172,6 +173,14 @@ trait RuleTrait
     public function alphaNumeric(): self
     {
         return $this->addRule(new AlphaNumeric());
+    }
+
+    /**
+     * Checks if value only exists off letters and spaces
+     */
+    public function alphaSpace(): self
+    {
+        return $this->addRule(new AlphaSpace());
     }
 
     /**

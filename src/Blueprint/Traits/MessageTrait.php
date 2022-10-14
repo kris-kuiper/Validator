@@ -13,6 +13,7 @@ use KrisKuiper\Validator\Blueprint\Messages\{
     Alpha,
     AlphaDash,
     AlphaNumeric,
+    AlphaSpace,
     Before,
     BeforeOrEqual,
     Between,
@@ -170,6 +171,14 @@ trait MessageTrait
     public function alphaNumeric(string|int|float $message): self
     {
         return $this->addMessage(new AlphaNumeric($message));
+    }
+
+    /**
+     * Adds a new message for the alphaNumeric rule
+     */
+    public function alphaSpace(string|int|float $message): self
+    {
+        return $this->addMessage(new AlphaSpace($message));
     }
 
     /**

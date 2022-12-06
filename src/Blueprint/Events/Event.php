@@ -9,6 +9,7 @@ use KrisKuiper\Validator\Blueprint\Rules\AbstractRule;
 use KrisKuiper\Validator\FieldFilter;
 use KrisKuiper\Validator\Storage\Storage;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
+use KrisKuiper\Validator\Translator\Path;
 
 class Event
 {
@@ -69,6 +70,14 @@ class Event
     public function getFieldName(): string|int|float|null
     {
         return $this->rule->getField()?->getFieldName();
+    }
+
+    /**
+     * Returns the path of the field under validation
+     */
+    public function getFieldPath(): ?Path
+    {
+        return $this->rule->getField()?->getPath();
     }
 
     /**

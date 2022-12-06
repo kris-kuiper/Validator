@@ -277,4 +277,23 @@ final class CustomTest extends TestCase
         $validator->field('product')->custom('product');
         $this->assertTrue($validator->execute());
     }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfCorrectFieldNameAndPathIsReturnedWhenUsingCustomValidation(): void
+    {
+        $data = ['product' => [1]];
+
+        $validator = new Validator($data);
+        $validator->custom('product', function (Event $event) {
+
+            $this->assertSame('product.*', $event->getFieldName());
+            $this->assertSame('product.0', $event->getFieldPath()?->getIdentifier());
+            return true;
+        });
+
+        $validator->field('product.*')->custom('product');
+        $this->assertTrue($validator->execute());
+    }
 }

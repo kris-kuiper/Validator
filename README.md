@@ -27,6 +27,20 @@ Here are a couple of the many perks:
 Modern PHP Validator provides several approaches to validate your application's (incoming) data. It makes it a breeze to validate form submit values as combining multiple input for single validation. It supports middleware and custom validation rules and error messages. It will also return the validated data to insert the data into i.e. a database.
 
 
+## Installation
+
+Modern PHP Validator is available on Packagist (using semantic versioning). Installation via [Composer](https://getcomposer.org/) is the recommended way.
+
+Run:
+```shell script
+composer require kris-kuiper/validator
+```
+
+Or add this line to your composer.json file:
+```shell script
+"kris-kuiper/validator": "^1.5"
+```
+
 
 ## Documentation
 All documentation can be found in the [docs](/docs) folder.
@@ -88,22 +102,6 @@ All documentation can be found in the [docs](/docs) folder.
 
 
 
-
-## Installation
-
-Modern PHP Validator is available on Packagist (using semantic versioning). Installation via [Composer](https://getcomposer.org/) is the recommended way.
-
-Run:
-```shell script
-composer require kris-kuiper/validator
-```
-
-Or add this line to your composer.json file:
-```shell script
-"kris-kuiper/validator": "^1.5"
-```
-
-
 ## Validation rules
 Below is a list with all predefined validation rules.
 
@@ -140,6 +138,8 @@ Below is a list with all predefined validation rules.
 ## Head first example:
 
 ```php
+use KrisKuiper\Validator\Validator;
+
 $data = [
     'department' => 'office',
     'color' => 'black',

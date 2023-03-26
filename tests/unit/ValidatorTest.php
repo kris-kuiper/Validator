@@ -74,6 +74,22 @@ final class ValidatorTest extends TestCase
     /**
      * @throws ValidatorException
      */
+    public function testFoo(): void
+    {
+        $data = ['foo' => 'bar'];
+
+        $validator = new Validator($data);
+        $validator->alias('foo', 'quez');
+        $validator->field('quez')->lengthMin(10);
+
+        $this->assertFalse($validator->execute());
+
+        var_dump($validator->errors()->current()->getFieldName());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
     public function testIfCorrectFieldNameIsReturnedWhenUsingMiddleware(): void
     {
         $validator = new Validator(['foo' => 'bar']);

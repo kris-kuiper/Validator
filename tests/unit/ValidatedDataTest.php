@@ -361,4 +361,101 @@ final class ValidatedDataTest extends TestCase
 
         $this->assertSame(['foo' => ['', null , [], 'bar', ' ']], $validator->validatedData()->filter(ValidatedData::FILTER_EMPTY, false)->toArray());
     }
+
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testTemplate(): void
+    {
+        $data = [
+            'foo' => 'bar',
+            'quez' => [
+                'first' => '1',
+                'second' => [
+                    'a' => '1',
+                    'b' => '2',
+                    'c' => '3'
+                ],
+                'third' => '3',
+                'fourth' => '4'
+            ],
+            'bar' => 'baz'
+        ];
+
+        $validator = new Validator($data);
+        $validator->field('foo', 'bar')->isString();
+        $validator->field('quez')->isArray();
+
+        $this->assertTrue($validator->execute());
+
+        $output = $validator->validatedData()->template([
+            'foo',
+            'quez' => [
+                'first',
+                'second' => [
+                    'b'
+                ],
+                'fourth'
+            ]
+        ])->toArray();
+
+        $this->assertSame([
+            'foo' => 'bar',
+            'quez' => [
+                'first' => '1',
+                'second' => [
+                    'b' => '2',
+                ],
+                'fourth' => '4'
+            ]
+        ], $output);
+    }
+
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testTemplate2(): void
+    {
+        $data = [
+            'foo' => [
+                'a' => '1',
+                'b' => '2',
+                'c' => '3'
+            ]
+        ];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->isArray();
+
+        $this->assertTrue($validator->execute());
+
+        $output = $validator->validatedData()->template(['foo'])->toArray();
+
+        $this->assertSame([
+            'foo' => [
+                'a' => '1',
+                'b' => '2',
+                'c' => '3'
+            ]
+        ], $output);
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testTemplate3(): void
+    {
+        $data = ['foo' => 'bar'];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->isString();
+
+        $this->assertTrue($validator->execute());
+
+        $output = $validator->validatedData()->template(['foo' => ['a', 'b']])->toArray();
+
+        $this->assertSame([], $output);
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator;
 
 use JsonException;
+use KrisKuiper\Validator\Helpers\ConvertEmpty;
 use KrisKuiper\Validator\Translator\Path;
 use KrisKuiper\Validator\Translator\PathTranslator;
 
@@ -21,6 +22,8 @@ class ValidatedData
     private int $filter = 0;
     private bool $filterRecursive = true;
     private ?string $pluck = null;
+    private ?ConvertEmpty $convert = null;
+    private array $template = [];
 
     /**
      * Excludes (blacklist) all given field names in the result set
@@ -65,6 +68,20 @@ class ValidatedData
         return $instance;
     }
 
+    public function convertEmpty(mixed $convertTo = null, int $convert = ConvertEmpty::CONVERT_EMPTY, bool $recursive = true): self
+    {
+        $instance = clone $this;
+        $instance->convert = new ConvertEmpty($convertTo, $convert, $recursive);
+        return $instance;
+    }
+
+    public function template(array $template): self
+    {
+        $instance = clone $this;
+        $instance->template = $template;
+        return $instance;
+    }
+
     /**
      * Returns an JSON string with the validated data
      * @throws JsonException
@@ -83,6 +100,8 @@ class ValidatedData
         $output = $this->filterNotItems($output);
         $output = $this->filterOnlyItems($output);
         $output = $this->filterEmpty($output);
+        $output = $this->executeConvertEmpty($output);
+        $output = $this->filterTemplate($output);
         return $this->pluckItems($output);
     }
 
@@ -176,12 +195,56 @@ class ValidatedData
         return $only;
     }
 
+    private function filterTemplate(array $output): array
+    {
+        if ([] === $this->template) {
+            return $output;
+        }
+
+        return $this->filterTemplate2($this->template, $output);
+    }
+
+
+    private function filterTemplate2(array $input, array $output): array
+    {
+        $data = [];
+
+        foreach ($input as $key => $value) {
+            if (true === is_array($value)) {
+                if (false === array_key_exists($key, $output) || false === is_array($output[$key])) {
+                    continue;
+                }
+
+                $data[$key] = $this->filterTemplate2($value, $output[$key]);
+            } else {
+                if (false === array_key_exists($value, $output)) {
+                    continue;
+                }
+
+                $data[$value] = $output[$value];
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Converts empty values i.e. empty arrays, strings or NULL values
+     */
+    private function executeConvertEmpty(array $output): array
+    {
+        if (null === $this->convert) {
+            return $output;
+        }
+
+        return $this->convert->convert($output);
+    }
+
     /**
      * Filters empty values i.e. empty arrays, strings or NULL values
      */
     private function filterEmpty(array $output): array
     {
-
         if (0 === $this->filter) {
             return $output;
         }

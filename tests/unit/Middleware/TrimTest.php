@@ -7,6 +7,7 @@ namespace tests\unit\Middleware;
 use KrisKuiper\Validator\Validator;
 use KrisKuiper\Validator\Exceptions\ValidatorException;
 use PHPUnit\Framework\TestCase;
+use tests\unit\assets\ConvertEmptyStringsMiddleware;
 
 final class TrimTest extends TestCase
 {
@@ -48,6 +49,20 @@ final class TrimTest extends TestCase
         $validator = new Validator($data);
         $validator->middleware('field')->trim('-_');
         $validator->field('field')->equals('foo', true);
+
+        $this->assertTrue($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testShouldPassWhenTrimmingNull(): void
+    {
+        $data = ['field' => ''];
+
+        $validator = new Validator($data);
+        $validator->middleware('field')->load(new ConvertEmptyStringsMiddleware())->trim();
+        $validator->field('field')->equals(null, true);
 
         $this->assertTrue($validator->execute());
     }

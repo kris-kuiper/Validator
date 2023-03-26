@@ -47,4 +47,12 @@ class ValidatorException extends Exception
     {
         return new self(sprintf('Date "%s" is not a correct date format in "%s" format', $date, $format));
     }
+
+    /**
+     * Thrown when using an incorrect convert mode
+     */
+    public static function incorrectConvertMode(int $mode): self
+    {
+        return new self(sprintf('Mode "%d" is not a correct convert mode', $mode));
+    }
 }

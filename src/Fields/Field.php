@@ -53,6 +53,12 @@ class Field
      */
     public function getFieldName(): int|string
     {
+        $t = $this->combineProxyCollection->getByAlias($this->fieldName)?->getProxy()->getFieldNames() ?? [];
+
+        if (1 === count($t)) {
+            return $t[0];
+        }
+
         return $this->fieldName;
     }
 

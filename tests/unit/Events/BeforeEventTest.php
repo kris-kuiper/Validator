@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tests\unit;
+namespace tests\unit\Events;
 
 use KrisKuiper\Validator\Blueprint\Blueprint;
 use KrisKuiper\Validator\Blueprint\Events\BeforeEvent;

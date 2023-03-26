@@ -13,7 +13,7 @@ class ConvertEmptyStringsMiddleware extends AbstractMiddleware
     {
         $value = $field->getValue();
 
-        if('' !== $value){
+        if ('' !== $value) {
             return;
         }
 

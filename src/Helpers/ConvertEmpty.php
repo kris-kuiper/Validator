@@ -44,27 +44,50 @@ class ConvertEmpty
     }
 
     /**
-     * Converts empty string, array's and null values to a provided value
+     * Searches for empty data that needs to be converted to a new value
      */
-    public function convert(array $data): array
+    public function convert(mixed $data): mixed
     {
+        if (false === is_array($data)) {
+            return $this->convertEmpty($data);
+        }
+
         foreach ($data as $key => $value) {
-            //Check if converting should be executed recursively if value is an array
-            if (true === is_array($value) && true === $this->recursive) {
+            // Check if converting should be executed recursively if value is an array
+            if (true === $this->recursive && true === is_array($value)) {
                 foreach ($value as $k => $v) {
                     $data[$key][$k] = $this->convert($v);
                 }
+
+                $value = $data[$key];
             }
 
-            if (self::CONVERT_EMPTY_STRING & $this->mode && '' === $value) { //Check for empty string
-                $data[$key] = $this->convertTo;
-            } elseif (self::CONVERT_NULL & $this->mode && null === $value) { //Check if value is null
-                $data[$key] = $this->convertTo;
-            } elseif (self::CONVERT_EMPTY_ARRAY & $this->mode && true === is_countable($value) && 0 === count($value)) { //Check if empty countable i.e. array
-                $data[$key] = $this->convertTo;
-            }
+            $data[$key] = $this->convertEmpty($value);
         }
 
-        return $data;
+        return $this->convertEmpty($data);
+    }
+
+    /**
+     * Converts empty string, array's and null values to a predefined value
+     */
+    private function convertEmpty(mixed $value): mixed
+    {
+        // Check for empty string
+        if (self::CONVERT_EMPTY_STRING & $this->mode && '' === $value) {
+            return $this->convertTo;
+        }
+
+        // Check if value is null
+        if (self::CONVERT_NULL & $this->mode && null === $value) {
+            return $this->convertTo;
+        }
+
+        // Check if empty countable i.e. array
+        if (self::CONVERT_EMPTY_ARRAY & $this->mode && true === is_countable($value) && 0 === count($value)) {
+            return $this->convertTo;
+        }
+
+        return $value;
     }
 }

@@ -15,8 +15,7 @@ final class ConfirmedTest extends TestCase
      */
     public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
-        foreach([['foo' => '', 'foo_confirmed' => ''], ['foo' => '', 'foo_confirmed' => null], ['foo' => '', 'foo_confirmed' => []]] as $data) {
-
+        foreach ([['foo' => '', 'foo_confirmed' => ''], ['foo' => '', 'foo_confirmed' => null], ['foo' => '', 'foo_confirmed' => []]] as $data) {
             $validator = new Validator($data);
             $validator->field('foo')->confirmed();
             $this->assertTrue($validator->execute());
@@ -28,8 +27,7 @@ final class ConfirmedTest extends TestCase
      */
     public function testIfValidationFailsWhenInValidValuesAreProvided(): void
     {
-        foreach([['foo' => '', 'foo_confirmed2' => ''], ['foo' => '', 'fooconfirmed' => ''], ['foo' => '', 'foo-confirmed' => ''], ['foo' => '']] as $data) {
-
+        foreach ([['foo' => '', 'foo_confirmed2' => ''], ['foo' => '', 'fooconfirmed' => ''], ['foo' => '', 'foo-confirmed' => ''], ['foo' => '']] as $data) {
             $validator = new Validator($data);
             $validator->field('foo')->confirmed();
             $this->assertFalse($validator->execute());

@@ -366,6 +366,24 @@ final class ValidatedDataTest extends TestCase
     /**
      * @throws ValidatorException
      */
+    public function testFoo(): void
+    {
+        $data = [
+            'foo' => ['', null, [], 'bar']
+        ];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->required(false);
+        $validator->execute();
+
+
+        $this->assertSame(['foo' => [null, null, null, 'bar']], $validator->validatedData()->convertEmpty()->toArray());
+    }
+
+
+    /**
+     * @throws ValidatorException
+     */
     public function testTemplate(): void
     {
         $data = [

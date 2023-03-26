@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator;
 
 use JsonException;
+use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Helpers\ConvertEmpty;
 use KrisKuiper\Validator\Translator\Path;
 use KrisKuiper\Validator\Translator\PathTranslator;
@@ -68,6 +69,9 @@ class ValidatedData
         return $instance;
     }
 
+    /**
+     * @throws ValidatorException
+     */
     public function convertEmpty(mixed $convertTo = null, int $convert = ConvertEmpty::CONVERT_EMPTY, bool $recursive = true): self
     {
         $instance = clone $this;
@@ -75,6 +79,9 @@ class ValidatedData
         return $instance;
     }
 
+    /**
+     *
+     */
     public function template(array $template): self
     {
         $instance = clone $this;

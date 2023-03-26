@@ -8,7 +8,6 @@ use KrisKuiper\Validator\Exceptions\ValidatorException;
 use KrisKuiper\Validator\Helpers\ConvertEmpty;
 use PHPUnit\Framework\TestCase;
 
-
 final class ConvertEmptyTest extends TestCase
 {
     public function testShouldConvertEmptyStringWhenUsingNoParameters(): void
@@ -87,6 +86,12 @@ final class ConvertEmptyTest extends TestCase
     {
         $convertEmpty = new ConvertEmpty(recursive: false);
         $this->assertSame(['foo' => ['bar' => ['quez' => '']]], $convertEmpty->convert(['foo' => ['bar' => ['quez' => '']]]));
+    }
+
+    public function testBar(): void
+    {
+        $convertEmpty = new ConvertEmpty();
+        $this->assertSame([null, null, null, 'baz'], $convertEmpty->convert(['', null, [], 'baz']));
     }
 
     /**

@@ -15,8 +15,7 @@ final class ProhibitedIfTest extends TestCase
      */
     public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
-        foreach([null, '', []] as $data) {
-
+        foreach ([null, '', []] as $data) {
             $validator = new Validator(['field1' => $data, 'field2' => 'foo']);
             $validator->field('field1')->prohibitedIf('field2');
             $this->assertTrue($validator->execute());
@@ -28,8 +27,7 @@ final class ProhibitedIfTest extends TestCase
      */
     public function testIfValidationPassesWhenUsingMultipleOtherFields(): void
     {
-        foreach([null, '', []] as $data) {
-
+        foreach ([null, '', []] as $data) {
             $validator = new Validator(['field1' => $data, 'field2' => 'foo', 'field3' => 'foo']);
             $validator->field('field1')->prohibitedIf('field2', 'field3');
             $this->assertTrue($validator->execute());
@@ -41,8 +39,7 @@ final class ProhibitedIfTest extends TestCase
      */
     public function testIfValidationFailsWhenInValidValuesAreProvided(): void
     {
-        foreach([(object) [], 2552, true, false, '2817334', -25, 5.52, ' ', '20,20'] as $data) {
-
+        foreach ([(object) [], 2552, true, false, '2817334', -25, 5.52, ' ', '20,20'] as $data) {
             $validator = new Validator(['field1' => $data, 'field2' => 'foo']);
             $validator->field('field1')->prohibitedIf('field2');
             $this->assertFalse($validator->execute());
@@ -74,8 +71,7 @@ final class ProhibitedIfTest extends TestCase
      */
     public function testIfValidationPassesWhenOtherFieldIsNotProvided(): void
     {
-        foreach([(object) [], 2552, true, false, '2817334', -25, 5.52, ' ', '20,20'] as $data) {
-
+        foreach ([(object) [], 2552, true, false, '2817334', -25, 5.52, ' ', '20,20'] as $data) {
             $validator = new Validator(['field1' => $data]);
             $validator->field('field1')->prohibitedIf('field2');
             $this->assertTrue($validator->execute());

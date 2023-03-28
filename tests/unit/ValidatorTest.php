@@ -100,7 +100,7 @@ final class ValidatorTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldReturnCorrectValuesForErrorMessageWhenObtainingError(): void
+    public function testIfCorrectValuesForErrorMessageAreReturnedWhenObtainingError(): void
     {
         $data = ['foo' => 11];
         $validator = new Validator($data);
@@ -123,7 +123,7 @@ final class ValidatorTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldReturnCorrectErrorMessageWhenUsingCustomErrorsMessagesPerField(): void
+    public function testIfCorrectErrorMessageIsReturnedWhenUsingCustomErrorsMessagesPerField(): void
     {
         $data = [
             'product' => [
@@ -148,7 +148,7 @@ final class ValidatorTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldReturnCorrectAmountOfErrorsWhenUsingDistinctMethod(): void
+    public function testIfCorrectAmountOfErrorsIsReturnedWhenUsingDistinctMethod(): void
     {
         $data = ['username' => 'abc', 'password' => '123', 'password_repeat' => '456'];
 
@@ -165,7 +165,7 @@ final class ValidatorTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldReturnCorrectErrorMessageWhenUsingCustomErrorsMessages(): void
+    public function testIfCorrectErrorMessageIsReturnedWhenUsingCustomErrorsMessages(): void
     {
         $data = [
             'product' => [
@@ -190,7 +190,7 @@ final class ValidatorTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldReturnCustomErrorMessageWhenMultipleFieldsAreUsingItWithDifferentParameters(): void
+    public function testIfCorrectErrorMessageIsReturnedWhenMultipleFieldsAreUsingItWithDifferentParameters(): void
     {
         $data = [
             'product1' => [

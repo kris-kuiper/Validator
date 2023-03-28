@@ -13,7 +13,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenComparingSameStrings(): void
+    public function testIfValidationPassesWhenComparingSameStrings(): void
     {
         $validator = new Validator(['field' => 'test']);
         $validator->field('field')->equals('test');
@@ -23,7 +23,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenComparingSameArrays(): void
+    public function testIfValidationPassesWhenComparingSameArrays(): void
     {
         $validator = new Validator(['field' => ['foo' => 'bar', 'quez' => 'qwaz']]);
         $validator->field('field')->equals(['quez' => 'qwaz', 'foo' => 'bar']);
@@ -33,7 +33,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenComparingSameArraysStrictly(): void
+    public function testIfValidationPassesWhenComparingSameArraysStrictly(): void
     {
         $validator = new Validator(['field' => ['foo' => 'bar', 'quez' => 'qwaz']]);
         $validator->field('field')->equals(['foo' => 'bar', 'quez' => 'qwaz'], true);
@@ -43,7 +43,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenComparingArraysIndifferentOrderStrictly(): void
+    public function testIfValidationFailsWhenComparingArraysIndifferentOrderStrictly(): void
     {
         $validator = new Validator(['field' => ['foo' => 'bar', 'quez' => 'qwaz']]);
         $validator->field('field')->equals(['quez' => 'qwaz', 'foo' => 'bar'], true);
@@ -53,7 +53,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenComparingStringWithIntNonStrictly(): void
+    public function testIfValidationPassesWhenComparingStringWithIntNonStrictly(): void
     {
         $validator = new Validator(['field' => 1]);
         $validator->field('field')->equals('1');
@@ -63,7 +63,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenComparingStringWithIntStrictly(): void
+    public function testIfValidationFailsWhenComparingStringWithIntStrictly(): void
     {
         $validator = new Validator(['field' => 1]);
         $validator->field('field')->equals('1', true);
@@ -73,7 +73,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenComparingIntWithBooleanNonStrictly(): void
+    public function testIfValidationPassesWhenComparingIntWithBooleanNonStrictly(): void
     {
         $validator = new Validator(['field' => 1]);
         $validator->field('field')->equals(true);
@@ -83,7 +83,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenComparingIntWithBooleanStrictly(): void
+    public function testIfValidationFailsWhenComparingIntWithBooleanStrictly(): void
     {
         $validator = new Validator(['field' => 1]);
         $validator->field('field')->equals(true, true);
@@ -93,7 +93,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenNoValuesAreProvided(): void
+    public function testIfValidationFailsWhenNoValuesAreProvided(): void
     {
         $validator = new Validator();
         $validator->field('field')->equals('foo');
@@ -103,7 +103,7 @@ final class EqualsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldReturnCorrectMessageWhenCustomMessageIsSet(): void
+    public function testIfCorrectMessageIsReturnedWhenCustomMessageIsSet(): void
     {
         $validator = new Validator(['field' => 'foo']);
         $validator->field('field')->equals('bar');

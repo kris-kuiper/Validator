@@ -13,7 +13,7 @@ final class NotInTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenValidValuesAreProvided(): void
+    public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
         foreach ([0, '0', false, [], (object) [], 2.5] as $data) {
             $validator = new Validator(['field' => $data]);
@@ -25,7 +25,7 @@ final class NotInTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenValidValuesAreProvidedInStrictMode(): void
+    public function testIfValidationPassesWhenValidValuesAreProvidedInStrictMode(): void
     {
         foreach ([1, 0] as $data) {
             $validator = new Validator(['field' => $data]);
@@ -37,7 +37,7 @@ final class NotInTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenInvalidValuesAreProvided(): void
+    public function testIfValidationFailsWhenInvalidValuesAreProvided(): void
     {
         foreach (['foo', 'bar', '1', 1, true] as $data) {
             $validator = new Validator(['field' => $data]);
@@ -49,7 +49,7 @@ final class NotInTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenInvalidValuesAreProvidedInStrictMode(): void
+    public function testIfValidationFailsWhenInvalidValuesAreProvidedInStrictMode(): void
     {
         foreach ([1, 0] as $data) {
             $validator = new Validator(['field' => $data]);
@@ -61,7 +61,7 @@ final class NotInTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenNoValuesAreProvided(): void
+    public function testIfValidationFailsWhenNoValuesAreProvided(): void
     {
         $validator = new Validator();
         $validator->field('field')->notIn(['foo']);

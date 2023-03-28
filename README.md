@@ -77,6 +77,8 @@ All documentation can be found in the [docs](/docs) folder.
   - [Returning only validated data](/docs/10%20-%20Retrieving%20validated%20data/10.1%20-%20Returning%20only%20validated%20data.md)
   - [Filtering validated data](/docs/10%20-%20Retrieving%20validated%20data/10.2%20-%20Filtering%20validated%20data.md)
   - [Filter empty values](/docs/10%20-%20Retrieving%20validated%20data/10.3%20-%20Filter%20empty%20values.md)
+  - [Convert empty values](/docs/10%20-%20Retrieving%20validated%20data/10.4%20-%20Convert%20empty%20data.md)
+  - [Using Templates](/docs/10%20-%20Retrieving%20validated%20data/10.5%20-%20Template.md)
 - Aliases
   - [Field name aliases](/docs/11%20-%20Field%20name%20aliases/11.1%20-%20Aliases.md)
 - Blueprints

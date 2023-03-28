@@ -362,11 +362,10 @@ final class ValidatedDataTest extends TestCase
         $this->assertSame(['foo' => ['', null , [], 'bar', ' ']], $validator->validatedData()->filter(ValidatedData::FILTER_EMPTY, false)->toArray());
     }
 
-
     /**
      * @throws ValidatorException
      */
-    public function testFoo(): void
+    public function testIfValidatedDataIsConvertedToEmptyWhenValidationPasses(): void
     {
         $data = [
             'foo' => ['', null, [], 'bar']
@@ -376,15 +375,13 @@ final class ValidatedDataTest extends TestCase
         $validator->field('foo')->required(false);
         $validator->execute();
 
-
         $this->assertSame(['foo' => [null, null, null, 'bar']], $validator->validatedData()->convertEmpty()->toArray());
     }
-
 
     /**
      * @throws ValidatorException
      */
-    public function testTemplate(): void
+    public function testIfTemplateReturnsCorrectStructureWhenUsingNestedArray(): void
     {
         $data = [
             'foo' => 'bar',
@@ -430,11 +427,10 @@ final class ValidatedDataTest extends TestCase
         ], $output);
     }
 
-
     /**
      * @throws ValidatorException
      */
-    public function testTemplate2(): void
+    public function testIfTemplateReturnsCorrectStructureWhenUsingFlatArray(): void
     {
         $data = [
             'foo' => [
@@ -463,7 +459,7 @@ final class ValidatedDataTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testTemplate3(): void
+    public function testIfTemplateReturnsCorrectStructureWhenTargetingNonExistingFields(): void
     {
         $data = ['foo' => 'bar'];
 

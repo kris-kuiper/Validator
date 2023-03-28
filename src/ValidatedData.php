@@ -70,6 +70,7 @@ class ValidatedData
     }
 
     /**
+     * Converts empty string, array's and null values to a predefined value
      * @throws ValidatorException
      */
     public function convertEmpty(mixed $convertTo = null, int $convert = ConvertEmpty::CONVERT_EMPTY, bool $recursive = true): self
@@ -80,7 +81,7 @@ class ValidatedData
     }
 
     /**
-     *
+     * Extracts data from the validated data by giving a blueprint/template of the expected structure
      */
     public function template(array $template): self
     {

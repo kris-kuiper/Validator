@@ -51,7 +51,7 @@ class PathTranslator extends AbstractTranslator
     public function has(string|int $key): bool
     {
         $pathCollection = new PathCollection();
-        return $this->paths(explode('.', (string) $key), $this->data, $pathCollection, [])->count() > 0;
+        return $this->paths(explode('.', (string) $key), $this->data, $pathCollection)->count() > 0;
     }
 
     /**
@@ -61,7 +61,7 @@ class PathTranslator extends AbstractTranslator
     {
         $pathCollection = new PathCollection();
 
-        $output = $this->paths(explode('.', (string) $key), $this->data, $pathCollection, []);
+        $output = $this->paths(explode('.', (string) $key), $this->data, $pathCollection);
 
         /** @var Path $item */
         foreach ($output as $item) {
@@ -85,10 +85,10 @@ class PathTranslator extends AbstractTranslator
         $pathCollection = new PathCollection();
 
         if (true === is_numeric($key)) {
-            return $this->paths([$key], $this->data, $pathCollection, []);
+            return $this->paths([$key], $this->data, $pathCollection);
         }
 
-        return $this->paths(explode('.', $key), $this->data, $pathCollection, []);
+        return $this->paths(explode('.', $key), $this->data, $pathCollection);
     }
 
     /**

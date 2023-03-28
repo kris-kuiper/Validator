@@ -13,7 +13,7 @@ final class RoundTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingSimpleFieldValue(): void
+    public function testIfValidationPassesWhenUsingSimpleFieldValue(): void
     {
         $data = ['field' => '2.5'];
 
@@ -26,7 +26,7 @@ final class RoundTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValues(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValues(): void
     {
         $data = ['options' => [0, 1, -2, '4.23', '-5.2', '-2,3', 5.2, 'a', true, false, '', null, [], (object) [], 2552, [1, 2], ['a', 'b'], ['foo' => 'bar'], '5.5', 5.5]];
 
@@ -40,7 +40,7 @@ final class RoundTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValuesWithPrecision(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValuesWithPrecision(): void
     {
         $data = ['options' => [0, 1, -2, '4.23', '-5.2', 1.2, 3.3333, '1.2', '3.3333']];
 
@@ -54,7 +54,7 @@ final class RoundTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValuesWithModeHalfDown(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValuesWithModeHalfDown(): void
     {
         $data = ['options' => [2.5, '2.5']];
 
@@ -68,7 +68,7 @@ final class RoundTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValuesWithModeEven(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValuesWithModeEven(): void
     {
         $data = ['options' => [1.5, -1.5, '1.5', '-1.5']];
 
@@ -82,7 +82,7 @@ final class RoundTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValuesWithModeOdd(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValuesWithModeOdd(): void
     {
         $data = ['options' => [1.5, -1.5, '1.5', '-1.5']];
 

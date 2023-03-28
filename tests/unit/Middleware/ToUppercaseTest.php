@@ -13,7 +13,7 @@ final class ToUppercaseTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingSimpleFieldValue(): void
+    public function testIfValidationPassesWhenUsingSimpleFieldValue(): void
     {
         $data = ['field' => 'lowercase'];
 
@@ -27,7 +27,7 @@ final class ToUppercaseTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValues(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValues(): void
     {
         $data = ['options' => ['one', 'two', 'three']];
 
@@ -41,7 +41,7 @@ final class ToUppercaseTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingNonStringValues(): void
+    public function testIfValidationPassesWhenUsingNonStringValues(): void
     {
         foreach ([null, [], (object) [], 2552, true, [1, 2], ['a', 'b'], ['foo' => 'bar']] as $data) {
             $validator = new Validator(['field' => $data]);

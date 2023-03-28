@@ -14,7 +14,7 @@ final class TrimTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingSimpleFieldValue(): void
+    public function testIfValidationPassesWhenUsingSimpleFieldValue(): void
     {
         $data = ['field' => '     foo '];
 
@@ -28,7 +28,7 @@ final class TrimTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValues(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValues(): void
     {
         $data = ['options' => [0, 1, true, false, '', null, [], (object) [], 2552, [1, 2], ['a', 'b'], ['foo' => 'bar']]];
 
@@ -42,7 +42,7 @@ final class TrimTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingDifferentCharacters(): void
+    public function testIfValidationPassesWhenUsingDifferentCharacters(): void
     {
         $data = ['field' => '--foo__'];
 
@@ -56,7 +56,7 @@ final class TrimTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassWhenTrimmingNull(): void
+    public function testIfValidationPassesWhenTrimmingNull(): void
     {
         $data = ['field' => ''];
 

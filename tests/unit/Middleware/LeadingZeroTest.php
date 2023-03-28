@@ -13,7 +13,7 @@ final class LeadingZeroTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingSimpleFieldValue(): void
+    public function testIfValidationPassesWhenUsingSimpleFieldValue(): void
     {
         foreach (['1', '2', '3', '4', '5', '6', '7', '8', '9', 1, 2, 3, 4, 5, 6, 7, 8, 9] as $data) {
             $validator = new Validator(['field' => $data]);
@@ -27,7 +27,7 @@ final class LeadingZeroTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValues(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValues(): void
     {
         $data = ['options' => [0, 1, true, false, '', null, [], (object) [], 2552, [1, 2], ['a', 'b'], ['foo' => 'bar']]];
 

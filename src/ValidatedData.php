@@ -203,17 +203,22 @@ class ValidatedData
         return $only;
     }
 
+    /**
+     * Extracts data from a previous set template structure
+     */
     private function filterTemplate(array $output): array
     {
         if ([] === $this->template) {
             return $output;
         }
 
-        return $this->filterTemplate2($this->template, $output);
+        return $this->filterTemplateRecursive($this->template, $output);
     }
 
-
-    private function filterTemplate2(array $input, array $output): array
+    /**
+     * Extracts data from a previous set template structure recursively
+     */
+    private function filterTemplateRecursive(array $input, array $output): array
     {
         $data = [];
 
@@ -223,7 +228,7 @@ class ValidatedData
                     continue;
                 }
 
-                $data[$key] = $this->filterTemplate2($value, $output[$key]);
+                $data[$key] = $this->filterTemplateRecursive($value, $output[$key]);
             } else {
                 if (false === array_key_exists($value, $output)) {
                     continue;

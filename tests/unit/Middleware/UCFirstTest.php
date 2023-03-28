@@ -13,7 +13,7 @@ final class UCFirstTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingSimpleFieldValue(): void
+    public function testIfValidationPassesWhenUsingSimpleFieldValue(): void
     {
         $data = ['field' => 'ucfirst'];
 
@@ -27,7 +27,7 @@ final class UCFirstTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValues(): void
+    public function testIfValidatedDataReturnsCorrectDataWhenUsingThreeDimensionalArrayValues(): void
     {
         $data = ['options' => [0, 1, true, false, '', 'foo bar', 'Foo bar', 'Foo Bar', null, [], (object) [], 2552, [1, 2], ['a', 'b'], ['foo' => 'bar']]];
 

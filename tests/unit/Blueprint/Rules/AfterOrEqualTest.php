@@ -71,7 +71,7 @@ final class AfterOrEqualTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldReturnCorrectMessageWhenCustomMessageIsSet(): void
+    public function testIfCorrectMessageIsReturnedWhenCustomMessageIsSet(): void
     {
         $validator = new Validator([]);
         $validator->field('field')->afterOrEqual('1952-03-28');
@@ -83,7 +83,7 @@ final class AfterOrEqualTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldThrowExceptionWhenWrongDateFormatIsProvided(): void
+    public function testIfExceptionIsThrownWhenWrongDateFormatIsProvided(): void
     {
         $this->expectException(ValidatorException::class);
 

@@ -13,7 +13,7 @@ final class SubstrTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingSimpleFieldValue(): void
+    public function testIfValidationPassesWhenUsingSimpleFieldValue(): void
     {
         $data = ['field' => 'foo'];
 
@@ -27,7 +27,7 @@ final class SubstrTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenPassingLength(): void
+    public function testIfValidationPassesWhenPassingLength(): void
     {
         $data = ['field' => 'foo'];
 
@@ -41,7 +41,7 @@ final class SubstrTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenPassingNegativeOffset(): void
+    public function testIfValidationPassesWhenPassingNegativeOffset(): void
     {
         $data = ['field' => '0123456789'];
 
@@ -55,7 +55,7 @@ final class SubstrTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValues(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValues(): void
     {
         $data = ['options' => [0, 1, true, false, '', null, [], (object) [], 2552, [1, 2], ['a', 'b'], ['foo' => 'bar']]];
 

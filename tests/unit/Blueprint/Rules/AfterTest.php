@@ -95,7 +95,7 @@ final class AfterTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldReturnCorrectMessageWhenCustomMessageIsSet(): void
+    public function testIfCorrectMessageIsReturnedWhenCustomMessageIsSet(): void
     {
         $validator = new Validator([]);
         $validator->field('field')->after('1952-03-28');

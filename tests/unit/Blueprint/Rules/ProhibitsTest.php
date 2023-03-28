@@ -65,8 +65,7 @@ final class ProhibitsTest extends TestCase
      */
     public function testIfValidationPassesWhenValidValuesAreProvided(): void
     {
-        foreach([(object) [], 2552, true, false, '2817334', -25, 5.52, ' ', '20,20'] as $data) {
-
+        foreach ([(object) [], 2552, true, false, '2817334', -25, 5.52, ' ', '20,20'] as $data) {
             $validator = new Validator(['field1' => $data]);
             $validator->field('field1')->prohibits('field2');
             $this->assertTrue($validator->execute());
@@ -78,8 +77,7 @@ final class ProhibitsTest extends TestCase
      */
     public function testIfValidationFailsWhenInvalidValuesAreProvided(): void
     {
-        foreach([(object) [], 2552, true, false, '2817334', -25, 5.52, ' ', '20,20'] as $data) {
-
+        foreach ([(object) [], 2552, true, false, '2817334', -25, 5.52, ' ', '20,20'] as $data) {
             $validator = new Validator(['field1' => $data, 'field2' => $data]);
             $validator->field('field1')->prohibits('field2');
             $this->assertFalse($validator->execute());

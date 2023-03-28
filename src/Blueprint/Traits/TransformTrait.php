@@ -7,6 +7,7 @@ namespace KrisKuiper\Validator\Blueprint\Traits;
 use KrisKuiper\Validator\Blueprint\Middleware\Transforms\{
     ABS,
     Ceil,
+    ConvertEmptyTo,
     Floor,
     LeadingZero,
     LTrim,
@@ -24,63 +25,25 @@ use KrisKuiper\Validator\Blueprint\Middleware\Transforms\{
     UCFirst,
     UCWords
 };
+use KrisKuiper\Validator\Helpers\ConvertEmpty;
 
 trait TransformTrait
 {
-    /**
-     * Converts the value (if it is a string) under validation to lowercase
-     */
-    public function toLowercase(): self
-    {
-        return $this->addTransform(new ToLowercase());
-    }
-
-    /**
-     * Converts the value (if it is a string) under validation to uppercase
-     */
-    public function toUppercase(): self
-    {
-        return $this->addTransform(new ToUppercase());
-    }
-
-    /**
-     * Converts the value under validation to a boolean
-     */
-    public function toBoolean(): self
-    {
-        return $this->addTransform(new ToBoolean());
-    }
-
-    /**
-     * Converts the value under validation to an integer number
-     */
-    public function toInt(): self
-    {
-        return $this->addTransform(new ToInt());
-    }
-
-    /**
-     * Converts the value under validation to a string
-     */
-    public function toString(): self
-    {
-        return $this->addTransform(new ToString());
-    }
-
-    /**
-     * Converts the value under validation to a float
-     */
-    public function toFloat(): self
-    {
-        return $this->addTransform(new ToFloat());
-    }
-
     /**
      * Converts to the next highest integer value by rounding up the value if necessary and if the value is a number
      */
     public function ceil(): self
     {
         return $this->addTransform(new Ceil());
+    }
+
+    /**
+     * Converts empty strings and array's to a new value
+     * Default NULL will be used as the new value
+     */
+    public function convertEmptyTo(mixed $convertTo = null, int $mode = ConvertEmpty::CONVERT_EMPTY, bool $recursive = true): self
+    {
+        return $this->addTransform(new ConvertEmptyTo(), ['convertTo' => $convertTo, 'mode' => $mode, 'recursive' => $recursive]);
     }
 
     /**
@@ -153,6 +116,54 @@ trait TransformTrait
     public function substr(int $offset, int $length = null): self
     {
         return $this->addTransform(new Substr(), ['offset' => $offset, 'length' => $length]);
+    }
+
+    /**
+     * Converts the value (if it is a string) under validation to lowercase
+     */
+    public function toLowercase(): self
+    {
+        return $this->addTransform(new ToLowercase());
+    }
+
+    /**
+     * Converts the value (if it is a string) under validation to uppercase
+     */
+    public function toUppercase(): self
+    {
+        return $this->addTransform(new ToUppercase());
+    }
+
+    /**
+     * Converts the value under validation to a boolean
+     */
+    public function toBoolean(): self
+    {
+        return $this->addTransform(new ToBoolean());
+    }
+
+    /**
+     * Converts the value under validation to an integer number
+     */
+    public function toInt(): self
+    {
+        return $this->addTransform(new ToInt());
+    }
+
+    /**
+     * Converts the value under validation to a string
+     */
+    public function toString(): self
+    {
+        return $this->addTransform(new ToString());
+    }
+
+    /**
+     * Converts the value under validation to a float
+     */
+    public function toFloat(): self
+    {
+        return $this->addTransform(new ToFloat());
     }
 
     /**

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace KrisKuiper\Validator;
 
 use JsonException;
+use KrisKuiper\Validator\Exceptions\ValidatorException;
+use KrisKuiper\Validator\Helpers\ConvertEmpty;
 use KrisKuiper\Validator\Translator\Path;
 use KrisKuiper\Validator\Translator\PathTranslator;
 
@@ -21,6 +23,8 @@ class ValidatedData
     private int $filter = 0;
     private bool $filterRecursive = true;
     private ?string $pluck = null;
+    private ?ConvertEmpty $convert = null;
+    private array $template = [];
 
     /**
      * Excludes (blacklist) all given field names in the result set
@@ -66,6 +70,27 @@ class ValidatedData
     }
 
     /**
+     * Converts empty string, array's and null values to a predefined value
+     * @throws ValidatorException
+     */
+    public function convertEmpty(mixed $convertTo = null, int $convert = ConvertEmpty::CONVERT_EMPTY, bool $recursive = true): self
+    {
+        $instance = clone $this;
+        $instance->convert = new ConvertEmpty($convertTo, $convert, $recursive);
+        return $instance;
+    }
+
+    /**
+     * Extracts data from the validated data by giving a blueprint/template of the expected structure
+     */
+    public function template(array $template): self
+    {
+        $instance = clone $this;
+        $instance->template = $template;
+        return $instance;
+    }
+
+    /**
      * Returns an JSON string with the validated data
      * @throws JsonException
      */
@@ -83,6 +108,8 @@ class ValidatedData
         $output = $this->filterNotItems($output);
         $output = $this->filterOnlyItems($output);
         $output = $this->filterEmpty($output);
+        $output = $this->executeConvertEmpty($output);
+        $output = $this->filterTemplate($output);
         return $this->pluckItems($output);
     }
 
@@ -177,11 +204,60 @@ class ValidatedData
     }
 
     /**
+     * Extracts data from a previous set template structure
+     */
+    private function filterTemplate(array $output): array
+    {
+        if ([] === $this->template) {
+            return $output;
+        }
+
+        return $this->filterTemplateRecursive($this->template, $output);
+    }
+
+    /**
+     * Extracts data from a previous set template structure recursively
+     */
+    private function filterTemplateRecursive(array $input, array $output): array
+    {
+        $data = [];
+
+        foreach ($input as $key => $value) {
+            if (true === is_array($value)) {
+                if (false === array_key_exists($key, $output) || false === is_array($output[$key])) {
+                    continue;
+                }
+
+                $data[$key] = $this->filterTemplateRecursive($value, $output[$key]);
+            } else {
+                if (false === array_key_exists($value, $output)) {
+                    continue;
+                }
+
+                $data[$value] = $output[$value];
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Converts empty values i.e. empty arrays, strings or NULL values
+     */
+    private function executeConvertEmpty(array $output): array
+    {
+        if (null === $this->convert) {
+            return $output;
+        }
+
+        return $this->convert->convert($output);
+    }
+
+    /**
      * Filters empty values i.e. empty arrays, strings or NULL values
      */
     private function filterEmpty(array $output): array
     {
-
         if (0 === $this->filter) {
             return $output;
         }

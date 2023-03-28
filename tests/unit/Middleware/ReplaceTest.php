@@ -13,7 +13,7 @@ final class ReplaceTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingSimpleFieldValue(): void
+    public function testIfValidationPassesWhenUsingSimpleFieldValue(): void
     {
         $data = ['field' => '10101010'];
 
@@ -26,7 +26,7 @@ final class ReplaceTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenReplacingSingleNumberAsFloat(): void
+    public function testIfValidationPassesWhenReplacingSingleNumberAsFloat(): void
     {
         $data = ['field' => 123.456];
 
@@ -39,7 +39,7 @@ final class ReplaceTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenReplacingSingleNumberAsInt(): void
+    public function testIfValidationPassesWhenReplacingSingleNumberAsInt(): void
     {
         $data = ['field' => 123];
 
@@ -52,7 +52,7 @@ final class ReplaceTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenReplacingSingleNumberAsString(): void
+    public function testIfValidationPassesWhenReplacingSingleNumberAsString(): void
     {
         $data = ['field' => '123'];
 
@@ -66,7 +66,7 @@ final class ReplaceTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValues(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValues(): void
     {
         $data = ['options' => [0, 1, -2, '5', '-5', '-2,3', 'a', true, false, '', null, [], (object) [], 2552, [1, 2], ['a', 'b'], ['foo' => 'bar'], 'this 10.3 test']];
 

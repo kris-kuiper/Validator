@@ -83,7 +83,7 @@ final class ContainsTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldReturnCorrectMessageWhenCustomMessageIsSet(): void
+    public function testIfCorrectMessageIsReturnedWhenCustomMessageIsSet(): void
     {
         $validator = new Validator();
         $validator->field('field')->contains(1);

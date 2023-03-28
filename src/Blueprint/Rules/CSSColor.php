@@ -45,7 +45,7 @@ class CSSColor extends AbstractRule
             return false;
         }
 
-        if(true === $this->requireHash && false === (bool) preg_match('/^#/', $value)) {
+        if(true === $this->requireHash && false === str_starts_with($value, '#')) {
             return false;
         }
 

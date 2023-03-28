@@ -1,5 +1,7 @@
 grumphp:
   process_timeout: 120
+  git_hook_variables:
+    EXEC_GRUMPHP_COMMAND: 'docker-compose -f ./docker-compose.yml exec -T validator'
   tasks:
     paratest:
       processes: ~

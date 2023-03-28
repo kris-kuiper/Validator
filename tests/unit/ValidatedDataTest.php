@@ -361,4 +361,115 @@ final class ValidatedDataTest extends TestCase
 
         $this->assertSame(['foo' => ['', null , [], 'bar', ' ']], $validator->validatedData()->filter(ValidatedData::FILTER_EMPTY, false)->toArray());
     }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfValidatedDataIsConvertedToEmptyWhenValidationPasses(): void
+    {
+        $data = [
+            'foo' => ['', null, [], 'bar']
+        ];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->required(false);
+        $validator->execute();
+
+        $this->assertSame(['foo' => [null, null, null, 'bar']], $validator->validatedData()->convertEmpty()->toArray());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfTemplateReturnsCorrectStructureWhenUsingNestedArray(): void
+    {
+        $data = [
+            'foo' => 'bar',
+            'quez' => [
+                'first' => '1',
+                'second' => [
+                    'a' => '1',
+                    'b' => '2',
+                    'c' => '3'
+                ],
+                'third' => '3',
+                'fourth' => '4'
+            ],
+            'bar' => 'baz'
+        ];
+
+        $validator = new Validator($data);
+        $validator->field('foo', 'bar')->isString();
+        $validator->field('quez')->isArray();
+
+        $this->assertTrue($validator->execute());
+
+        $output = $validator->validatedData()->template([
+            'foo',
+            'quez' => [
+                'first',
+                'second' => [
+                    'b'
+                ],
+                'fourth'
+            ]
+        ])->toArray();
+
+        $this->assertSame([
+            'foo' => 'bar',
+            'quez' => [
+                'first' => '1',
+                'second' => [
+                    'b' => '2',
+                ],
+                'fourth' => '4'
+            ]
+        ], $output);
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfTemplateReturnsCorrectStructureWhenUsingFlatArray(): void
+    {
+        $data = [
+            'foo' => [
+                'a' => '1',
+                'b' => '2',
+                'c' => '3'
+            ]
+        ];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->isArray();
+
+        $this->assertTrue($validator->execute());
+
+        $output = $validator->validatedData()->template(['foo'])->toArray();
+
+        $this->assertSame([
+            'foo' => [
+                'a' => '1',
+                'b' => '2',
+                'c' => '3'
+            ]
+        ], $output);
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfTemplateReturnsCorrectStructureWhenTargetingNonExistingFields(): void
+    {
+        $data = ['foo' => 'bar'];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->isString();
+
+        $this->assertTrue($validator->execute());
+
+        $output = $validator->validatedData()->template(['foo' => ['a', 'b']])->toArray();
+
+        $this->assertSame([], $output);
+    }
 }

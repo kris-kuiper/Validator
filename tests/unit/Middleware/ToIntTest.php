@@ -13,7 +13,7 @@ final class ToIntTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenUsingSimpleFieldValue(): void
+    public function testIfValidationPassesWhenUsingSimpleFieldValue(): void
     {
         $data = ['field' => '2.5'];
 
@@ -26,7 +26,7 @@ final class ToIntTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldRetrieveCorrectValidatedDataWhenUsingThreeDimensionalArrayValues(): void
+    public function testIfCorrectValidatedDataIsReturnedWhenUsingThreeDimensionalArrayValues(): void
     {
         $data = ['options' => [0, 1, -2, '4.23', '-5.2', '-2,3', 'a', true, false, '', null, [], (object) [], 2552, [1, 2], ['a', 'b'], ['foo' => 'bar']]];
 

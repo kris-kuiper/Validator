@@ -13,7 +13,7 @@ final class RequiredArrayKeysTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenValidStringValuesAreProvided(): void
+    public function testIfValidationPassesWhenValidStringValuesAreProvided(): void
     {
         $validator = new Validator(['field' => ['foo' => 'bar', 'quez' => 'bazz']]);
         $validator->field('field')->requiredArrayKeys('foo', 'quez');
@@ -23,7 +23,7 @@ final class RequiredArrayKeysTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldPassValidationWhenValidIntegerValuesAreProvided(): void
+    public function testIfValidationPassesWhenValidIntegerValuesAreProvided(): void
     {
         $validator = new Validator(['field' => [25 => 'foo', 52 => 'bar']]);
         $validator->field('field')->requiredArrayKeys(25, 52);
@@ -33,7 +33,7 @@ final class RequiredArrayKeysTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenInvalidValuesAreProvided(): void
+    public function testIfValidationFailsWhenInvalidValuesAreProvided(): void
     {
         $validator = new Validator(['field' => []]);
         $validator->field('field')->requiredArrayKeys('foo');
@@ -43,7 +43,7 @@ final class RequiredArrayKeysTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenNotAllKeysArePresent(): void
+    public function testIfValidationFailsWhenNotAllKeysArePresent(): void
     {
         $validator = new Validator(['field' => ['foo' => 'bar']]);
         $validator->field('field')->requiredArrayKeys('foo', 'quez');
@@ -63,7 +63,7 @@ final class RequiredArrayKeysTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testShouldFailValidationWhenNoValuesAreProvided(): void
+    public function testIfValidationFailsWhenNoValuesAreProvided(): void
     {
         $validator = new Validator();
         $validator->field('field')->requiredArrayKeys('foo');

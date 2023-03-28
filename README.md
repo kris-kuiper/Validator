@@ -27,6 +27,20 @@ Here are a couple of the many perks:
 Modern PHP Validator provides several approaches to validate your application's (incoming) data. It makes it a breeze to validate form submit values as combining multiple input for single validation. It supports middleware and custom validation rules and error messages. It will also return the validated data to insert the data into i.e. a database.
 
 
+## Installation
+
+Modern PHP Validator is available on Packagist (using semantic versioning). Installation via [Composer](https://getcomposer.org/) is the recommended way.
+
+Run:
+```shell script
+composer require kris-kuiper/validator
+```
+
+Or add this line to your composer.json file:
+```shell script
+"kris-kuiper/validator": "^1.5"
+```
+
 
 ## Documentation
 All documentation can be found in the [docs](/docs) folder.
@@ -63,6 +77,8 @@ All documentation can be found in the [docs](/docs) folder.
   - [Returning only validated data](/docs/10%20-%20Retrieving%20validated%20data/10.1%20-%20Returning%20only%20validated%20data.md)
   - [Filtering validated data](/docs/10%20-%20Retrieving%20validated%20data/10.2%20-%20Filtering%20validated%20data.md)
   - [Filter empty values](/docs/10%20-%20Retrieving%20validated%20data/10.3%20-%20Filter%20empty%20values.md)
+  - [Convert empty values](/docs/10%20-%20Retrieving%20validated%20data/10.4%20-%20Convert%20empty%20data.md)
+  - [Using Templates](/docs/10%20-%20Retrieving%20validated%20data/10.5%20-%20Template.md)
 - Aliases
   - [Field name aliases](/docs/11%20-%20Field%20name%20aliases/11.1%20-%20Aliases.md)
 - Blueprints
@@ -86,22 +102,6 @@ All documentation can be found in the [docs](/docs) folder.
 - License
   - [License](#license)
 
-
-
-
-## Installation
-
-Modern PHP Validator is available on Packagist (using semantic versioning). Installation via [Composer](https://getcomposer.org/) is the recommended way.
-
-Run:
-```shell script
-composer require kris-kuiper/validator
-```
-
-Or add this line to your composer.json file:
-```shell script
-"kris-kuiper/validator": "^1.5"
-```
 
 
 ## Validation rules
@@ -140,6 +140,8 @@ Below is a list with all predefined validation rules.
 ## Head first example:
 
 ```php
+use KrisKuiper\Validator\Validator;
+
 $data = [
     'department' => 'office',
     'color' => 'black',

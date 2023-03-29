@@ -111,7 +111,6 @@ class PathTranslator extends AbstractTranslator
         return $this->removeFromKeys($keys, $data[$current]);
     }
 
-
     /**
      * Searches the given data array for values based on a flat key array and returns these values with the corresponding paths
      * @param array $match A flat key array structure
@@ -154,6 +153,10 @@ class PathTranslator extends AbstractTranslator
                 $path = $tmp;
             }
 
+            return $pathCollection;
+        }
+
+        if (false === is_array($data)) {
             return $pathCollection;
         }
 

@@ -430,6 +430,89 @@ final class ValidatedDataTest extends TestCase
     /**
      * @throws ValidatorException
      */
+    public function testIfTemplateReturnsCorrectStructureWhenUsingWildcards(): void
+    {
+        $data = [
+            'countries' => [
+                'netherlands' => [
+                    'buildings' => [
+                        'foo',
+                        'bar'
+                    ]
+                ],
+                'england' => [
+                    'buildings' => [
+                        'foo',
+                        'bar'
+                    ]
+                ]
+            ],
+            'addresses' => [
+                [
+                    'street' => 'street 1',
+                    'city' => 'city 1',
+                    'zip_code' => 'zipcode 1',
+                    'house_number' => 'house number 1',
+                ],
+                [
+                    'street' => 'street 2',
+                    'city' => 'city 2',
+                    'zip_code' => 'zipcode 2',
+                    'house_number' => 'house number 2',
+                ]
+            ]
+        ];
+
+        $validator = new Validator($data);
+        $validator->field('countries', 'addresses')->isArray();
+
+        $this->assertTrue($validator->execute());
+
+        $output = $validator->validatedData()->template([
+            'countries' => [
+                '*' => [
+                    'buildings'
+                ]
+            ],
+            'addresses' => [
+                '*' => [
+                    'zip_code',
+                    'house_number'
+                ]
+            ]
+        ])->toArray();
+
+        $this->assertSame([
+            'countries' => [
+                'netherlands' => [
+                    'buildings' => [
+                        'foo',
+                        'bar'
+                    ]
+                ],
+                'england' => [
+                    'buildings' => [
+                        'foo',
+                        'bar'
+                    ]
+                ]
+            ],
+            'addresses' => [
+                [
+                    'zip_code' => 'zipcode 1',
+                    'house_number' => 'house number 1',
+                ],
+                [
+                    'zip_code' => 'zipcode 2',
+                    'house_number' => 'house number 2',
+                ]
+            ]
+        ], $output);
+    }
+
+    /**
+     * @throws ValidatorException
+     */
     public function testIfTemplateReturnsCorrectStructureWhenUsingFlatArray(): void
     {
         $data = [
@@ -469,6 +552,23 @@ final class ValidatedDataTest extends TestCase
         $this->assertTrue($validator->execute());
 
         $output = $validator->validatedData()->template(['foo' => ['a', 'b']])->toArray();
+
+        $this->assertSame([], $output);
+    }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfTemplateReturnsEmptyArrayWhenProvidingEmptyArray(): void
+    {
+        $data = ['foo' => 'bar'];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->isString();
+
+        $this->assertTrue($validator->execute());
+
+        $output = $validator->validatedData()->template([])->toArray();
 
         $this->assertSame([], $output);
     }

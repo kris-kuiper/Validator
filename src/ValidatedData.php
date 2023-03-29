@@ -24,7 +24,7 @@ class ValidatedData
     private bool $filterRecursive = true;
     private ?string $pluck = null;
     private ?ConvertEmpty $convert = null;
-    private array $template = [];
+    private ?array $template = null;
 
     /**
      * Excludes (blacklist) all given field names in the result set
@@ -208,37 +208,48 @@ class ValidatedData
      */
     private function filterTemplate(array $output): array
     {
-        if ([] === $this->template) {
+        if (null === $this->template) {
             return $output;
         }
 
-        return $this->filterTemplateRecursive($this->template, $output);
-    }
-
-    /**
-     * Extracts data from a previous set template structure recursively
-     */
-    private function filterTemplateRecursive(array $input, array $output): array
-    {
         $data = [];
+        $paths = $this->generateTemplatePaths($this->template) ;
 
-        foreach ($input as $key => $value) {
-            if (true === is_array($value)) {
-                if (false === array_key_exists($key, $output) || false === is_array($output[$key])) {
-                    continue;
-                }
+        foreach ($paths as $path) {
+            $translator = new PathTranslator($output);
+            $pathCollection = $translator->path(implode('.', $path));
 
-                $data[$key] = $this->filterTemplateRecursive($value, $output[$key]);
-            } else {
-                if (false === array_key_exists($value, $output)) {
-                    continue;
-                }
-
-                $data[$value] = $output[$value];
+            foreach ($pathCollection as $pathItem) {
+                $this->insertIntoArray($data, $pathItem->getPath(), $pathItem->getValue());
             }
         }
 
         return $data;
+    }
+
+    /**
+     * Generates flat template paths
+     */
+    private function generateTemplatePaths($data, $prefix = []): array
+    {
+
+        $keyStrings = [];
+
+        foreach ($data as $key => $value) {
+            $currentPrefix = $prefix;
+
+            if (false === is_array($value)) {
+                $currentPrefix[] = $value;
+                $keyStrings[] = $currentPrefix;
+                continue;
+            }
+
+            $currentPrefix[] = $key;
+            $subKeyStrings = $this->generateTemplatePaths($value, $currentPrefix);
+            $keyStrings = array_merge($keyStrings, $subKeyStrings);
+        }
+
+        return $keyStrings;
     }
 
     /**

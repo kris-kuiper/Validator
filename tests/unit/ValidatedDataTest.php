@@ -555,4 +555,21 @@ final class ValidatedDataTest extends TestCase
 
         $this->assertSame([], $output);
     }
+
+    /**
+     * @throws ValidatorException
+     */
+    public function testIfTemplateReturnsEmptyArrayWhenProvidingEmptyArray(): void
+    {
+        $data = ['foo' => 'bar'];
+
+        $validator = new Validator($data);
+        $validator->field('foo')->isString();
+
+        $this->assertTrue($validator->execute());
+
+        $output = $validator->validatedData()->template([])->toArray();
+
+        $this->assertSame([], $output);
+    }
 }

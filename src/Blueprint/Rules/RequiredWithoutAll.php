@@ -60,6 +60,13 @@ class RequiredWithoutAll extends AbstractRequired
             }
         }
 
-        return 0 !== count(array_filter($result));
+        $emptyAmount = count(array_filter($result));
+
+        if (0 !== $emptyAmount) {
+            $this->getField()?->setBailed(true);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -32,7 +32,7 @@ final class RequiredWithAllTest extends TestCase
     /**
      * @throws ValidatorException
      */
-    public function testBlaat(): void
+    public function testIfNextRuleIsNotExecutedWhenNoValuesAreProvided(): void
     {
         $validator = new Validator([]);
 

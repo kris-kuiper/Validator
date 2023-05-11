@@ -26,6 +26,20 @@ final class RequiredWithoutAllTest extends TestCase
     /**
      * @throws ValidatorException
      */
+    public function testIfNextRuleIsNotExecutedWhenAllValuesAreProvided(): void
+    {
+        $validator = new Validator([
+            'foo' => true,
+            'bar' => true,
+        ]);
+
+        $validator->field('age')->requiredWithoutAll('foo', 'bar')->isString();
+        $this->assertTrue($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
     public function testIfValidationPassesWithAgeWhenOtherFieldIsProvided(): void
     {
         $validator = new Validator([

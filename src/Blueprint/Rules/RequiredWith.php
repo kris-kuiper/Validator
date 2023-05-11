@@ -42,8 +42,16 @@ class RequiredWith extends AbstractRequired
 
         $fieldNames = $this->getParameter('fieldNames');
 
+        if (0 === count($fieldNames)) {
+            $this->getField()?->setBailed(true);
+        }
+
         foreach ($fieldNames as $fieldName) {
             $paths = $this->getPaths($fieldName);
+
+            if (0 === $paths->count()) {
+                $this->getField()?->setBailed(true);
+            }
 
             foreach ($paths as $path) {
                 if (null !== $path && false === $this->isEmpty($path->getValue())) {

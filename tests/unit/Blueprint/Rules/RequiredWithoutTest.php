@@ -26,6 +26,19 @@ final class RequiredWithoutTest extends TestCase
     /**
      * @throws ValidatorException
      */
+    public function testIfNextRuleIsNotExecutedWhenFieldFieldIsProvided(): void
+    {
+        $validator = new Validator([
+            'color' => 'black'
+        ]);
+
+        $validator->field('age')->requiredWithout('color')->isInt();
+        $this->assertTrue($validator->execute());
+    }
+
+    /**
+     * @throws ValidatorException
+     */
     public function testIfValidationPassesWithAgeWhenOtherFieldIsProvided(): void
     {
         $validator = new Validator([

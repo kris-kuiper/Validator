@@ -56,6 +56,8 @@ class RequiredWithout extends AbstractRequired
             }
         }
 
+        $this->getField()?->setBailed(true);
+
         return true;
     }
 }
